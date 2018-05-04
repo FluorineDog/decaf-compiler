@@ -3,13 +3,12 @@
 %{
 /* need this for the call to atof() below */
 #include <math.h>
-  enum yytokentype{
-    T_ID = 0, 
-    T_integer = 1, 
-    T_float = 2, 
-
+enum yytokentype{
+  T_ID = 0, 
+  T_integer = 1, 
+  T_float = 2, 
 @#0#@
-  }
+  };
 %}
 
 DIGIT    [0-9]
