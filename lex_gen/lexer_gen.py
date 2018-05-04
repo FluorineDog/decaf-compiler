@@ -11,15 +11,24 @@ def custom_format(string, *args, **kwargs):
 
 
 def main(*argv):
+  parser = argparse.ArgumentParser(
+    description="this is a generator of lexer.l"
+  )
+  parser.add_argument("src_dir", help="flex++ template and useful data")
+  parser.add_argument("-o", dest="output", nargs='?', help="output file")
+  K = parser.parse_args()
+  src_dir = K.src_dir
+  output_file = K.output
+  # print(K.src_dir, K.output)
+  # return
 
-  template = ""
-  with open("lex.template.l") as file:
+  with open(src_dir + "/lex.template.l") as file:
     template = file.read()
 
   counter = 100
   enum_list = []
   rule_list = []
-  with open("keyword.txt") as keyword_file:
+  with open(src_dir + "/keyword.txt") as keyword_file:
     for line in keyword_file.readlines():
       if(line.split() == []):
         continue
@@ -31,7 +40,7 @@ def main(*argv):
           symbol=symbol, word=word, indent=" "*(14 - len(symbol))))
       counter += 1
 
-  with open("symbols.txt") as keyword_file:
+  with open(src_dir + "/symbols.txt") as keyword_file:
     for line in keyword_file.readlines():
       if(len(line.split()) == 0):
         continue
@@ -45,8 +54,11 @@ def main(*argv):
 
   arg1 = ",\n".join(enum_list)
   arg2 = "\n".join(rule_list)
-  with open(, 'w') as file:
-    file.write(custom_format(template, arg1, arg2))
+  if(output_file):
+    with open(output_file, 'w') as file:
+      file.write(custom_format(template, arg1, arg2))
+  else:
+    print(custom_format(template, arg1, arg2))
 
 
 main(sys.argv)
