@@ -16,8 +16,7 @@ not !
 semicolon ;
 comma ,
 dot .
-squ_bra [
-squ_ket ]
+square_bra [
+square_ket ]
 round_bra (
 round_ket )
-

@@ -4,12 +4,17 @@
 /* need this for the call to atof() below */
 #include <math.h>
   enum yytokentype{
+    T_ID = 0, 
+    T_integer = 1, 
+    T_float = 2, 
+
 @#0#@
   }
 %}
 
 DIGIT    [0-9]
 ID       [A-Za-z_][A-Za-z0-9_]*
+%x       C_COMMENT
 
 %%
 
@@ -23,12 +28,14 @@ ID       [A-Za-z_][A-Za-z0-9_]*
                     atof( yytext ) );
             }
 
-
 @#1#@
 
 {ID}        printf( "An identifier: %s\n", yytext );
 
-"{"[^}\n]*"}"     /* eat up one-line comments */
+"//".*\n    
+"/*"            { BEGIN(C_COMMENT); }
+<C_COMMENT>"*/" { BEGIN(INITIAL); }
+<C_COMMENT>.    { }     
 
 [ \t\n]+          /* eat up whitespace */
 

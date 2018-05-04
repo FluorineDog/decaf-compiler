@@ -1,1 +1,1 @@
-class Any
+i
