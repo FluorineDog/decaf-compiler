@@ -23,12 +23,12 @@ ID       [A-Za-z_][A-Za-z0-9_]*
 %%
 
 {DIGIT}+    {
-                    yyval_rel = atoi(yytext) ;
+                    yyval_real = atoi(yytext) ;
                     return T_int;
             }
 
 [(-|+)]{DIGIT}+"."{DIGIT}*[(e|E)(-|+){DIGIT}+]        {
-                    yyval_rel = atof(yytext) ;
+                    yyval_real = atof(yytext) ;
                     return T_real;
             }
 
@@ -52,12 +52,13 @@ ID       [A-Za-z_][A-Za-z0-9_]*
 int main(int argc, char* argv[] )
 {
   ++argv, --argc;  /* skip over program name */
+  FILE* yyin;
   if ( argc > 0 )
           yyin = fopen( argv[0], "r" );
   else
           yyin = stdin;
   while(true){
-    enum yytokennum enum_num = yylex();
+    enum yytokentype enum_num = yylex();
     std::cout << enum_num << "***" << yytext << std::endl
     if(enum_num == END_OF_FILE){
       break;
