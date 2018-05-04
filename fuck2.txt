@@ -1,0 +1,23 @@
+add +
+minus -
+mul *
+div /
+mod %
+less <
+less_eq <=
+greater >
+greater_eq >=
+assign =
+eq ==
+not_eq !=
+and &&
+or ||
+not !
+semicolon ;
+comma ,
+dot .
+squ_bra [
+squ_ket ]
+round_bra (
+round_ket )
+
