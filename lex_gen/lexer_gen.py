@@ -22,7 +22,7 @@ def main(*argv):
   # print(K.src_dir, K.output)
   # return
 
-  with open(src_dir + "/lex.template.l") as file:
+  with open(src_dir + "/lexer.template.l") as file:
     template = file.read()
 
   counter = 100

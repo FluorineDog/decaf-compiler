@@ -1,5 +1,3 @@
-
-
 add_custom_command(
   OUTPUT lexer.cpp
   COMMAND flex++ lexer.l > lexer.cpp
@@ -7,10 +5,17 @@ add_custom_command(
   COMMENT "flex++ generating"
 )
 
+
+set(LEX_DEPS ${CMAKE_CURRENT_SOURCE_DIR}/*)
+set(lexer_gen ${CMAKE_CURRENT_SOURCE_DIR}/lexer_gen.py)
 add_custom_command(
   OUTPUT lexer.l 
-  COMMAND gen.py
+  COMMAND ${lexer_gen} ${CMAKE_CURRENT_SOURCE_DIR} -o lexer.l
+  DEPENDS ${LEX_DEPS}
+  COMMENT "lexer.l generating"
 )
+# set_target_properties(lexer.cpp GENERATED)
+# set_target_properties(lexer.l GENERATED)
 
 add_custom_target(
   lex_gen ALL
