@@ -20,3 +20,5 @@ square_bra [
 square_ket ]
 round_bra (
 round_ket )
+curly_bra {
+curly_ket }

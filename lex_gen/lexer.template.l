@@ -2,9 +2,7 @@
 
 %{
 /* need this for the call to atof() below */
-#include <cmath>
-#include <string>
-#include <iostream>
+#include <math.h>
 enum yytokentype{
   T_ID = 0, 
   T_integer = 1, 
@@ -49,6 +47,7 @@ ID       [A-Za-z_][A-Za-z0-9_]*
 
 %%
 
+
 int main(int argc, char* argv[] )
 {
   ++argv, --argc;  /* skip over program name */
@@ -57,9 +56,9 @@ int main(int argc, char* argv[] )
           yyin = fopen( argv[0], "r" );
   else
           yyin = stdin;
-  while(true){
-    enum yytokentype enum_num = yylex();
-    std::cout << enum_num << "***" << yytext << std::endl
+  while(1){
+    int enum_num = yylex();
+    printf("%d  %s\n", enum_num, yytext);
     if(enum_num == END_OF_FILE){
       break;
     }
