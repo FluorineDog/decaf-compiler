@@ -8,8 +8,8 @@ add_custom_command(
 )
 
 add_custom_command(
-  OUTPUT lexer.c
-  COMMAND flex -o lexer.c lexer.l
+  OUTPUT lexer.cpp
+  COMMAND flex++ -o lexer.cpp lexer.l
   DEPENDS lexer.l
   COMMENT "flex generating"
 )
@@ -20,5 +20,5 @@ add_custom_command(
 #   COMMENT PHONY
 # )
 
-add_executable(lex_gen lexer.c)
-target_link_libraries(lex_gen fl)
+add_executable(lex_gen lexer.cpp)
+# target_link_libraries(lex_gen fl)

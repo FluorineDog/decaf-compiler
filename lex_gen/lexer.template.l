@@ -3,6 +3,11 @@
 %{
 /* need this for the call to atof() below */
 #include <math.h>
+#include <iostream>
+using std::cin;
+using std::cout;
+using std::endl;
+
 enum yytokentype{
   T_ID = 0, 
   T_integer = 1, 
@@ -14,12 +19,11 @@ int yyval_int;
 double yyval_real;
 %}
 
+%option noyywrap c++
 DIGIT    [0-9]
 ID       [A-Za-z_][A-Za-z0-9_]*
 %x       C_COMMENT
-
 %%
-
 {DIGIT}+    {
                     yyval_real = atoi(yytext) ;
                     return T_int;
@@ -43,22 +47,17 @@ ID       [A-Za-z_][A-Za-z0-9_]*
 
 <<EOF>>     { return END_OF_FILE; }
 
-.           printf( "Unrecognized character: %s\n", yytext );
+.           { cout << "Unrecoginized token" << endl;}
 
 %%
 
 
 int main(int argc, char* argv[] )
 {
-  ++argv, --argc;  /* skip over program name */
-  FILE* yyin;
-  if ( argc > 0 )
-          yyin = fopen( argv[0], "r" );
-  else
-          yyin = stdin;
+  yyFlexLexer lexer(std::cin, std::cout);
   while(1){
-    int enum_num = yylex();
-    printf("%d  %s\n", enum_num, yytext);
+    int enum_num = lexer.yylex();
+    cout << enum_num << " <=> " << lexer.YYText() << endl;
     if(enum_num == END_OF_FILE){
       break;
     }
