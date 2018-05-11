@@ -20,5 +20,5 @@ add_custom_command(
 #   COMMENT PHONY
 # )
 
-add_executable(lex_gen lexer.cpp)
+add_executable(lexer lexer.cpp)
 # target_link_libraries(lex_gen fl)
