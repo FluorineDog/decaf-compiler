@@ -1,6 +1,7 @@
 # Create target for the parser
 cmake_minimum_required(VERSION 3.8)
 add_subdirectory(lexer)
+add_subdirectory(parser)
 
 # Create custom command for flex/lex (note the outputs)
 # ADD_CUSTOM_COMMAND(
