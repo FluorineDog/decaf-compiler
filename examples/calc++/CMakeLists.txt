@@ -49,6 +49,6 @@ add_library(parser ${PR}parser.cc)
 add_library(driver ${PR}driver.cc)
 add_library(scanner ${PR}scanner.cc)
 # dep(calc++ "${PR}scanner.hh" "${PR}parser.hh")
-add_executable(cal calc++.cc)
+add_executable(main calc++.cc)
 
-target_link_libraries(cal driver scanner parser)
+target_link_libraries(main driver scanner parser)

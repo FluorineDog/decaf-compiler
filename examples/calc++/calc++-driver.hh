@@ -35,3 +35,4 @@ public:
   void error (const std::string& m);
 };
 #endif // ! CALCXX_DRIVER_HH
+
