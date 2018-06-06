@@ -8,15 +8,17 @@ using std::cin;
 using std::cout;
 using std::endl;
 yyFlexLexer lexer;
-// #include "../praser.hxx"
+#include "parser.hxx"
+int yylex (void);
+void yyerror (char const *);
 // /*
-enum yytokentype{
-  T_ID = 0, 
-  T_integer = 1, 
-  T_real = 2, 
-  END_OF_FILE = 3, 
-@#0#@
-};
+// enum yytokentype{
+//   T_ID = 0, 
+//   T_integer = 1, 
+//   T_real = 2, 
+//   END_OF_FILE = 3, 
+// };
+
 // */
 int yyval_int;
 double yyval_real;
@@ -37,7 +39,7 @@ ID       [A-Za-z_][A-Za-z0-9_]*
                     return T_real;
             }
 
-@#1#@
+@#0#@
 
 {ID}        { return T_ID; }
 
@@ -54,14 +56,18 @@ ID       [A-Za-z_][A-Za-z0-9_]*
 
 %%
 
+int yylex (void);
+void yyerror (char const *);
 
-int main(int argc, char* argv[] )
-{
-  while(1){
-    int enum_num = lexer.yylex();
-    cout << enum_num << " <=> " << lexer.YYText() << endl;
-    if(enum_num == END_OF_FILE){
-      break;
-    }
-  }
-}
+
+
+// int main(int argc, char* argv[] )
+// {
+//   while(1){
+//     int enum_num = lexer.yylex();
+//     cout << enum_num << " <=> " << lexer.YYText() << endl;
+//     if(enum_num == END_OF_FILE){
+//       break;
+//     }
+//   }
+// }

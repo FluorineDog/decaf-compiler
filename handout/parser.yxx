@@ -11,8 +11,56 @@
 /* Bison declarations.  */
 %define api.value.type {double}
 %token NUM
-%token T_plus
-%token T_int
+// %token T_plus
+// %token T_int
+%token void
+%token string
+%token bool
+%token int
+%token double
+%token null
+%token true
+%token false
+%token class
+%token extends
+%token interface
+%token implements
+%token this
+%token while
+%token if
+%token else
+%token for
+%token return
+%token break
+%token Print
+%token ReadInteger
+%token ReadLine
+%token NewArray
+%token New
+%token add
+%token minus
+%token mul
+%token div
+%token mod
+%token less
+%token less_eq
+%token greater
+%token greater_eq
+%token assign
+%token eq
+%token not_eq
+%token and
+%token or
+%token not
+%token semicolon
+%token comma
+%token dot
+%token square_bra
+%token square_ket
+%token round_bra
+%token round_ket
+%token curly_bra
+%token curly_ket
 
 // %left '-' '+'
 // %left '*' '/'

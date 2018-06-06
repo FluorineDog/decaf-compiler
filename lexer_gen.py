@@ -9,15 +9,16 @@ def custom_format(string, *args, **kwargs):
   formatted = substituted.format(*args, **kwargs)
   return formatted
 
-
 def main(*argv):
   parser = argparse.ArgumentParser(
     description="this is a generator of lexer.l"
   )
-  parser.add_argument("root_dir", help="flex++ template and useful data")
-  parser.add_argument("output_dir", dest="output", nargs='?', help="output file")
+  parser.add_argument("--root_dir", dest="root_dir", nargs='?', help="root folder")
+  parser.add_argument("--output_dir", dest="output_dir", nargs='?', help="output folder")
+
   K = parser.parse_args()
   lexer_dir = K.root_dir + "/lexer"
+  parser_dir = K.root_dir + "/parser"
   output_dir = K.output_dir
   # print(K.lexer_dir, K.output)
   # return
@@ -26,19 +27,18 @@ def main(*argv):
   # counter = 100
   # enum_list = []
   token_list = []
-  rule_list = []
+  lexer_rule_list = []
   with open(lexer_dir + "/keyword.txt") as keyword_file:
     for line in keyword_file.readlines():
       if(line.split() == []):
         continue
       word = line.split()[0]
       symbol = word
-      enum_list.append('%token '.format(
-          word=word))
       # enum_list.append('  T_{word} = {counter}'.format(
           # word=word, counter=counter))
-      token_list = ''
-      rule_list.append('"{symbol}"{indent}{{ return T_{word}; }}'.format(
+      token_list.append('%token {word}'.format(
+          word=word))
+      lexer_rule_list.append('"{symbol}"{indent}{{ return T_{word}; }}'.format(
           symbol=symbol, word=word, indent=" "*(14 - len(symbol))))
       # counter += 1
 
@@ -50,27 +50,29 @@ def main(*argv):
       word, symbol = line.split()
       # enum_list.append('  T_{word} = {counter}'.format(
           # word=word, counter=counter))
-      rule_list.append('"{symbol}"{indent}{{ return T_{word}; }}'.format(
+      token_list.append('%token {word}'.format(
+          word=word))
+      lexer_rule_list.append('"{symbol}"{indent}{{ return T_{word}; }}'.format(
           symbol=symbol, word=word, indent=" "*(14 - len(symbol))))
       # counter += 1
 
-  arg1 = "\n".join(token_list)
-  arg2 = "\n".join(rule_list)
+  token_list = "\n".join(token_list)
+  lexer_rule_list = "\n".join(lexer_rule_list)
   # del
 
   with open(lexer_dir + "/lexer.template.l") as file:
-    template = file.read()
+    lexel_content = custom_format(file.read(), lexer_rule_list)
 
-  lexel_content = custom_format(template, arg1, arg2)
-  praser_content = custom_format(template, arg1, arg2)
+  with open(parser_dir + "/parser.template.yxx") as file:
+    parser_content = custom_format(file.read(), token_list)
 
-  contents = {"lexel.l": lexel_content, "parser.yxx": praser_content}
+  contents = {"/lexel.l": lexel_content, "/parser.yxx": parser_content}
   if(output_dir):
-    for [name, content] in contents:
-      with open(output_dir + name) as file:
+    for name, content in contents.items():
+      with open(output_dir + name, 'w') as file:
         file.write(content)
   else:
-    for [name, content] in contents:
+    for name, content in contents.items():
       print("\n-------------------------")
       print(name)
       print(content)
