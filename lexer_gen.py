@@ -60,12 +60,12 @@ def main(*argv):
   lexer_rule_list = "\n".join(lexer_rule_list)
 
   with open(lexer_dir + "/lexer.template.l") as file:
-    lexel_content = custom_format(file.read(), lexer_rule_list)
+    lexer_content = custom_format(file.read(), lexer_rule_list)
 
   with open(parser_dir + "/parser.template.yxx") as file:
     parser_content = custom_format(file.read(), token_list)
 
-  contents = {"/lexel.l": lexel_content, "/parser.yxx": parser_content}
+  contents = {"/lexer.l": lexer_content, "/parser.yxx": parser_content}
   if(output_dir):
     for name, content in contents.items():
       with open(output_dir + name, 'w') as file:
