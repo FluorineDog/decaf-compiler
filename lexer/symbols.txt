@@ -1,4 +1,4 @@
-add +
+plus +
 minus -
 mul *
 div /

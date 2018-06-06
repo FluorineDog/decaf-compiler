@@ -36,7 +36,7 @@ def main(*argv):
       symbol = word
       # enum_list.append('  T_{word} = {counter}'.format(
           # word=word, counter=counter))
-      token_list.append('%token {word}'.format(
+      token_list.append('%token T_{word}'.format(
           word=word))
       lexer_rule_list.append('"{symbol}"{indent}{{ return T_{word}; }}'.format(
           symbol=symbol, word=word, indent=" "*(14 - len(symbol))))
@@ -50,7 +50,7 @@ def main(*argv):
       word, symbol = line.split()
       # enum_list.append('  T_{word} = {counter}'.format(
           # word=word, counter=counter))
-      token_list.append('%token {word}'.format(
+      token_list.append('%token T_{word}'.format(
           word=word))
       lexer_rule_list.append('"{symbol}"{indent}{{ return T_{word}; }}'.format(
           symbol=symbol, word=word, indent=" "*(14 - len(symbol))))
@@ -58,7 +58,6 @@ def main(*argv):
 
   token_list = "\n".join(token_list)
   lexer_rule_list = "\n".join(lexer_rule_list)
-  # del
 
   with open(lexer_dir + "/lexer.template.l") as file:
     lexel_content = custom_format(file.read(), lexer_rule_list)
