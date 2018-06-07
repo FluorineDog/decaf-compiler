@@ -15,20 +15,19 @@ void yyerror (char const *);
 %}
 
 %option noyywrap c++
+%option yylineno
+
 DIGIT    [0-9]
 ID       [A-Za-z_][A-Za-z0-9_]*
 %x       C_COMMENT
 %%
 {DIGIT}+    {
-                    // yyval_real = atoi(yytext) ;
-                    yylval = atoi(yytext); 
-                    return NUM;
+                    yylval = make_unique<Interger>
+                    return T_int;
             }
 
 [(-|+)]{DIGIT}+"."{DIGIT}*[(e|E)(-|+){DIGIT}+]        {
-                    // yyval_real = atof(yytext) ;
-                    yylval = atof(yytext); 
-                    return NUM;
+                    return T_real;
             }
 
 @#lexer_rule_list#@
@@ -49,8 +48,10 @@ ID       [A-Za-z_][A-Za-z0-9_]*
 %%
 
 int yylex (void){
+
   int enum_num = lexer.yylex();
-  cout << enum_num << " <=> " << lexer.YYText() << endl;
+  // cout << enum_num << " <=> " << lexer.YYText() << endl;
+  yylval = make_unique<Terminal<enum_num>>()
   return enum_num;
 }
 
