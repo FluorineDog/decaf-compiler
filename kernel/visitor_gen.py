@@ -28,6 +28,16 @@ class {name}Visitor : public Visitor{{
 }};
 '''
 
+wt_source = '''// Template
+#include <
+'''
+
+wt_source_func = \
+'''void {vis}Vistor::visit(class {type}){{
+  // TODO
+}}
+'''
+
 
 def parse(content, visitors):
   class_eng = re.compile(class_tmp)
