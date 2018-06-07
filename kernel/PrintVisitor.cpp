@@ -9,9 +9,9 @@ void PrintVisitor::visit(class BinaryExpr* node) {
   node->right->accept(*this);
 }
 void PrintVisitor::visit(class Block* node) {
-  cout << "stmts" << node->stmts.size() << std::endl;
+  cout << "stmts" << node->stmts.size() << endl;
   for (auto& s : node->stmts) {
     s->accept(*this);
-    cout << std::endl;
+    cout << endl;
   }
 }

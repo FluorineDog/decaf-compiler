@@ -29,13 +29,16 @@ class {name}Visitor : public Visitor{{
 '''
 
 wt_source = '''// Template
-#include <
+#include "generated/{vis}Visitor.h"
+#include "internal.h"
+{func_list}
 '''
 
 wt_source_func = \
-'''void {vis}Vistor::visit(class {type}){{
+'''void {vis}Vistor::visit(class {type}* node){{
   // TODO
 }}
+
 '''
 
 
@@ -73,6 +76,15 @@ def parse(content, visitors):
     header_c = wt_headers.format(declare_list, name = vis)
     with open("generated/" + vis + "Visitor.h", 'w') as file:
       file.write(header_c)
+    pass
+    func_list = "".join([\
+      wt_source_func\
+      .format(vis=vis, type=t) for (t, _) in result
+    ])
+    source_c = wt_source.format(vis=vis, func_list=func_list)
+    pass
+    with open("generated/template/" + vis + "Visitor.cpp", 'w') as file:
+      file.write(source_c)
 
 
 def main():
