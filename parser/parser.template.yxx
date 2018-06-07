@@ -56,7 +56,7 @@ line:
 ;
 exp:
   num                   { $$ = $1;     }
-| exp T_plus num        { $$ = make_shared<BinaryExpr>($1, T_plus, $3);}
+| exp T_plus num        { $$ = mkBinaryExpr($1, T_plus, $3);}
 ;
 num:
   T_real { $$=yylval; }

@@ -5,7 +5,7 @@ class_tmp = "class (\w+) *: *public ASTNodeBase.*?virtual.*?\a(.*?)};"
 entry_tmp = "(^|\a)[^/]*?(\w+) (\w+);"
 
 wt_mknode = '''
-auto mk{name}({comma_list}) {{
+inline auto mk{name}({comma_list}) {{
   auto node = make_shared<{name}>();
 {arrow_list}  // Generated
   return node;
