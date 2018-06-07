@@ -8,7 +8,6 @@ using std::cin;
 using std::cout;
 using std::endl;
 yyFlexLexer lexer;
-// #include "../praser.hxx"
 // /*
 enum yytokentype{
   T_ID = 0, 

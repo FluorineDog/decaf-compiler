@@ -1,5 +1,6 @@
 # Create target for the parser
 cmake_minimum_required(VERSION 3.8)
+file(GLOB VISITOR_CPPS kernel/*Visitor.cpp)
 set(ROOT ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_custom_command(
@@ -31,13 +32,15 @@ SET_SOURCE_FILES_PROPERTIES(parser.cpp GENERATED)
 include_directories(kernel)
 add_custom_target(parser_hxx DEPENDS parser.hxx)
 
-add_library(PrintVisitor kernel/PrintVisitor.cpp)
-add_dependencies(PrintVisitor parser_hxx)
+add_library(visitors ${VISITOR_CPPS})
+add_dependencies(visitors parser_hxx)
 
 
-add_executable(main parser.cpp)
+add_executable(main parser.cpp )
 add_library(lexer lexer.cpp)
 target_link_libraries(main lexer)
-target_link_libraries(main PrintVisitor)
+target_link_libraries(main visitors)
+
+
 add_dependencies(lexer parser_hxx)
 

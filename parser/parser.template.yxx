@@ -1,15 +1,21 @@
 /* Infix notation calculator.  */
-%{
+%code top{
   // #include <math.h>
   // #include <stdio.h>
   #include <iostream>
-  #include "common.h"
   using std::cout;
   using std::cin;
+}
+%code requires{
+  #include "common.h"
+}
+%code{
   int yylex (void);
   void yyerror (char const *);
   node_ptr_t root;
-%}
+}
+
+
 %define api.value.type {node_ptr_t}
 /* Bison declarations.  */
 // %union {

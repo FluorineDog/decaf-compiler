@@ -9,10 +9,7 @@ using std::cout;
 using std::cerr;
 using std::endl;
 yyFlexLexer lexer;
-#include "common.h"
 #include "parser.hxx"
-int yylex (void);
-void yyerror (char const *);
 %}
 
 
