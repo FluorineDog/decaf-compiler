@@ -32,7 +32,7 @@ class BinaryExpr : public ASTNodeBase {
 class Block : public ASTNodeBase {
  public:
   virtual void accept(Visitor& v) { v.visit(this); }
-  vector<node_ptr_t> stmts; 
+  vector<node_ptr_t> stmts;  // advanced container will be omitted
 };
 
 #include "generated/mknode.h"

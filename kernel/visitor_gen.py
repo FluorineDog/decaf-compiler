@@ -2,7 +2,7 @@
 import re
 
 class_tmp = "class (\w+) *: *public ASTNodeBase.*?virtual.*?\a(.*?)};"
-entry_tmp = "(^|\a)[^/]*?(\w+) (\w+);"
+entry_tmp = "(^|\a)[ ]*?(\w+) (\w+);"
 
 wt_mknode = '''
 inline auto mk{name}({comma_list}) {{
@@ -16,7 +16,7 @@ def parse(content):
   class_eng = re.compile(class_tmp)
   entry_eng = re.compile(entry_tmp)
   result = class_eng.findall(content)
-  mknode_c = '' 
+  mknode_c = '#include "../common.h"'
   for name, values in result:
     entries = [(t, v) for _, t, v in entry_eng.findall(values)]
     comma_list = ", ".join(["{0} {1}".format(t, v) for (t, v) in entries])

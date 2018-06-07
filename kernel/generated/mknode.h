@@ -1,4 +1,4 @@
-
+#include "../common.h"
 inline auto mkInteger(int num) {
   auto node = make_shared<Integer>();
   node->num = num;
