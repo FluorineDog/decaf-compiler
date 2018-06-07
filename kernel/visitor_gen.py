@@ -16,8 +16,16 @@ wt_visitor = '''#pragma once
 class Visitor {{
  public:
 {0} // Generated
-}}
+}};
 {1} 
+'''
+
+wt_headers = '''#pragma once
+#include "common.h"
+#include "Visitor.h"
+class {name}Visitor : public Visitor{{
+{0}
+}};
 '''
 
 def parse(content, visitors):
@@ -27,14 +35,15 @@ def parse(content, visitors):
   mknode_c = '#include "../common.h"'
 
   print(visitors)
-  visitor_virtual_list = "".join([
+  pure_list = "".join([
     "  virtual void visit(class {0}* node) = 0;\n"
     .format(name) for (name, _) in result])
   include_list = "".join([
     '#include "{0}Visitor.h"\n'
     .format(vis) for (vis) in visitors])
-  visitor_c = wt_visitor.format(visitor_virtual_list, include_list)
-  print(visitor_c)
+  visitor_c = wt_visitor.format(pure_list, include_list)
+  with open('generated/Visitor.h', 'w') as file:
+    file.write(visitor_c)
 
   for name, values in result:
     entries = [(t, v) for _, t, v in entry_eng.findall(values)]
@@ -45,6 +54,15 @@ def parse(content, visitors):
   with open('generated/mknode.h', 'w') as file:
     file.write(mknode_c)
   
+  for vis in visitors:
+    declare_list = "".join([\
+      '  virtual void visit(class {0}* node);\n'\
+      .format(t) for (t, _) in result
+    ])
+    header_c = wt_headers.format(declare_list, name = vis)
+    with open("generated/" + vis + "Visitor.h", 'w') as file:
+      file.write(header_c)
+
 
 def main():
   visitors = []
