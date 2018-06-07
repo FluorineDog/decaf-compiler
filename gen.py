@@ -60,10 +60,10 @@ def main(*argv):
   lexer_rule_list = "\n".join(lexer_rule_list)
 
   with open(lexer_dir + "/lexer.template.l") as file:
-    lexer_content = custom_format(file.read(), lexer_rule_list)
+    lexer_content = custom_format(file.read(), lexer_rule_list=lexer_rule_list)
 
   with open(parser_dir + "/parser.template.yxx") as file:
-    parser_content = custom_format(file.read(), token_list)
+    parser_content = custom_format(file.read(), token_list=token_list)
 
   contents = {"/lexer.l": lexer_content, "/parser.yxx": parser_content}
   if(output_dir):
@@ -75,4 +75,6 @@ def main(*argv):
       print("\n-------------------------")
       print(name)
       print(content)
-main(sys.argv)
+
+if __name__ == "__main__":
+  main(sys.argv)

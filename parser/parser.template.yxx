@@ -18,7 +18,7 @@
 %token END_OF_FILE 0
 %token NUM
 %token ID
-@#0#@
+@#token_list#@
 
 %% /* The grammar follows.  */
 input:

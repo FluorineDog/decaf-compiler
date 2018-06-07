@@ -31,7 +31,7 @@ ID       [A-Za-z_][A-Za-z0-9_]*
                     return NUM;
             }
 
-@#0#@
+@#lexer_rule_list#@
 
 {ID}        { return ID; }
 
