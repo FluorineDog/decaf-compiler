@@ -42,14 +42,16 @@ ID       [A-Za-z_][A-Za-z0-9_]*
 
 [ \t\n]+          /* eat up whitespace */
 
-<<EOF>>     { return END_OF_FILE; }
+<<EOF>>     { return END_OF_FILE;}
 
 .           { cout << "Unrecoginized token" << endl;}
 
 %%
 
 int yylex (void){
-  return lexer.yylex();
+  int enum_num = lexer.yylex();
+  cout << enum_num << " <=> " << lexer.YYText() << endl;
+  return enum_num;
 }
 
 void yyerror (char const * err_msg){

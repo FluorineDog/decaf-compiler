@@ -15,9 +15,9 @@
 //   Fuck value_int;
 // }
 
+%token END_OF_FILE 0
 %token NUM
 %token ID
-%token END_OF_FILE
 @#0#@
 
 %% /* The grammar follows.  */
