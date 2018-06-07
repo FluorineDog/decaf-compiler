@@ -1,5 +1,6 @@
 #!/bin/python
 import re
+import os
 
 class_tmp = "class (\w+) *: *public ASTNodeBase.*?virtual.*?\a(.*?)};"
 entry_tmp = "(^|\a)[ ]*?(\w+) (\w+);"
@@ -7,16 +8,34 @@ entry_tmp = "(^|\a)[ ]*?(\w+) (\w+);"
 wt_mknode = '''
 inline auto mk{name}({comma_list}) {{
   auto node = make_shared<{name}>();
-{arrow_list}  // Generated
+{arrow_list} // Generated
   return node;
 }}
 '''
+wt_visitor = '''#pragma once
+class Visitor {{
+ public:
+{0} // Generated
+}}
+{1} 
+'''
 
-def parse(content):
+def parse(content, visitors):
   class_eng = re.compile(class_tmp)
   entry_eng = re.compile(entry_tmp)
   result = class_eng.findall(content)
   mknode_c = '#include "../common.h"'
+
+  print(visitors)
+  visitor_virtual_list = "".join([
+    "  virtual void visit(class {0}* node) = 0;\n"
+    .format(name) for (name, _) in result])
+  include_list = "".join([
+    '#include "{0}Visitor.h"\n'
+    .format(vis) for (vis) in visitors])
+  visitor_c = wt_visitor.format(visitor_virtual_list, include_list)
+  print(visitor_c)
+
   for name, values in result:
     entries = [(t, v) for _, t, v in entry_eng.findall(values)]
     comma_list = ", ".join(["{0} {1}".format(t, v) for (t, v) in entries])
@@ -28,6 +47,12 @@ def parse(content):
   
 
 def main():
+  visitors = []
+  for filename in os.listdir("."):
+    result = re.match("(.*)Visitor.cpp", filename)
+    if result:
+      visitors.append(result.groups()[0])
+
   with open("common.h") as file:
     comment_eng = re.compile("^(.*?)(//|$)")
     con = file.read()
@@ -36,7 +61,6 @@ def main():
       # print(comment_eng.match(line).groups())
       new_con += comment_eng.match(line).groups()[0] + '\a'
     # print(new_con)
-    parse(new_con)
-
+    parse(new_con, visitors)
 
 main()

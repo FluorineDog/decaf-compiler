@@ -2,7 +2,7 @@
 inline auto mkInteger(int num) {
   auto node = make_shared<Integer>();
   node->num = num;
-  // Generated
+ // Generated
   return node;
 }
 
@@ -11,12 +11,12 @@ inline auto mkBinaryExpr(node_ptr_t left, int op, node_ptr_t right) {
   node->left = left;
   node->op = op;
   node->right = right;
-  // Generated
+ // Generated
   return node;
 }
 
 inline auto mkBlock() {
   auto node = make_shared<Block>();
-  // Generated
+ // Generated
   return node;
 }
