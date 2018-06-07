@@ -6,22 +6,12 @@
 #include <iostream>
 using std::cin;
 using std::cout;
+using std::cerr;
 using std::endl;
 yyFlexLexer lexer;
 #include "parser.hxx"
 int yylex (void);
 void yyerror (char const *);
-// /*
-// enum yytokentype{
-//   T_ID = 0, 
-//   T_integer = 1, 
-//   T_real = 2, 
-//   END_OF_FILE = 3, 
-// };
-
-// */
-int yyval_int;
-double yyval_real;
 %}
 
 %option noyywrap c++
@@ -30,18 +20,20 @@ ID       [A-Za-z_][A-Za-z0-9_]*
 %x       C_COMMENT
 %%
 {DIGIT}+    {
-                    yyval_real = atoi(yytext) ;
-                    return T_int;
+                    // yyval_real = atoi(yytext) ;
+                    yylval = atoi(yytext); 
+                    return NUM;
             }
 
 [(-|+)]{DIGIT}+"."{DIGIT}*[(e|E)(-|+){DIGIT}+]        {
-                    yyval_real = atof(yytext) ;
-                    return T_real;
+                    // yyval_real = atof(yytext) ;
+                    yylval = atof(yytext); 
+                    return NUM;
             }
 
 @#0#@
 
-{ID}        { return T_ID; }
+{ID}        { return ID; }
 
 "//".*\n    
 "/*"            { BEGIN(C_COMMENT); }
@@ -56,8 +48,13 @@ ID       [A-Za-z_][A-Za-z0-9_]*
 
 %%
 
-int yylex (void);
-void yyerror (char const *);
+int yylex (void){
+  return lexer.yylex();
+}
+
+void yyerror (char const * err_msg){
+  cerr << err_msg << endl;
+}
 
 
 
