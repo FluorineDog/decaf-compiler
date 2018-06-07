@@ -3,6 +3,7 @@
   // #include <math.h>
   // #include <stdio.h>
   #include <iostream>
+  #include "common.h"
   using std::cout;
   using std::cin;
   int yylex (void);

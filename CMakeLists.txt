@@ -27,6 +27,8 @@ SET_SOURCE_FILES_PROPERTIES(parser.hxx GENERATED)
 SET_SOURCE_FILES_PROPERTIES(lexer.cpp GENERATED)
 SET_SOURCE_FILES_PROPERTIES(parser.cpp GENERATED)
 
+
+include_directories(kernel)
 add_custom_target(parser_hxx DEPENDS parser.hxx)
 
 add_executable(main parser.cpp)
