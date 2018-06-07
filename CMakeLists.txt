@@ -1,36 +1,36 @@
 # Create target for the parser
 cmake_minimum_required(VERSION 3.8)
-add_subdirectory(lexer)
-add_subdirectory(parser)
+set(ROOT ${CMAKE_CURRENT_SOURCE_DIR})
 
-# Create custom command for flex/lex (note the outputs)
-# ADD_CUSTOM_COMMAND(
-#   SOURCE ${LEX_SOURCE_DIR}/src/lexer.l
-#   COMMAND flex++ 
-#   ARGS -o lexer.cpp
-#        ${LEX_SOURCE_DIR}/src/lexer.l
-#   TARGET FooParser
-#   OUTPUTS lexer.cpp)
+add_custom_command(
+  OUTPUT lexer.l parser.yxx
+  COMMAND ${ROOT}/gen.py --root_dir ${ROOT} --output_dir .
+  DEPENDS ${ROOT}/parser/* ${ROOT}/lexer/* ${ROOT}/gen.py
+  COMMENT "generate from template"
+)
 
-# Create custom command for bison/yacc (note the DEPENDS)
-# ADD_CUSTOM_COMMAND(
-#   SOURCE ${Foo_SOURCE_DIR}/src/parser.y
-#   COMMAND ${BISON_EXECUTABLE} 
-#   ARGS -y ${Foo_SOURCE_DIR}/src/parser.y
-#        -o ${Foo_BINARY_DIR}/src/parser.c
-#   TARGET FooParser
-#   DEPENDS ${Foo_BINARY_DIR}/src/lexer.c
-#   OUTPUTS ${Foo_BINARY_DIR}/src/parser.c)
+add_custom_command(
+  OUTPUT parser.cpp parser.hxx
+  COMMAND bison parser.yxx --defines=parser.hxx --output=parser.cpp 
+  DEPENDS parser.yxx
+  COMMENT "bison gen"
+)
 
-# Add parser.c to the list of sources
-# SET(Foo_SRCS ${Foo_SRCS} ${Foo_BINARY_DIR}/src/parser.c)
+add_custom_command(
+  OUTPUT lexer.cpp
+  COMMAND flex++ -o lexer.cpp lexer.l 
+  DEPENDS lexer.l
+  COMMENT "flex gen"
+)
 
-# Since parser.c does not exists yet when cmake is run, mark
-# it as generated
-# SET_SOURCE_FILES_PROPERTIES(${Foo_BINARY_DIR}/src/parser.c GENERATED)
+SET_SOURCE_FILES_PROPERTIES(parser.hxx GENERATED)
+SET_SOURCE_FILES_PROPERTIES(lexer.cpp GENERATED)
+SET_SOURCE_FILES_PROPERTIES(parser.cpp GENERATED)
 
-# SET_SOURCE_FILES_PROPERTIES(lexer.cpp GENERATED)
-# add_executable(lexer lexer.cpp)
+add_custom_target(parser_hxx DEPENDS parser.hxx)
 
-# Include binary directory to include lexer.c in parser.c
+add_executable(main parser.cpp)
+add_library(lexer lexer.cpp)
+target_link_libraries(main lexer)
+add_dependencies(lexer parser_hxx)
 
