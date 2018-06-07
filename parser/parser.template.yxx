@@ -49,14 +49,14 @@ block:
 ;
 
 line:
-  T_semicolon {$$ = nullptr;}
-| exp T_semicolon  { 
+  ';' {$$ = nullptr;}
+| exp ';'  { 
     // printf ("\t$%.10g\n", $1); 
   }
 ;
 exp:
   num                   { $$ = $1;     }
-| exp T_plus num        { $$ = mkBinaryExpr($1, T_plus, $3);}
+| exp '+' num        { $$ = mkBinaryExpr($1, '+', $3);}
 ;
 num:
   T_real { $$=yylval; }

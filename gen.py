@@ -48,11 +48,14 @@ def main(*argv):
         continue
       assert(len(line.split()) == 2)
       word, symbol = line.split()
+      word = "T_" + word
       # enum_list.append('  T_{word} = {counter}'.format(
           # word=word, counter=counter))
-      token_list.append('%token T_{word}'.format(
+      if len(symbol) == 1:
+        word = "'" + symbol + "'"
+      token_list.append('%token {word}'.format(
           word=word))
-      lexer_rule_list.append('"{symbol}"{indent}{{ return T_{word}; }}'.format(
+      lexer_rule_list.append('"{symbol}"{indent}{{ return {word}; }}'.format(
           symbol=symbol, word=word, indent=" "*(14 - len(symbol))))
       # counter += 1
 
