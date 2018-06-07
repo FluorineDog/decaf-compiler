@@ -6,6 +6,6 @@ void PrintVisitor::visit(class Integer* node){
 void PrintVisitor::visit(class BinaryExpr* node){
   cout << "2";
 }
-void PrintVisitor::visit(class Sentence* node){
+void PrintVisitor::visit(class Block* node){
   cout << "3";
 }

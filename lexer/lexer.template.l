@@ -24,7 +24,7 @@ ID       [A-Za-z_][A-Za-z0-9_]*
 %x       C_COMMENT
 %%
 {DIGIT}+    {
-                    yylval = make_shared<Integer>();
+                    yylval = make_shared<Integer>(atoi(lexer.YYText()));
                     return T_integer;
             }
 

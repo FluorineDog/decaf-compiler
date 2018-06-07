@@ -8,6 +8,7 @@
   using std::cin;
   int yylex (void);
   void yyerror (char const *);
+  node_ptr_t root;
 %}
 %define api.value.type {node_ptr_t}
 /* Bison declarations.  */
@@ -24,20 +25,32 @@
 @#token_list#@
 
 %% /* The grammar follows.  */
-input:
+input: 
+  block{
+    root = $1;
+  }
+;
+
+block:
   %empty     {$$ = make_shared<Block>();}
-| input line {$$ = $1; $1.stmts.emplace_back($2);}
+| block line {
+    $$ = $1;
+    auto block = dynamic_cast<Block*>($$.get());
+    if($1 != nullptr){
+      block->stmts.emplace_back($1);
+    }
+  }
 ;
 
 line:
-  T_semicolon {$$ = nullptr}
+  T_semicolon {$$ = nullptr;}
 | exp T_semicolon  { 
     // printf ("\t$%.10g\n", $1); 
   }
 ;
 exp:
   num                   { $$ = $1;     }
-| exp T_plus num        { $$ = make_shared<Expr>($1, T_plus, $3);}
+| exp T_plus num        { $$ = make_shared<BinaryExpr>($1, T_plus, $3);}
 ;
 num:
   T_real { $$=yylval; }
@@ -48,4 +61,6 @@ num:
 
 int main(){
   yyparse();
+  PrintVisitor v;
+  root->accept(v);
 }
