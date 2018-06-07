@@ -43,7 +43,7 @@ block:
     $$ = $1;
     auto block = dynamic_cast<Block*>($$.get());
     if($1 != nullptr){
-      block->stmts.emplace_back($1);
+      block->stmts.emplace_back($2);
     }
   }
 ;

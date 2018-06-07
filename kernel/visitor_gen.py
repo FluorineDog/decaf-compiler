@@ -28,6 +28,7 @@ class {name}Visitor : public Visitor{{
 }};
 '''
 
+
 def parse(content, visitors):
   class_eng = re.compile(class_tmp)
   entry_eng = re.compile(entry_tmp)
