@@ -31,8 +31,13 @@ SET_SOURCE_FILES_PROPERTIES(parser.cpp GENERATED)
 include_directories(kernel)
 add_custom_target(parser_hxx DEPENDS parser.hxx)
 
+add_library(PrintVisitor kernel/PrintVisitor.cpp)
+add_dependencies(PrintVisitor parser_hxx)
+
+
 add_executable(main parser.cpp)
 add_library(lexer lexer.cpp)
 target_link_libraries(main lexer)
+target_link_libraries(main PrintVisitor)
 add_dependencies(lexer parser_hxx)
 

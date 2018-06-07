@@ -9,10 +9,12 @@ using std::cout;
 using std::cerr;
 using std::endl;
 yyFlexLexer lexer;
+#include "common.h"
 #include "parser.hxx"
 int yylex (void);
 void yyerror (char const *);
 %}
+
 
 %option noyywrap c++
 %option yylineno
@@ -22,8 +24,8 @@ ID       [A-Za-z_][A-Za-z0-9_]*
 %x       C_COMMENT
 %%
 {DIGIT}+    {
-                    yylval = make_unique<Interger>
-                    return T_int;
+                    yylval = make_shared<Integer>();
+                    return T_integer;
             }
 
 [(-|+)]{DIGIT}+"."{DIGIT}*[(e|E)(-|+){DIGIT}+]        {
@@ -51,7 +53,6 @@ int yylex (void){
 
   int enum_num = lexer.yylex();
   // cout << enum_num << " <=> " << lexer.YYText() << endl;
-  yylval = make_unique<Terminal<enum_num>>()
   return enum_num;
 }
 

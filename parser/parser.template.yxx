@@ -18,30 +18,30 @@
 
 %token END_OF_FILE 0
 %token T_real
-%token T_int
+%token T_integer
 %token REAL
 %token ID
 @#token_list#@
 
 %% /* The grammar follows.  */
 input:
-  %empty
-| line input 
+  %empty     {$$ = make_shared<Block>();}
+| input line {$$ = $1; $1.stmts.emplace_back($2);}
 ;
 
 line:
-  T_semicolon
+  T_semicolon {$$ = nullptr}
 | exp T_semicolon  { 
     // printf ("\t$%.10g\n", $1); 
   }
 ;
 exp:
-  num                   { $$ = std::move($1);     }
-| exp T_plus num        { $$ = std::move($1);     }
+  num                   { $$ = $1;     }
+| exp T_plus num        { $$ = make_shared<Expr>($1, T_plus, $3);}
 ;
 num:
-  T_real { $$=std::move(yylval); }
-| T_int  { $$=std::move(yylval); }
+  T_real { $$=yylval; }
+| T_integer  { $$=yylval; }
 ;
 
 %%
