@@ -35,4 +35,10 @@ class Block : public ASTNodeBase {
   vector<node_ptr_t> stmts;  // advanced container will be omitted
 };
 
+class Type : public ASTNodeBase {
+ public:
+  virtual void accept(Visitor& v) { v.visit(this); }
+  int Type;
+}
+
 #include "generated/mknode.h"

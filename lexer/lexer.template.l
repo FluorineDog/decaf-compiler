@@ -22,11 +22,11 @@ ID       [A-Za-z_][A-Za-z0-9_]*
 %%
 {DIGIT}+    {
                     yylval = mkInteger(atoi(lexer.YYText()));
-                    return T_integer;
+                    return NUM_integer;
             }
 
 [(-|+)]{DIGIT}+"."{DIGIT}*[(e|E)(-|+){DIGIT}+]        {
-                    return T_real;
+                    return NUM_real;
             }
 
 @#lexer_rule_list#@

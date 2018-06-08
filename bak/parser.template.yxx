@@ -24,50 +24,44 @@
 // }
 
 %token END_OF_FILE 0
-%token NUM_real
-%token NUM_integer
+%token T_real
+%token T_integer
+%token REAL
 %token ID
 @#token_list#@
 
 %% /* The grammar follows.  */
-input:
-  %empty 
-| input Decl 
+input: 
+  block{
+    root = $1;
+  }
 ;
 
-Decl:
-  VariableDecl
-| FuncitionDecl
-| ClassDecl
-| InterfaceDecl
+block:
+  %empty     {$$ = make_shared<Block>();}
+| block line {
+    $$ = $1;
+    auto block = dynamic_cast<Block*>($$.get());
+    if($1 != nullptr){
+      block->stmts.emplace_back($2);
+    }
+  }
 ;
 
-VariableDecl:
-  Variable ';'
+line:
+  ';' {$$ = nullptr;}
+| exp ';'  { 
+    // printf ("\t$%.10g\n", $1); 
+  }
 ;
-
-Variable:
-  Type ID
+exp:
+  num                   { $$ = $1;     }
+| exp '+' num        { $$ = mkBinaryExpr($1, '+', $3);}
 ;
-
-Type:
-  T_int 
-| T_double 
-| T_bool 
-| T_string
-| ID
-| Type []
+num:
+  T_real { $$=yylval; }
+| T_integer  { $$=yylval; }
 ;
-TypeVoid:
-  Type
-| void
-;
-FunctionDecl:
-  TypeVoid ID '(' Formals ')' 
-;
-Formals:
-  
-
 
 %%
 
