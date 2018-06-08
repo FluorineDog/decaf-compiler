@@ -58,16 +58,36 @@ Type:
 | ID
 | Type []
 ;
+
 TypeVoid:
   Type
-| void
+| T_void
 ;
-FunctionDecl:
-  TypeVoid ID '(' Formals ')' 
-;
-Formals:
-  
 
+FunctionDecl:
+  TypeVoid ID '(' Formals ')' StmtBlock
+;
+
+Formals:
+  %empty
+| Variable {}
+| Variable ',' {} Formals
+;
+
+ClassDecl:
+  T_class ID Extends Implements
+;
+
+Extends:
+  %empty
+| T_extends ID
+;
+
+Implements:
+  %empty
+
+| Implements, T_implements 
+;
 
 %%
 
