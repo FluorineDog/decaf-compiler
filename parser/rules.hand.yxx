@@ -45,8 +45,8 @@ Type:
 ;
 
 FunctionDecl:
-  Type ident '(' Formals ')' StmtBlock      {$$ = mkProtoType($1, $2, $4, $6);}
-| T_void ident '(' Formals ')' StmtBlock    {$$ = mkProtoType($1, $2, $4, $6);}
+  Type ident '(' Formals ')' StmtBlock      {$$ = mkFunctionDecl($1, $2, $4, $6);}
+| T_void ident '(' Formals ')' StmtBlock    {$$ = mkFunctionDecl($1, $2, $4, $6);}
 ;
 
 VariableCommaList:
