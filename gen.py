@@ -20,12 +20,7 @@ def main(*argv):
   lexer_dir = K.root_dir + "/lexer"
   parser_dir = K.root_dir + "/parser"
   output_dir = K.output_dir
-  # print(K.lexer_dir, K.output)
-  # return
 
-  
-  # counter = 100
-  # enum_list = []
   token_list = []
   lexer_rule_list = []
   special_token_list = []
@@ -71,7 +66,7 @@ def main(*argv):
 
   with open(parser_dir + "/token.gen.yxx") as file:
     token_rule_list = file.read()
-  token_list += token_rule_list
+  token_list = token_rule_list + '\n' + token_list
   with open(lexer_dir + "/lexer.template.l") as file:
     lexer_content = custom_format(file.read(), lexer_rule_list=lexer_rule_list)
 

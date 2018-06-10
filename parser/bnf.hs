@@ -30,7 +30,8 @@ PrintStmt ::= T_Print ( Expr,+ ) ;
 
 Expr ::= Constant | LValue | T_this | Call | ( Expr ) | \
  T_ReadInteger ( ) | T_ReadLine ( ) | T_New ident  | \
- T_NewArray ( Expr , Type ) 
+ T_NewArray ( Expr , Type ) | \
+ Expr + Expr | Expr - Expr | Expr * Expr 
 LValue ::= ident | Expr . ident | Expr [ Expr ]
 Call ::= ident ( Actuals ) | Expr . ident ( Actuals )
 Actuals ::= Expr,*
