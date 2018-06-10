@@ -15,7 +15,7 @@ Implementor ::= T_implements type_ident?
 Field ::= VariableDecl | FunctionDecl
 
 InterfaceDecl ::= T_interface type_ident { Prototype* }
-Prototype ::= Type ident ( Formals ) | T_void ident ( Formals ) 
+Prototype ::= Type ident ( Formals ) ; | T_void ident ( Formals ) ;
 StmtBlock ::= { Stmt* }
 Stmt ::= Expr? ; | IfStmt | WhileStmt | ForStmt | \
  BreakStmt | ReturnStmt | PrintStmt | StmtBlock | VariableDecl

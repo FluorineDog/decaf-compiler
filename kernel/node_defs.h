@@ -1,5 +1,7 @@
 #pragma once
 #include "common.h"
+#include <string>
+using std::string;
 class Integer : public ASTNodeBase {
  public:
   virtual void accept(Visitor& v) { v.visit(this); }
@@ -129,7 +131,7 @@ class While : public ASTNodeBase {
 class If : public ASTNodeBase {
  public:
   virtual void accept(Visitor& v) { v.visit(this); }
-  int contion;
+  node_ptr_t condition;
   node_ptr_t if_stmt;
   node_ptr_t else_stmt;
 };
@@ -149,8 +151,58 @@ class Interface : public ASTNodeBase {
   node_ptr_t prototypes;
 };
 
-class FUCK : public ASTNodeBase {
+class Field : public ASTNodeBase {
  public:
   virtual void accept(Visitor& v) { v.visit(this); }
-  int type;
+  int decl;
 };
+
+class ClassDecl : public ASTNodeBase {
+ public:
+  virtual void accept(Visitor& v) { v.visit(this); }
+  node_ptr_t type;
+  node_ptr_t extender;
+  node_ptr_t implementor;
+  node_ptr_t fields;
+};
+
+
+class FunctionDecl : public ASTNodeBase {
+ public:
+  virtual void accept(Visitor& v) { v.visit(this); }
+  node_ptr_t type;
+  node_ptr_t identifier;
+  node_ptr_t formals; 
+  node_ptr_t body;
+};
+
+class TypeArray : public ASTNodeBase {
+ public:
+  virtual void accept(Visitor& v) { v.visit(this); }
+  node_ptr_t base;
+};
+
+class TypeBase : public ASTNodeBase {
+ public:
+  virtual void accept(Visitor& v) { v.visit(this); }
+  int base_type;
+};
+
+
+class TypeUser : public ASTNodeBase {
+ public:
+  virtual void accept(Visitor& v) { v.visit(this); }
+  string type_name;
+};
+
+class ID : public ASTNodeBase {
+ public:
+  virtual void accept(Visitor& v) { v.visit(this); }
+  string name;
+};
+
+class NoAction : public ASTNodeBase {
+ public:
+  virtual void accept(Visitor& v) { v.visit(this); }
+};
+

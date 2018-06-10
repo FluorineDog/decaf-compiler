@@ -33,8 +33,8 @@ TYPE_ID       [A-Z][A-Za-z0-9_]*
 
 @#lexer_rule_list#@
 
-{ID}        { return ID; }
-{TYPE_ID}        { return TYPE_ID; }
+{ID}        { yylval = mkTypeUser(lexer.YYText());return ID; }
+{TYPE_ID}        { yylval = mkTypeUser(lexer.YYText()); return TYPE_ID; }
 
 "//".*\n    
 "/*"            { BEGIN(C_COMMENT); }
