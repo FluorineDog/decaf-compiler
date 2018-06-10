@@ -17,11 +17,7 @@
 
 
 %define api.value.type {node_ptr_t}
-/* Bison declarations.  */
-// %union {
-//   double value_double;
-//   Fuck value_int;
-// }
+
 
 %token END_OF_FILE 0
 %token NUM_double

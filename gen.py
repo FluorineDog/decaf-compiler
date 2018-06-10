@@ -21,8 +21,10 @@ def main(*argv):
   token_list, lexer_rule_list = lexer.engine.gen(lexer_dir)
 
 
-  with open(parser_dir + "/generated/rules.gen.yxx") as file:
+  with open(parser_dir + "/rules.hand.yxx") as file:
     parser_rule_list = file.read()
+    parser_rule_list = parser_rule_list.replace("%%", "")
+    print(parser_rule_list)
   with open(parser_dir + "/token.gen.yxx") as file:
     token_rule_list = file.read()
 

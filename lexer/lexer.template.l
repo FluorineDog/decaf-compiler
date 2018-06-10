@@ -27,6 +27,7 @@ TYPE_ID       [A-Z][A-Za-z0-9_]*
             }
 
 [(-|+)]{DIGIT}+"."{DIGIT}*[(e|E)(-|+){DIGIT}+]        {
+                    yylval = mkDouble(atof(lexer.YYText()));
                     return NUM_double;
             }
 
