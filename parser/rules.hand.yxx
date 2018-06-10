@@ -111,57 +111,57 @@ PrototypeList:
 ;
 
 PrototypeListOptional:
-  %empty                     {}
-| PrototypeList              {}
+  %empty                     {$$ = nullptr;}
+| PrototypeList              {$$ = $1;}
 ;
 
 InterfaceDecl:
-  T_interface type_ident '{' PrototypeListOptional '}'     {}
+  T_interface type_ident '{' PrototypeListOptional '}'     {$$ = mkInterface($2, $4);}
 ;
 
 Prototype:
-  Type ident '(' Formals ')'     {}
-| T_void ident '(' Formals ')'     {}
+  Type ident '(' Formals ')'       {$$ = mkProtoType($1, $2, $4);}
+| T_void ident '(' Formals ')'     {$$ = mkProtoType($1, $2, $4);}
 ;
 
 StmtList:
-  Stmt                       {}
-| StmtList Stmt              {}
+  Stmt                       {$$ = mkList(); extract<List>($$)->list.push_back($1);  }
+| StmtList Stmt              {$$ = $1; extract<List>($$)->list.push_back($2); }
 ;
 
 StmtListOptional:
-  %empty                     {}
-| StmtList                   {}
+  %empty                     {$$ = nullptr;}
+| StmtList                   {$$ = $1;}
 ;
 
 StmtBlock:
-  '{' StmtListOptional '}'     {}
+  '{' StmtListOptional '}'     {$$ = $2;}
 ;
 
 ExprOptional:
-  %empty                     {}
-| Expr                       {}
+  %empty                     {$$ = nullptr;}
+| Expr                       {$$ = $1;}
 ;
 
 Stmt:
-  ExprOptional ';'           {}
-| IfStmt                     {}
-| WhileStmt                  {}
-| ForStmt                    {}
-| BreakStmt                  {}
-| ReturnStmt                 {}
-| PrintStmt                  {}
-| StmtBlock                  {}
-| VariableDecl               {}
+  ExprOptional ';'           {$$ = $1;}
+| IfStmt                     {$$ = $1;}
+| WhileStmt                  {$$ = $1;}
+| ForStmt                    {$$ = $1;}
+| BreakStmt                  {$$ = $1;}
+| ReturnStmt                 {$$ = $1;}
+| PrintStmt                  {$$ = $1;}
+| StmtBlock                  {$$ = $1;}
+| VariableDecl               {$$ = $1;}
 ;
 
 ElseTailOptional:
-  %empty                     {}
-| ElseTail                   {}
+  %empty                     {$$ = nullptr;}
+| ElseTail                   {$$ = $1;}
 ;
 
 IfStmt:
-  T_if '(' Expr ')' Stmt ElseTailOptional     {}
+  T_if '(' Expr ')' Stmt ElseTailOptional     { $$ = mkIf($3, $5, $6);}
 ;
 
 ElseTail:
@@ -185,8 +185,8 @@ BreakStmt:
 ;
 
 ExprCommaList:
-  Expr                       { $$ = mkExprList(); extract<ExprList>($$)->list.push_back($1);  }
-| ExprCommaList ',' Expr     { $$ = $1; extract<ExprList>($$)->list.push_back($3); }
+  Expr                       { $$ = mkList(); extract<List>($$)->list.push_back($1);  }
+| ExprCommaList ',' Expr     { $$ = $1; extract<List>($$)->list.push_back($3); }
 ;
 
 PrintStmt:

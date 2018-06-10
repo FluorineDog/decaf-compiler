@@ -17,22 +17,6 @@ class NullPointer : public ASTNodeBase {
   virtual void accept(Visitor& v) { v.visit(this); }
 };
 
-// class BinaryExpr : public ASTNodeBase {
-//  public:
-//   virtual void accept(Visitor& v) { v.visit(this); }
-//   node_ptr_t left;
-//   int op;
-//   node_ptr_t right;
-// };
-
-
-
-// class Type : public ASTNodeBase {
-//  public:
-//   virtual void accept(Visitor& v) { v.visit(this); }
-//   int type;
-// };
-
 class Call : public ASTNodeBase {
  public:
   virtual void accept(Visitor& v) { v.visit(this); }
@@ -106,11 +90,12 @@ class Print : public ASTNodeBase {
   node_ptr_t args;
 };
 
-class ExprList : public ASTNodeBase {
+class List : public ASTNodeBase {
  public:
   virtual void accept(Visitor& v) { v.visit(this); }
   vector<node_ptr_t> list;  // advanced container will be omitted
 };
+
 
 class Break : public ASTNodeBase {
  public:
@@ -141,6 +126,28 @@ class While : public ASTNodeBase {
   node_ptr_t stmt;
 };
 
+class If : public ASTNodeBase {
+ public:
+  virtual void accept(Visitor& v) { v.visit(this); }
+  int contion;
+  node_ptr_t if_stmt;
+  node_ptr_t else_stmt;
+};
+
+class ProtoType : public ASTNodeBase {
+ public:
+  virtual void accept(Visitor& v) { v.visit(this); }
+  node_ptr_t type;
+  node_ptr_t identifier;
+  node_ptr_t formals; 
+};
+
+class Interface : public ASTNodeBase {
+ public:
+  virtual void accept(Visitor& v) { v.visit(this); }
+  node_ptr_t type_ident;
+  node_ptr_t prototypes;
+};
 
 class FUCK : public ASTNodeBase {
  public:
