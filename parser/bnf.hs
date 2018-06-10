@@ -4,8 +4,8 @@ type_ident ::= TYPE_ID
 Decl ::= VariableDecl | FunctionDecl | ClassDecl | InterfaceDecl
 VariableDecl ::= Variable ;
 Variable ::= Type ident
-
-Type ::= T_int | T_double | T_bool | T_string | type_ident | Type [ ]
+TypeBase ::= T_int | T_double | T_bool | T_string 
+Type ::= TypeBase | type_ident | Type [ ]
 FunctionDecl ::= Type ident ( Formals ) StmtBlock | \
  T_void ident ( Formals ) StmtBlock
 Formals ::= Variable,*

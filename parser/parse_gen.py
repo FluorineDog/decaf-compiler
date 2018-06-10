@@ -49,7 +49,8 @@ def add_parser(parser, name, body):
   if name in name_list_done:
     return
   name_list_done.add(name)
-  rule_list_c = []
+  rule_list = []
+  print(name)
   for rule in body:
     # print(rule, "$", end='')
     items = rule.split(' ')
@@ -58,9 +59,12 @@ def add_parser(parser, name, body):
     rule_c = []
     for item in items:
       add_rule_c(rule_c, item, parser)
-    rule_c = " ".join(rule_c)
-    rule_list_c.append(rule_c)
-  rule_list_c = "\n| ".join(rule_list_c)
+    print(rule_c, end=' ')
+    # rule_c = " ".join(rule_c)
+    rule_list.append(rule_c)
+
+  rule_c_list = [" ".join(rule) for rule in rule_list if rule]
+  rule_list_c = "\n| ".join(rule_c_list)
   parser.append(name + ":\n  " + rule_list_c + "\n;\n")
 
   pass
