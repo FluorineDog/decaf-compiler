@@ -1,14 +1,14 @@
-%token    ';'
-%left     ','
-%right    '='
-%left     T_or
-%left     T_and 
-%left     '<' T_less_eq '>' T_greater_eq T_eq T_not_eq
-%left     '+' '-'
-%left     '*' '/' '%'
-%left     '.' 
+%token  <intval>  ';'
+%left   <intval>  ','
+%right  <intval>  '='
+%left   <intval>  T_or
+%left   <intval>  T_and 
+%left   <intval>  '<' T_less_eq '>' T_greater_eq T_eq T_not_eq
+%left   <intval>  '+' '-'
+%left   <intval>  '*' '/' '%'
+%left   <intval>  '.' 
 %precedence NEG
-%right    '!' 
-%left     '[' ']' 
-%token    '(' ')' '{' '}'
+%right  <intval>  '!' 
+%left   <intval>  '[' ']' 
+%token  <intval>  '(' ')' '{' '}'
 
