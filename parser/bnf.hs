@@ -29,9 +29,13 @@ BreakStmt ::= T_break ;
 PrintStmt ::= T_Print ( Expr,+ ) ;
 
 Expr ::= Constant | LValue | T_this | Call | ( Expr ) | \
+ Expr + Expr | Expr - Expr | Expr * Expr | Expr / Expr | \
+ Expr % Expr | - Expr | Expr < Expr | Expr T_less_eq Expr | \
+ Expr > Expr | Expr T_greater_eq Expr | Expr T_eq Expr | Expr T_not_eq Expr | \
+ Expr T_and Expr | Expr T_or Expr | ! Expr | \
  T_ReadInteger ( ) | T_ReadLine ( ) | T_New ident  | \
- T_NewArray ( Expr , Type ) | \
- Expr + Expr | Expr - Expr | Expr * Expr 
+ T_NewArray ( Expr , Type ) 
+
 LValue ::= ident | Expr . ident | Expr [ Expr ]
 Call ::= ident ( Actuals ) | Expr . ident ( Actuals )
 Actuals ::= Expr,*
