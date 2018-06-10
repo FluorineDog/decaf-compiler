@@ -61,7 +61,6 @@ class Member : public ASTNodeBase {
 class NewArray : public ASTNodeBase {
  public:
   virtual void accept(Visitor& v) { v.visit(this); }
-  // can be nullptr
   node_ptr_t expr;
   node_ptr_t type;
 };
@@ -114,15 +113,38 @@ class ExprList : public ASTNodeBase {
   vector<node_ptr_t> list;  // advanced container will be omitted
 };
 
-class Control : public ASTNodeBase {
+class Break : public ASTNodeBase {
  public:
   virtual void accept(Visitor& v) { v.visit(this); }
-  int action_type;
+};
+
+class Return : public ASTNodeBase {
+ public:
+  virtual void accept(Visitor& v) { v.visit(this); }
+  // can be empty
+  node_ptr_t expr;
+};
+
+class For : public ASTNodeBase {
+ public:
+  virtual void accept(Visitor& v) { v.visit(this); }
+  // can be empty
+  node_ptr_t init_expr;
+  node_ptr_t conditional_expr;
+  node_ptr_t step_expr;
+  node_ptr_t stmt;
+};
+
+class While : public ASTNodeBase {
+ public:
+  virtual void accept(Visitor& v) { v.visit(this); }
+  node_ptr_t conditional_expr;
+  node_ptr_t stmt;
 };
 
 
-// class Type : public ASTNodeBase {
-//  public:
-//   virtual void accept(Visitor& v) { v.visit(this); }
-//   int type;
-// };
+class FUCK : public ASTNodeBase {
+ public:
+  virtual void accept(Visitor& v) { v.visit(this); }
+  int type;
+};

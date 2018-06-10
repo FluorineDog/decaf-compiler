@@ -169,19 +169,19 @@ ElseTail:
 ;
 
 WhileStmt:
-  T_while '(' Expr ')' Stmt     {}
+  T_while '(' Expr ')' Stmt     {$$ = mkWhile($3, $5);}
 ;
 
 ForStmt:
-  T_for '(' ExprOptional ';' Expr ';' ExprOptional ')' Stmt     {}
+  T_for '(' ExprOptional ';' Expr ';' ExprOptional ')' Stmt     { $$ = mkFor($3, $5, $7, $9);}
 ;
 
 ReturnStmt:
-  T_return ExprOptional ';'     {}
+  T_return ExprOptional ';'     { $$ = mkReturn($2); }
 ;
 
 BreakStmt:
-  T_break ';'                {  }
+  T_break ';'                { $$ = mkBreak();}
 ;
 
 ExprCommaList:
@@ -232,8 +232,8 @@ Call:
 ;
 
 ExprCommaListOptional:
-  %empty                     {$$=nullptr;}
-| ExprCommaList              {$$=$1;}
+  %empty                     {$$ = nullptr;}
+| ExprCommaList              {$$ = $1;}
 ;
 
 Actuals:
