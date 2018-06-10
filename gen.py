@@ -60,23 +60,23 @@ def main(*argv):
           symbol=symbol, word=word, indent=" "*(14 - len(symbol))))
       # counter += 1
 
-  token_list = "\n".join(token_list)
   lexer_rule_list = "\n".join(lexer_rule_list)
   with open(output_dir + "/hand_parser_tokens.yxx" , "w") as file:
     special_token_list = "\n".join(special_token_list)
     file.write(special_token_list)
 
-  with open(parser_dir + "/rules.gen.yxx") as file:
+  token_list = "\n".join(token_list)
+  with open(parser_dir + "/generated/rules.gen.yxx") as file:
     parser_rule_list = file.read()
 
+  with open(parser_dir + "/token.gen.yxx") as file:
+    token_rule_list = file.read()
+  token_list += token_rule_list
   with open(lexer_dir + "/lexer.template.l") as file:
     lexer_content = custom_format(file.read(), lexer_rule_list=lexer_rule_list)
 
   with open(parser_dir + "/parser.template.yxx") as file:
     parser_content = custom_format(file.read(), token_list=token_list, parser_rule_list = parser_rule_list)
-
-  with open(parser_dir + "/token.gen.yxx") as file:
-    file.read
 
   contents = {"/lexer.l": lexer_content, "/parser.yxx": parser_content}
   if(output_dir):

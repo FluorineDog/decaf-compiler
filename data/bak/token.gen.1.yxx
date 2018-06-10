@@ -1,0 +1,13 @@
+%token ';'
+%token ','
+%right '='
+%left T_or
+%left T_and 
+%left '<' T_less_eq '>' T_greater_eq T_eq T_not_eq
+%left '+' '-'
+%left '*' '/' '%'
+%left '.' 
+%precedence NEG
+%right '!' 
+%left '[' ']' 
+%token '(' ')' '{' '}'
