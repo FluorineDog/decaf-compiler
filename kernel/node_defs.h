@@ -201,6 +201,13 @@ class ID : public ASTNodeBase {
   string name;
 };
 
+class Assign : public ASTNodeBase {
+ public:
+  virtual void accept(Visitor& v) { v.visit(this); }
+  node_ptr_t left;
+  node_ptr_t right;
+};
+
 class NoAction : public ASTNodeBase {
  public:
   virtual void accept(Visitor& v) { v.visit(this); }

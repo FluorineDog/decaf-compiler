@@ -194,7 +194,8 @@ PrintStmt:
 ;
 
 Expr:
-  Constant                   {$$ = $1;}
+  LValue '=' Expr            {$$ = mkAssign($1, $3);}
+| Constant                   {$$ = $1;}
 | LValue                     {$$ = $1;}
 | T_this                     {$$ = mkThis();}
 | Call                       {$$ = $1;}

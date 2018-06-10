@@ -28,7 +28,7 @@ ReturnStmt ::= T_return Expr? ;
 BreakStmt ::= T_break ;
 PrintStmt ::= T_Print ( Expr,+ ) ;
 
-Expr ::= Constant | LValue | T_this | Call | ( Expr ) | \
+Expr ::= LValue = Expr | Constant | LValue | T_this | Call | ( Expr ) | \
  Expr + Expr | Expr - Expr | Expr * Expr | Expr / Expr | \
  Expr % Expr | - Expr | Expr < Expr | Expr T_less_eq Expr | \
  Expr > Expr | Expr T_greater_eq Expr | Expr T_eq Expr | Expr T_not_eq Expr | \
