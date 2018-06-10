@@ -68,7 +68,7 @@ def add_parser(parser, name, body):
 
 def main():
   input = sys.stdin.read()
-  input.replace('\\\n', '')
+  input = input.replace('\\\n', '')
   lines = re.findall("^(.*)::=(.*)$", input, re.M)
   parser = []
   for full_line in lines:

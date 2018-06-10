@@ -16,7 +16,8 @@ Field ::= VariableDecl | FunctionDecl
 InterfaceDecl ::= T_interface ident { Prototype* }
 Prototype ::= TypeVoid ident ( Formals ) 
 StmtBlock ::= { VariableDecl* Stmt* }
-Stmt ::= Expr? ; | IfStmt | WhileStmt | ForStmt | BreakStmt | ReturnStmt | PrintStmt | StmtBlock 
+Stmt ::= Expr? ; | IfStmt | WhileStmt | ForStmt | \
+ BreakStmt | ReturnStmt | PrintStmt | StmtBlock 
 
 IfStmt ::=  T_if ( Expr ) Stmt ElseTail?
 ElseTail ::= T_else Expr
