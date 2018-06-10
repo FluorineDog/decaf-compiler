@@ -40,7 +40,12 @@ wt_source_func = \
 }}
 
 '''
-
+def fetch(content):
+  start = content.find("/*")
+  end = content.find("*/")
+  if start == -1:
+    return ''
+  return content[start + 2:end]
 
 def parse(content, visitors):
   class_eng = re.compile(class_tmp)
@@ -73,7 +78,10 @@ def parse(content, visitors):
       '  virtual void visit(class {0}* node);\n'\
       .format(t) for (t, _) in result
     ])
-    header_c = wt_headers.format(declare_list, name = vis)
+    with open(vis + "Visitor.cpp") as file:
+      variable_list = fetch(file.read())
+
+    header_c = wt_headers.format(declare_list + variable_list, name = vis)
     with open("generated/" + vis + "Visitor.h", 'w') as file:
       file.write(header_c)
     pass

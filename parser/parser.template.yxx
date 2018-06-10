@@ -28,7 +28,7 @@
 
 %% /* The grammar follows.  */
 input:
-  Program
+  Program {root = $1;}
 ;
 
 @#parser_rule_list#@
