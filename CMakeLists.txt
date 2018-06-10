@@ -12,7 +12,7 @@ add_custom_command(
 
 add_custom_command(
   OUTPUT parser.cpp parser.hxx
-  COMMAND bison parser.yxx --defines=parser.hxx --output=parser.cpp 
+  COMMAND bison parser.yxx --defines=parser.hxx --output=parser.cpp  -v 
   DEPENDS parser.yxx
   COMMENT "bison gen"
 )
@@ -29,6 +29,7 @@ SET_SOURCE_FILES_PROPERTIES(lexer.cpp GENERATED)
 SET_SOURCE_FILES_PROPERTIES(parser.cpp GENERATED)
 
 
+set(CMAKE_CXX_STANDARD 17)
 include_directories(kernel)
 add_custom_target(parser_hxx DEPENDS parser.hxx)
 

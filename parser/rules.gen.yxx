@@ -183,13 +183,8 @@ ReturnStmt:
   T_return ExprOptional ';'
 ;
 
-T_breakOptional:
-  %empty
-| T_break
-;
-
 BreakStmt:
-  T_breakOptional ';'
+  T_break ';'
 ;
 
 ExprCommaList:
@@ -202,8 +197,8 @@ PrintStmt:
 ;
 
 Expr:
-  LValue '=' Expr
-| Constant
+  Constant
+| LValue '=' Expr
 | LValue
 | T_this
 | Call
@@ -212,7 +207,7 @@ Expr:
 | T_ReadInteger '(' ')'
 | T_ReadLine '(' ')'
 | T_New ident
-| T_NewArray '(' Expr, Type ')'
+| T_NewArray '(' Expr ',' Type ')'
 ;
 
 LValue:
