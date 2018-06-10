@@ -28,6 +28,7 @@ def main(*argv):
   # enum_list = []
   token_list = []
   lexer_rule_list = []
+  special_token_list = []
   with open(lexer_dir + "/keyword.txt") as keyword_file:
     for line in keyword_file.readlines():
       if(line.split() == []):
@@ -53,7 +54,7 @@ def main(*argv):
           # word=word, counter=counter))
       if len(symbol) == 1:
         word = "'" + symbol + "'"
-      token_list.append('%token {word}'.format(
+      special_token_list.append('%token {word}'.format(
           word=word))
       lexer_rule_list.append('"{symbol}"{indent}{{ return {word}; }}'.format(
           symbol=symbol, word=word, indent=" "*(14 - len(symbol))))
@@ -61,7 +62,11 @@ def main(*argv):
 
   token_list = "\n".join(token_list)
   lexer_rule_list = "\n".join(lexer_rule_list)
-  with open(parser_dir + "/generated/rules.gen.yxx") as file:
+  with open(output_dir + "/hand_parser_tokens.yxx" , "w") as file:
+    special_token_list = "\n".join(special_token_list)
+    file.write(special_token_list)
+
+  with open(parser_dir + "/rules.gen.yxx") as file:
     parser_rule_list = file.read()
 
   with open(lexer_dir + "/lexer.template.l") as file:
@@ -69,6 +74,9 @@ def main(*argv):
 
   with open(parser_dir + "/parser.template.yxx") as file:
     parser_content = custom_format(file.read(), token_list=token_list, parser_rule_list = parser_rule_list)
+
+  with open(parser_dir + "/token.gen.yxx") as file:
+    file.read
 
   contents = {"/lexer.l": lexer_content, "/parser.yxx": parser_content}
   if(output_dir):
