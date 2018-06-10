@@ -19,13 +19,13 @@ class List {
   void main() {
     ListNode second;
     ListNode third;
-    head = new ListNode();
+    head = New ListNode;
     head.setData(4);  //  Could use "head.data = 4;"
     print(head.data);
-    second = new ListNode();
+    second = New ListNode;
     second.setData(5);
     print(second.data);
-    third = new ListNode();
+    third = New ListNode;
     third.setData(11);
     print(third.data);
     head.next = second;

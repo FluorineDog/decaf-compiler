@@ -4,8 +4,36 @@ class List {
   void setData(int x) { data = x; }
 }
 
-class ListNode {
-  
+class List {
+  ListNode head;
+  void show(ListNode list) {
+    ListNode cursor;
+    int count;
+    count = 0;
+    cursor = list;
+    while (cursor != null) {
+      count = count + 1;
+      print(count, cursor.data);
+      cursor = cursor.next;
+    }
+  }
+  void main() {
+    ListNode second;
+    ListNode third;
+    head = New ListNode;
+    // head.setData(4);  //  Could use "head.data = 4;"
+    // print(head.data);
+    // second = new ListNode();
+    // second.setData(5);
+    // print(second.data);
+    // third = new ListNode();
+    // third.setData(11);
+    // print(third.data);
+    // head.next = second;
+    // second.next = third;
+    // third.next = null;
+    // show(head);
+  }
 }
 
 class Program {

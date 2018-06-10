@@ -217,7 +217,7 @@ Expr:
 | '!' Expr                   {$$ = mkUnaryExpr('!', $2);}
 | T_ReadInteger '(' ')'      {$$ = mkRead(T_ReadInteger);}
 | T_ReadLine '(' ')'         {$$ = mkRead(T_ReadLine);}
-| T_New ident                {$$ = mkNew($2);}
+| T_New type_ident           {$$ = mkNew($2);}
 | T_NewArray '(' Expr ',' Type ')'     {$$ = mkNewArray($3, $5);}
 ;
 
