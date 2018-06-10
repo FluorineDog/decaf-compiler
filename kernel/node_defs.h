@@ -6,6 +6,87 @@ class Integer : public ASTNodeBase {
   int num;
 };
 
+class Double : public ASTNodeBase {
+ public:
+  virtual void accept(Visitor& v) { v.visit(this); }
+  double num;
+};
+
+class NullPointer : public ASTNodeBase {
+ public:
+  virtual void accept(Visitor& v) { v.visit(this); }
+};
+
+// class BinaryExpr : public ASTNodeBase {
+//  public:
+//   virtual void accept(Visitor& v) { v.visit(this); }
+//   node_ptr_t left;
+//   int op;
+//   node_ptr_t right;
+// };
+
+
+
+// class Type : public ASTNodeBase {
+//  public:
+//   virtual void accept(Visitor& v) { v.visit(this); }
+//   int type;
+// };
+
+class Call : public ASTNodeBase {
+ public:
+  virtual void accept(Visitor& v) { v.visit(this); }
+  // can be nullptr
+  node_ptr_t expr;
+  node_ptr_t ident;
+  node_ptr_t actuals;
+};
+
+class Index : public ASTNodeBase {
+ public:
+  virtual void accept(Visitor& v) { v.visit(this); }
+  // can be nullptr
+  node_ptr_t expr;
+  node_ptr_t index_expr;
+};
+
+class Member : public ASTNodeBase {
+ public:
+  virtual void accept(Visitor& v) { v.visit(this); }
+  // can be nullptr
+  node_ptr_t expr;
+  node_ptr_t index_expr;
+};
+
+class NewArray : public ASTNodeBase {
+ public:
+  virtual void accept(Visitor& v) { v.visit(this); }
+  // can be nullptr
+  node_ptr_t expr;
+  node_ptr_t type;
+};
+
+class New : public ASTNodeBase {
+ public:
+  virtual void accept(Visitor& v) { v.visit(this); }
+  // can be nullptr
+  node_ptr_t expr;
+  node_ptr_t type;
+};
+
+class Read : public ASTNodeBase {
+ public:
+  virtual void accept(Visitor& v) { v.visit(this); }
+  int option;
+};
+
+class UnaryExpr : public ASTNodeBase {
+ public:
+  virtual void accept(Visitor& v) { v.visit(this); }
+  int op;
+  node_ptr_t expr;
+};
+
 class BinaryExpr : public ASTNodeBase {
  public:
   virtual void accept(Visitor& v) { v.visit(this); }
@@ -14,14 +95,34 @@ class BinaryExpr : public ASTNodeBase {
   node_ptr_t right;
 };
 
-class Block : public ASTNodeBase {
+
+class This : public ASTNodeBase {
  public:
   virtual void accept(Visitor& v) { v.visit(this); }
-  vector<node_ptr_t> stmts;  // advanced container will be omitted
 };
 
-class Type : public ASTNodeBase {
+
+class Print : public ASTNodeBase {
  public:
   virtual void accept(Visitor& v) { v.visit(this); }
-  int type;
+  node_ptr_t args;
 };
+
+class ExprList : public ASTNodeBase {
+ public:
+  virtual void accept(Visitor& v) { v.visit(this); }
+  vector<node_ptr_t> list;  // advanced container will be omitted
+};
+
+class Control : public ASTNodeBase {
+ public:
+  virtual void accept(Visitor& v) { v.visit(this); }
+  int action_type;
+};
+
+
+// class Type : public ASTNodeBase {
+//  public:
+//   virtual void accept(Visitor& v) { v.visit(this); }
+//   int type;
+// };

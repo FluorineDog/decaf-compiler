@@ -19,3 +19,8 @@ using node_ptr_t = shared_ptr<ASTNodeBase>;
 
 
 #include "generated/mknode.h"
+
+template <typename T>
+T* extract(node_ptr_t node){
+  return dynamic_cast<T*>(node.get());
+}

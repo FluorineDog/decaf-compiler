@@ -1,0 +1,248 @@
+%%
+DeclList:
+  Decl                       {}
+| DeclList Decl              {}
+;
+
+Program:
+  DeclList                   {}
+;
+
+ident:
+  ID                         {}
+;
+
+type_ident:
+  TYPE_ID                    {}
+;
+
+Decl:
+  VariableDecl               {}
+| FunctionDecl               {}
+| ClassDecl                  {}
+| InterfaceDecl              {}
+;
+
+VariableDecl:
+  Variable ';'               {}
+;
+
+Variable:
+  Type ident                 {}
+;
+
+TypeBase:
+  T_int                      {}
+| T_double                   {}
+| T_bool                     {}
+| T_string                   {}
+;
+
+Type:
+  TypeBase                   {}
+| type_ident                 {}
+| Type '[' ']'               {}
+;
+
+FunctionDecl:
+  Type ident '(' Formals ')' StmtBlock     {}
+| T_void ident '(' Formals ')' StmtBlock     {}
+;
+
+VariableCommaList:
+  Variable                   {}
+| VariableCommaList ',' Variable     {}
+;
+
+VariableCommaListOptional:
+  %empty                     {}
+| VariableCommaList          {}
+;
+
+Formals:
+  VariableCommaListOptional     {}
+;
+
+ExtenderOptional:
+  %empty                     {}
+| Extender                   {}
+;
+
+ImplementorOptional:
+  %empty                     {}
+| Implementor                {}
+;
+
+FieldList:
+  Field                      {}
+| FieldList Field            {}
+;
+
+FieldListOptional:
+  %empty                     {}
+| FieldList                  {}
+;
+
+ClassDecl:
+  T_class type_ident ExtenderOptional ImplementorOptional '{' FieldListOptional '}'     {}
+;
+
+Extender:
+  T_extends type_ident       {}
+;
+
+type_identOptional:
+  %empty                     {}
+| type_ident                 {}
+;
+
+Implementor:
+  T_implements type_identOptional     {}
+;
+
+Field:
+  VariableDecl               {}
+| FunctionDecl               {}
+;
+
+PrototypeList:
+  Prototype                  {}
+| PrototypeList Prototype     {}
+;
+
+PrototypeListOptional:
+  %empty                     {}
+| PrototypeList              {}
+;
+
+InterfaceDecl:
+  T_interface type_ident '{' PrototypeListOptional '}'     {}
+;
+
+Prototype:
+  Type ident '(' Formals ')'     {}
+| T_void ident '(' Formals ')'     {}
+;
+
+StmtList:
+  Stmt                       {}
+| StmtList Stmt              {}
+;
+
+StmtListOptional:
+  %empty                     {}
+| StmtList                   {}
+;
+
+StmtBlock:
+  '{' StmtListOptional '}'     {}
+;
+
+ExprOptional:
+  %empty                     {}
+| Expr                       {}
+;
+
+Stmt:
+  ExprOptional ';'           {}
+| IfStmt                     {}
+| WhileStmt                  {}
+| ForStmt                    {}
+| BreakStmt                  {}
+| ReturnStmt                 {}
+| PrintStmt                  {}
+| StmtBlock                  {}
+| VariableDecl               {}
+;
+
+ElseTailOptional:
+  %empty                     {}
+| ElseTail                   {}
+;
+
+IfStmt:
+  T_if '(' Expr ')' Stmt ElseTailOptional     {}
+;
+
+ElseTail:
+  T_else Stmt                {}
+;
+
+WhileStmt:
+  T_while '(' Expr ')' Stmt     {}
+;
+
+ForStmt:
+  T_for '(' ExprOptional ';' Expr ';' ExprOptional ')' Stmt     {}
+;
+
+ReturnStmt:
+  T_return ExprOptional ';'     {}
+;
+
+BreakStmt:
+  T_break ';'                {  }
+;
+
+ExprCommaList:
+  Expr                       { auto list = mkExprList(); list->list.push_back($3); $$=list; }
+| ExprCommaList ',' Expr     { auto list = extract<ExprList>($1); list->list.push_back($3); $$=list; }
+;
+
+PrintStmt:
+  T_Print '(' ExprCommaList ')' ';'     {$$ = mkPrint($3)}
+;
+
+Expr:
+  Constant                   {$$ = $1;}
+| LValue                     {$$ = $1;}
+| T_this                     {$$ = mkThis();}
+| Call                       {$$ = $1;}
+| '(' Expr ')'               {$$ = $2;}
+| Expr '+' Expr              {$$ = mkBinaryExpr($1, $2, $3);}
+| Expr '-' Expr              {$$ = mkBinaryExpr($1, $2, $3);}
+| Expr '*' Expr              {$$ = mkBinaryExpr($1, $2, $3);}
+| Expr '/' Expr              {$$ = mkBinaryExpr($1, $2, $3);}
+| Expr '%' Expr              {$$ = mkBinaryExpr($1, $2, $3);}
+| '-' Expr                   {$$ = mkBinaryExpr($1, $2, $3);}
+| Expr '<' Expr              {$$ = mkUnaryExpr($1, $2);}
+| Expr T_less_eq Expr        {$$ = mkBinaryExpr($1, $2, $3);}
+| Expr '>' Expr              {$$ = mkBinaryExpr($1, $2, $3);}
+| Expr T_greater_eq Expr     {$$ = mkBinaryExpr($1, $2, $3);}
+| Expr T_eq Expr             {$$ = mkBinaryExpr($1, $2, $3);}
+| Expr T_not_eq Expr         {$$ = mkBinaryExpr($1, $2, $3);}
+| Expr T_and Expr            {$$ = mkBinaryExpr($1, $2, $3);}
+| Expr T_or Expr             {$$ = mkBinaryExpr($1, $2, $3);}
+| '!' Expr                   {$$ = mkUnaryExpr($1, $2);}
+| T_ReadInteger '(' ')'      {$$ = mkRead(T_ReadInteger);}
+| T_ReadLine '(' ')'         {$$ = mkRead(T_ReadLine);}
+| T_New ident                {$$ = mkNew($2);}
+| T_NewArray '(' Expr ',' Type ')'     {$$ = mkNewArray($3, $5);}
+;
+
+LValue:
+  ident                      {$$ = $1;}
+| Expr '.' ident             {$$ = mkMember($1, $3);}
+| Expr '[' Expr ']'          {$$ = mkIndex($1, $3);}
+;
+
+Call:
+  ident '(' Actuals ')'      {$$ = mkCall(nullptr, $1, $3);}
+| Expr '.' ident '(' Actuals ')'     {$$ = mkCall($1, $3, $5);}
+;
+
+ExprCommaListOptional:
+  %empty                     {$$=nullptr;}
+| ExprCommaList              {$$=$1;}
+;
+
+Actuals:
+  ExprCommaListOptional      {$$ = $1;}
+;
+
+Constant:
+  NUM_int                    {$$ = mkDouble(1);}
+| NUM_double                 {$$ = mkDouble(1.0); }
+| T_null                     {$$ = mkNullPointer();}
+;
+%%

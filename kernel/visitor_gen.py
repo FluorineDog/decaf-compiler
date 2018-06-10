@@ -94,7 +94,7 @@ def main():
     if result:
       visitors.append(result.groups()[0])
 
-  with open("common.h") as file:
+  with open("node_defs.h") as file:
     comment_eng = re.compile("^(.*?)(//|$)")
     con = file.read()
     new_con = ""
