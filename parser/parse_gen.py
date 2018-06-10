@@ -67,7 +67,8 @@ def add_parser(parser, name, body):
 
 
 def main():
-  input = sys.stdin.read()
+  with open ("bnf.hs") as file:
+    input = file.read()
   input = input.replace('\\\n', '')
   lines = re.findall("^(.*)::=(.*)$", input, re.M)
   parser = []
@@ -77,6 +78,10 @@ def main():
     body = full_line[1].split("|")
     add_parser(parser, name, body)
     full_line = ''
-  print("\n".join(parser))
+
+  content_c = "\n".join(parser)
+  with open("generated/rules.gen.yxx", 'w') as file:
+    file.write(content_c)
+
 if __name__ == "__main__":
   main()

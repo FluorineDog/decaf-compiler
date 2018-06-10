@@ -61,7 +61,7 @@ def main(*argv):
 
   token_list = "\n".join(token_list)
   lexer_rule_list = "\n".join(lexer_rule_list)
-  with open(parser_dir + "/rules.gen.yxx") as file:
+  with open(parser_dir + "/generated/rules.gen.yxx") as file:
     parser_rule_list = file.read()
 
   with open(lexer_dir + "/lexer.template.l") as file:
