@@ -1,13 +1,9 @@
 #!/bin/python
 import sys
 import argparse
-import lexer.gen
+import lexer.engine
+from lexer.engine import custom_format
 
-def custom_format(string, *args, **kwargs):
-  padded = string.replace('{', '{{').replace('}', '}}')
-  substituted = padded.replace('@#', '{').replace('#@', '}')
-  formatted = substituted.format(*args, **kwargs)
-  return formatted
 
 def main(*argv):
   parser = argparse.ArgumentParser(
@@ -21,16 +17,18 @@ def main(*argv):
   parser_dir = K.root_dir + "/parser"
   output_dir = K.output_dir
 
+  # lexer.gen
+  token_list, lexer_rule_list = lexer.engine.gen(lexer_dir)
 
-  token_list, lexer_rule_list = lexer.gen.gen(lexer_dir)
+
   with open(parser_dir + "/generated/rules.gen.yxx") as file:
     parser_rule_list = file.read()
-
   with open(parser_dir + "/token.gen.yxx") as file:
     token_rule_list = file.read()
+
   token_list = token_rule_list + '\n' + token_list
-  with open(lexer_dir + "/lexer.template.l") as file:
-    lexer_content = custom_format(file.read(), lexer_rule_list=lexer_rule_list)
+
+  lexer_content = lexer.engine.lexer_l_gen(lexer_rule_list, lexer_dir)
 
   with open(parser_dir + "/parser.template.yxx") as file:
     parser_content = custom_format(file.read(), token_list=token_list, parser_rule_list = parser_rule_list)

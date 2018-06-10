@@ -1,4 +1,11 @@
 #!/bin/python
+
+def custom_format(string, *args, **kwargs):
+  padded = string.replace('{', '{{').replace('}', '}}')
+  substituted = padded.replace('@#', '{').replace('#@', '}')
+  formatted = substituted.format(*args, **kwargs)
+  return formatted
+
 def gen(lexer_dir):
   token_list = []
   lexer_rule_list = []
@@ -38,3 +45,9 @@ def gen(lexer_dir):
   token_list = "\n".join(token_list)
   lexer_rule_list = "\n".join(lexer_rule_list)
   return (token_list, lexer_rule_list)
+
+# lexer_l_gen
+def lexer_l_gen(lexer_rule_list, lexer_dir):
+  with open(lexer_dir + "/lexer.template.l") as file:
+    lexer_content = custom_format(file.read(), lexer_rule_list=lexer_rule_list)
+  return lexer_content
