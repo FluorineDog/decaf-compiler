@@ -35,7 +35,7 @@ wt_source = '''// Template
 '''
 
 wt_source_func = \
-'''void {vis}Visitor::visit(class {type}* node){{
+'''void {vis}Visitor::visit({type}* node){{
   // TODO
 }}
 
