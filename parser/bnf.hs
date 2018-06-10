@@ -28,8 +28,8 @@ BreakStmt ::= T_break? ;
 PrintStmt ::= T_Print ( Expr,+ ) ;
 
 Expr ::= LValue = Expr | Constant | LValue | T_this | Call | ( Expr ) | \
- - Expr | ReadInteger ( ) | ReadLine ( ) | T_new ident  | \
- T_NewArray ( Expr , Type ) 
+ - Expr | T_ReadInteger ( ) | T_ReadLine ( ) | T_New ident  | \
+ T_NewArray ( Expr, Type ) 
 LValue ::= ident | Expr . ident | Expr [ Expr ]
 Call ::= ident ( Actuals ) | Expr . ident ( Actuals )
 Actuals ::= Expr,*

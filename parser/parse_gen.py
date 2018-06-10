@@ -72,7 +72,7 @@ def main():
   lines = re.findall("^(.*)::=(.*)$", input, re.M)
   parser = []
   for full_line in lines:
-    print(full_line)
+    # print(full_line)
     name = full_line[0].replace(' ', '')
     body = full_line[1].split("|")
     add_parser(parser, name, body)

@@ -31,63 +31,11 @@
 
 %% /* The grammar follows.  */
 input:
-  %empty 
-| input Decl 
+  Program
 ;
 
-Decl:
-  VariableDecl
-| FuncitionDecl
-| ClassDecl
-| InterfaceDecl
-;
+@#parser_rule_list#@
 
-VariableDecl:
-  Variable ';'
-;
-
-Variable:
-  Type ID
-;
-
-Type:
-  T_int 
-| T_double 
-| T_bool 
-| T_string
-| ID
-| Type []
-;
-
-TypeVoid:
-  Type
-| T_void
-;
-
-FunctionDecl:
-  TypeVoid ID '(' Formals ')' StmtBlock
-;
-
-Formals:
-  %empty
-| Variable {}
-| Variable ',' {} Formals
-;
-
-ClassDecl:
-  T_class ID Extends Implements
-;
-
-Extends:
-  %empty
-| T_extends ID
-;
-
-Implements:
-  %empty
-
-| Implements, T_implements 
-;
 
 %%
 

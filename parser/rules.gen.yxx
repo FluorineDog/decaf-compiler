@@ -1,0 +1,243 @@
+DeclList:
+  Decl
+| DeclList Decl
+;
+
+Program:
+  DeclList
+;
+
+ident:
+  ID
+;
+
+Decl:
+  VariableDecl
+| FunctionDecl
+| ClassDecl
+| InterfaceDecl
+;
+
+VariableDecl:
+  Variable ';'
+;
+
+Variable:
+  Type ident
+;
+
+Type:
+  T_int
+| T_double
+| T_bool
+| T_string
+| ident
+| Type '[' ']'
+;
+
+TypeVoid:
+  Type
+| T_void
+;
+
+FunctionDecl:
+  TypeVoid ident '(' Formals ')' StmtBlock
+;
+
+VariableCommaList:
+  Variable
+| VariableCommaList ',' Variable
+;
+
+VariableCommaListOptional:
+  %empty
+| VariableCommaList
+;
+
+Formals:
+  VariableCommaListOptional
+;
+
+ExtenderOptional:
+  %empty
+| Extender
+;
+
+ImplementorOptional:
+  %empty
+| Implementor
+;
+
+FieldList:
+  Field
+| FieldList Field
+;
+
+FieldListOptional:
+  %empty
+| FieldList
+;
+
+ClassDecl:
+  T_class ident ExtenderOptional ImplementorOptional '{' FieldListOptional '}'
+;
+
+Extender:
+  T_extends ident
+;
+
+identOptional:
+  %empty
+| ident
+;
+
+Implementor:
+  T_implements identOptional
+;
+
+Field:
+  VariableDecl
+| FunctionDecl
+;
+
+PrototypeList:
+  Prototype
+| PrototypeList Prototype
+;
+
+PrototypeListOptional:
+  %empty
+| PrototypeList
+;
+
+InterfaceDecl:
+  T_interface ident '{' PrototypeListOptional '}'
+;
+
+Prototype:
+  TypeVoid ident '(' Formals ')'
+;
+
+VariableDeclList:
+  VariableDecl
+| VariableDeclList VariableDecl
+;
+
+VariableDeclListOptional:
+  %empty
+| VariableDeclList
+;
+
+StmtList:
+  Stmt
+| StmtList Stmt
+;
+
+StmtListOptional:
+  %empty
+| StmtList
+;
+
+StmtBlock:
+  '{' VariableDeclListOptional StmtListOptional '}'
+;
+
+ExprOptional:
+  %empty
+| Expr
+;
+
+Stmt:
+  ExprOptional ';'
+| IfStmt
+| WhileStmt
+| ForStmt
+| BreakStmt
+| ReturnStmt
+| PrintStmt
+| StmtBlock
+;
+
+ElseTailOptional:
+  %empty
+| ElseTail
+;
+
+IfStmt:
+  T_if '(' Expr ')' Stmt ElseTailOptional
+;
+
+ElseTail:
+  T_else Expr
+;
+
+WhileStmt:
+  T_while '(' Expr ')' Stmt
+;
+
+ForStmt:
+  T_for '(' ExprOptional ';' Expr ';' ExprOptional ')' Stmt
+;
+
+ReturnStmt:
+  T_return ExprOptional ';'
+;
+
+T_breakOptional:
+  %empty
+| T_break
+;
+
+BreakStmt:
+  T_breakOptional ';'
+;
+
+ExprCommaList:
+  Expr
+| ExprCommaList ',' Expr
+;
+
+PrintStmt:
+  T_Print '(' ExprCommaList ')' ';'
+;
+
+Expr:
+  LValue '=' Expr
+| Constant
+| LValue
+| T_this
+| Call
+| '(' Expr ')'
+| '-' Expr
+| T_ReadInteger '(' ')'
+| T_ReadLine '(' ')'
+| T_New ident
+| T_NewArray '(' Expr, Type ')'
+;
+
+LValue:
+  ident
+| Expr '.' ident
+| Expr '[' Expr ']'
+;
+
+Call:
+  ident '(' Actuals ')'
+| Expr '.' ident '(' Actuals ')'
+;
+
+ExprCommaListOptional:
+  %empty
+| ExprCommaList
+;
+
+Actuals:
+  ExprCommaListOptional
+;
+
+Constant:
+  NUM_int
+| NUM_double
+| T_null
+;
+

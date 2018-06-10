@@ -1,3 +1,0 @@
-%empty | ActualsExpr
-ActualsExpr ::= ActualsExpr
-| ActualsExpr ',' Expr
