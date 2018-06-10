@@ -185,8 +185,8 @@ BreakStmt:
 ;
 
 ExprCommaList:
-  Expr                       { auto list = mkExprList(); list->list.push_back($3); $$=list; }
-| ExprCommaList ',' Expr     { auto list = extract<ExprList>($1); list->list.push_back($3); $$=list; }
+  Expr                       { $$ = mkExprList(); extract<ExprList>($$)->list.push_back($1);  }
+| ExprCommaList ',' Expr     { $$ = $1; extract<ExprList>($$)->list.push_back($3); }
 ;
 
 PrintStmt:
@@ -199,21 +199,21 @@ Expr:
 | T_this                     {$$ = mkThis();}
 | Call                       {$$ = $1;}
 | '(' Expr ')'               {$$ = $2;}
-| Expr '+' Expr              {$$ = mkBinaryExpr($1, $2, $3);}
-| Expr '-' Expr              {$$ = mkBinaryExpr($1, $2, $3);}
-| Expr '*' Expr              {$$ = mkBinaryExpr($1, $2, $3);}
-| Expr '/' Expr              {$$ = mkBinaryExpr($1, $2, $3);}
-| Expr '%' Expr              {$$ = mkBinaryExpr($1, $2, $3);}
-| '-' Expr                   {$$ = mkBinaryExpr($1, $2, $3);}
-| Expr '<' Expr              {$$ = mkUnaryExpr($1, $2);}
-| Expr T_less_eq Expr        {$$ = mkBinaryExpr($1, $2, $3);}
-| Expr '>' Expr              {$$ = mkBinaryExpr($1, $2, $3);}
-| Expr T_greater_eq Expr     {$$ = mkBinaryExpr($1, $2, $3);}
-| Expr T_eq Expr             {$$ = mkBinaryExpr($1, $2, $3);}
-| Expr T_not_eq Expr         {$$ = mkBinaryExpr($1, $2, $3);}
-| Expr T_and Expr            {$$ = mkBinaryExpr($1, $2, $3);}
-| Expr T_or Expr             {$$ = mkBinaryExpr($1, $2, $3);}
-| '!' Expr                   {$$ = mkUnaryExpr($1, $2);}
+| Expr '+' Expr              {$$ = mkBinaryExpr($1, '+', $3);}
+| Expr '-' Expr              {$$ = mkBinaryExpr($1, '-', $3);}
+| Expr '*' Expr              {$$ = mkBinaryExpr($1, '*', $3);}
+| Expr '/' Expr              {$$ = mkBinaryExpr($1, '/', $3);}
+| Expr '%' Expr              {$$ = mkBinaryExpr($1, '%', $3);}
+| '-' Expr                   {$$ = mkUnaryExpr('-', $2);}
+| Expr '<'          Expr     {$$ = mkBinaryExpr($1, '<'         , $3);}
+| Expr T_less_eq    Expr     {$$ = mkBinaryExpr($1, T_less_eq   , $3);}
+| Expr '>'          Expr     {$$ = mkBinaryExpr($1, '>'         , $3);}
+| Expr T_greater_eq Expr     {$$ = mkBinaryExpr($1, T_greater_eq, $3);}
+| Expr T_eq         Expr     {$$ = mkBinaryExpr($1, T_eq        , $3);}
+| Expr T_not_eq     Expr     {$$ = mkBinaryExpr($1, T_not_eq    , $3);}
+| Expr T_and        Expr     {$$ = mkBinaryExpr($1, T_and       , $3);}
+| Expr T_or         Expr     {$$ = mkBinaryExpr($1, T_or        , $3);}
+| '!' Expr                   {$$ = mkUnaryExpr('!', $2);}
 | T_ReadInteger '(' ')'      {$$ = mkRead(T_ReadInteger);}
 | T_ReadLine '(' ')'         {$$ = mkRead(T_ReadLine);}
 | T_New ident                {$$ = mkNew($2);}
