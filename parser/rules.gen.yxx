@@ -11,6 +11,10 @@ ident:
   ID
 ;
 
+type_ident:
+  TYPE_ID
+;
+
 Decl:
   VariableDecl
 | FunctionDecl
@@ -31,17 +35,13 @@ Type:
 | T_double
 | T_bool
 | T_string
-| TYPE_ID
+| type_ident
 | Type '[' ']'
 ;
 
-TypeVoid:
-  Type
-| T_void
-;
-
 FunctionDecl:
-  TypeVoid ident '(' Formals ')' StmtBlock
+  Type ident '(' Formals ')' StmtBlock
+| T_void ident '(' Formals ')' StmtBlock
 ;
 
 VariableCommaList:
@@ -79,20 +79,20 @@ FieldListOptional:
 ;
 
 ClassDecl:
-  T_class ident ExtenderOptional ImplementorOptional '{' FieldListOptional '}'
+  T_class type_ident ExtenderOptional ImplementorOptional '{' FieldListOptional '}'
 ;
 
 Extender:
-  T_extends ident
+  T_extends type_ident
 ;
 
-identOptional:
+type_identOptional:
   %empty
-| ident
+| type_ident
 ;
 
 Implementor:
-  T_implements identOptional
+  T_implements type_identOptional
 ;
 
 Field:
@@ -111,11 +111,12 @@ PrototypeListOptional:
 ;
 
 InterfaceDecl:
-  T_interface ident '{' PrototypeListOptional '}'
+  T_interface type_ident '{' PrototypeListOptional '}'
 ;
 
 Prototype:
-  TypeVoid ident '(' Formals ')'
+  Type ident '(' Formals ')'
+| T_void ident '(' Formals ')'
 ;
 
 StmtList:
@@ -193,7 +194,6 @@ Expr:
 | T_this
 | Call
 | '(' Expr ')'
-| '-' Expr
 | T_ReadInteger '(' ')'
 | T_ReadLine '(' ')'
 | T_New ident
