@@ -31,7 +31,7 @@ Type:
 | T_double
 | T_bool
 | T_string
-| ident
+| TYPE_ID
 | Type '[' ']'
 ;
 
@@ -118,16 +118,6 @@ Prototype:
   TypeVoid ident '(' Formals ')'
 ;
 
-VariableDeclList:
-  VariableDecl
-| VariableDeclList VariableDecl
-;
-
-VariableDeclListOptional:
-  %empty
-| VariableDeclList
-;
-
 StmtList:
   Stmt
 | StmtList Stmt
@@ -139,7 +129,7 @@ StmtListOptional:
 ;
 
 StmtBlock:
-  '{' VariableDeclListOptional StmtListOptional '}'
+  '{' StmtListOptional '}'
 ;
 
 ExprOptional:
@@ -156,6 +146,7 @@ Stmt:
 | ReturnStmt
 | PrintStmt
 | StmtBlock
+| VariableDecl
 ;
 
 ElseTailOptional:
@@ -168,7 +159,7 @@ IfStmt:
 ;
 
 ElseTail:
-  T_else Expr
+  T_else Stmt
 ;
 
 WhileStmt:
@@ -198,7 +189,6 @@ PrintStmt:
 
 Expr:
   Constant
-| LValue '=' Expr
 | LValue
 | T_this
 | Call

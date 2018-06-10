@@ -27,6 +27,7 @@
 %token NUM_double
 %token NUM_int
 %token ID
+%token TYPE_ID
 @#token_list#@
 
 %% /* The grammar follows.  */

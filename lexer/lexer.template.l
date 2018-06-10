@@ -17,7 +17,8 @@ yyFlexLexer lexer;
 %option yylineno
 
 DIGIT    [0-9]
-ID       [A-Za-z_][A-Za-z0-9_]*
+ID       [a-z_][A-Za-z0-9_]*
+TYPE_ID       [A-Z][A-Za-z0-9_]*
 %x       C_COMMENT
 %%
 {DIGIT}+    {
@@ -32,6 +33,7 @@ ID       [A-Za-z_][A-Za-z0-9_]*
 @#lexer_rule_list#@
 
 {ID}        { return ID; }
+{TYPE_ID}        { return TYPE_ID; }
 
 "//".*\n    
 "/*"            { BEGIN(C_COMMENT); }
