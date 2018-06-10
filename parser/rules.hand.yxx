@@ -165,7 +165,7 @@ IfStmt:
 ;
 
 ElseTail:
-  T_else Stmt                {}
+  T_else Stmt                {$$ = $2;}
 ;
 
 WhileStmt:
@@ -190,7 +190,7 @@ ExprCommaList:
 ;
 
 PrintStmt:
-  T_Print '(' ExprCommaList ')' ';'     {$$ = mkPrint($3)}
+  T_Print '(' ExprCommaList ')' ';'     {$$ = mkPrint($3);}
 ;
 
 Expr:
