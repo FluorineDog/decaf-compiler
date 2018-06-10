@@ -24,8 +24,8 @@
 // }
 
 %token END_OF_FILE 0
-%token NUM_real
-%token NUM_integer
+%token NUM_double
+%token NUM_int
 %token ID
 @#token_list#@
 
