@@ -128,6 +128,12 @@ class While : public ASTNodeBase {
   node_ptr_t stmt;
 };
 
+class Block : public ASTNodeBase {
+ public:
+  virtual void accept(Visitor& v) { v.visit(this); }
+  node_ptr_t stmt_list;
+};
+
 class If : public ASTNodeBase {
  public:
   virtual void accept(Visitor& v) { v.visit(this); }

@@ -1,10 +1,10 @@
-%type <unode_ptr_t> Program
-%type <unode_ptr_t> DeclList
-%type <unode_ptr_t> ident
+%type <uList> Program
+%type <uList> DeclList
+%type <uIdentifier> ident
 %type <uTypeUser> type_ident
 %type <unode_ptr_t> Decl
-%type <unode_ptr_t> VariableDecl
-%type <unode_ptr_t> Variable
+%type <uTypedVariable> VariableDecl
+%type <uTypedVariable> Variable
 %type <uTypeBase> TypeBase
 %type <unode_ptr_t> Type
 %type <uFunctionDecl> FunctionDecl

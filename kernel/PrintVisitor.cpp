@@ -78,6 +78,10 @@ void PrintVisitor::visit(While* node){
   // TODO
 }
 
+void PrintVisitor::visit(Block* node){
+  // TODO
+}
+
 void PrintVisitor::visit(If* node){
   // TODO
 }

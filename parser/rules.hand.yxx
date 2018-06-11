@@ -135,7 +135,7 @@ StmtListOptional:
 ;
 
 StmtBlock:
-  '{' StmtListOptional '}'     {$$ = $2;}
+  '{' StmtListOptional '}'     {$$ = mkBlock($2);}
 ;
 
 ExprOptional:
