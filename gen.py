@@ -2,17 +2,17 @@
 import sys
 import argparse
 import lexer.engine
+import hack.parser.engine
 from lexer.engine import custom_format
 
-
 def main(*argv):
-  parser = argparse.ArgumentParser(
+  parserArg = argparse.ArgumentParser(
     description="this is a generator of lexer.l"
   )
-  parser.add_argument("--root_dir", dest="root_dir", nargs='?', help="root folder")
-  parser.add_argument("--output_dir", dest="output_dir", nargs='?', help="output folder")
+  parserArg.add_argument("--root_dir", dest="root_dir", nargs='?', help="root folder")
+  parserArg.add_argument("--output_dir", dest="output_dir", nargs='?', help="output folder")
 
-  K = parser.parse_args()
+  K = parserArg.parse_args()
   lexer_dir = K.root_dir + "/lexer"
   parser_dir = K.root_dir + "/parser"
   output_dir = K.output_dir
@@ -20,20 +20,8 @@ def main(*argv):
   # lexer.gen
   token_list, lexer_rule_list = lexer.engine.gen(lexer_dir)
 
-
-  with open(parser_dir + "/rules.hand.yxx") as file:
-    parser_rule_list = file.read()
-    parser_rule_list = parser_rule_list.replace("%%", "")
-    print(parser_rule_list)
-  with open(parser_dir + "/token.gen.yxx") as file:
-    token_rule_list = file.read()
-
-  token_list = token_rule_list + '\n' + token_list
-
   lexer_content = lexer.engine.lexer_l_gen(lexer_rule_list, lexer_dir)
-
-  with open(parser_dir + "/parser.template.yxx") as file:
-    parser_content = custom_format(file.read(), token_list=token_list, parser_rule_list = parser_rule_list)
+  parser_content = hack.parser.engine.gen(parser_dir, token_list)
 
   contents = {"/lexer.l": lexer_content, "/parser.yxx": parser_content}
   if(output_dir):

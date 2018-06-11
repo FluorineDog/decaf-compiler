@@ -61,7 +61,7 @@ def add_parser(parser, name, body):
     rule_c = []
     for item in items:
       add_rule_c(rule_c, item, parser)
-    print(rule_c, end=' ')
+    # print(rule_c, end=' ')
     # rule_c = " ".join(rule_c)
     rule_list.append(rule_c)
 
