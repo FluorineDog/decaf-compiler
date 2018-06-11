@@ -18,7 +18,7 @@ def gen(lexer_dir):
       symbol = word
       # enum_list.append('  T_{word} = {counter}'.format(
           # word=word, counter=counter))
-      token_list.append('%token T_{word}'.format(
+      token_list.append('%token <intval> T_{word}'.format(
           word=word))
       lexer_rule_list.append('"{symbol}"{indent}{{ return T_{word}; }}'.format(
           symbol=symbol, word=word, indent=" "*(14 - len(symbol))))
@@ -34,7 +34,7 @@ def gen(lexer_dir):
           # word=word, counter=counter))
       if len(symbol) == 1:
         word = "'" + symbol + "'"
-      special_token_list.append('%token {word}'.format(
+      special_token_list.append('%token <intval> {word}'.format(
           word=word))
       lexer_rule_list.append('"{symbol}"{indent}{{ return {word}; }}'.format(
           symbol=symbol, word=word, indent=" "*(14 - len(symbol))))

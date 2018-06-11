@@ -22,19 +22,19 @@ TYPE_ID       [A-Z][A-Za-z0-9_]*
 %x       C_COMMENT
 %%
 {DIGIT}+    {
-                    yylval = mkInteger(atoi(lexer.YYText()));
+                    yylval.unode_ptr_t = mkInteger(atoi(lexer.YYText()));
                     return NUM_int;
             }
 
 [(-|+)]{DIGIT}+"."{DIGIT}*[(e|E)(-|+){DIGIT}+]        {
-                    yylval = mkDouble(atof(lexer.YYText()));
+                    yylval.unode_ptr_t = mkDouble(atof(lexer.YYText()));
                     return NUM_double;
             }
 
 @#lexer_rule_list#@
 
-{ID}        { yylval = mkTypeUser(lexer.YYText());return ID; }
-{TYPE_ID}        { yylval = mkTypeUser(lexer.YYText()); return TYPE_ID; }
+{ID}        { yylval.unode_ptr_t = mkTypeUser(lexer.YYText());return ID; }
+{TYPE_ID}        { yylval.unode_ptr_t = mkTypeUser(lexer.YYText()); return TYPE_ID; }
 
 "//".*\n    
 "/*"            { BEGIN(C_COMMENT); }

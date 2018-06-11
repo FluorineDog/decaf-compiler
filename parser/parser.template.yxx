@@ -15,16 +15,19 @@
   node_ptr_t root;
 }
 
+%union {
+  node_ptr_t unode_ptr_t;
+  int intval;
+}
 
-%define api.value.type {node_ptr_t}
 
-
-%token END_OF_FILE 0
-%token NUM_double
-%token NUM_int
-%token ID
-%token TYPE_ID
+%token <intval> END_OF_FILE 0
+%token <unode_ptr_t> NUM_double
+%token <unode_ptr_t> NUM_int
+%token <unode_ptr_t> ID
+%token <unode_ptr_t> TYPE_ID
 @#token_list#@
+@#type_list#@
 
 %% /* The grammar follows.  */
 input:
