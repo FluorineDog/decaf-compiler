@@ -208,6 +208,13 @@ class Assign : public ASTNodeBase {
   node_ptr_t right;
 };
 
+class TypedVariable : public ASTNodeBase {
+ public:
+  virtual void accept(Visitor& v) { v.visit(this); }
+  node_ptr_t type;
+  node_ptr_t id;
+};
+
 class NoAction : public ASTNodeBase {
  public:
   virtual void accept(Visitor& v) { v.visit(this); }

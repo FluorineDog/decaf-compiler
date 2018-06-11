@@ -28,7 +28,7 @@ VariableDecl:
 ;
 
 Variable:
-  Type ident                 {$$ = $1;}
+  Type ident                 {$$ = mkTypedVariable($1, $2);}
 ;
 
 TypeBase:
@@ -242,7 +242,7 @@ Actuals:
 ;
 
 Constant:
-  NUM_int                    {$$ = mkDouble(1);}
+  NUM_int                    {$$ = mkInteger(1);}
 | NUM_double                 {$$ = mkDouble(1.0); }
 | T_null                     {$$ = mkNullPointer();}
 ;

@@ -25,6 +25,6 @@
   TypeArray* uTypeArray;
   TypeBase* uTypeBase;
   TypeUser* uTypeUser;
-  Identifier* uID;
+  Identifier* uIdentifier;
   Assign* uAssign;
   NoAction* uNoAction;

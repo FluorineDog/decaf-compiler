@@ -23,10 +23,10 @@
 
 
 %token <intval> END_OF_FILE 0
-%token <unode_ptr_t> NUM_double
-%token <unode_ptr_t> NUM_int
-%token <unode_ptr_t> ID
-%token <unode_ptr_t> TYPE_ID
+%token <uDouble> NUM_double
+%token <uInt> NUM_int
+%token <uIdentifier> ID
+%token <uTypeUser> TYPE_ID
 @#token_list#@
 @#type_list#@
 

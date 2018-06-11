@@ -11,7 +11,7 @@ FunctionDecl ::= Type ident ( Formals ) StmtBlock | \
 Formals ::= Variable,*
 ClassDecl ::= T_class type_ident Extender? Implementor? { Field* }
 Extender ::= T_extends type_ident
-Implementor ::= T_implements type_ident?
+Implementor ::= T_implements type_ident+
 Field ::= VariableDecl | FunctionDecl
 
 InterfaceDecl ::= T_interface type_ident { Prototype* }
