@@ -28,3 +28,4 @@
   Identifier* uIdentifier;
   Assign* uAssign;
   NoAction* uNoAction;
+  TypedVariable uTypedVariable

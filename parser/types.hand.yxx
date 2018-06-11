@@ -18,7 +18,7 @@
 %type <uList> FieldListOptional
 %type <uTypeUser> Extender
 %type <uList> Implementor
-%type <uTypeUser> type_identOptional
+%type <uList> type_identList
 %type <unode_ptr_t> Field
 %type <uInterface> InterfaceDecl
 %type <uList> PrototypeList

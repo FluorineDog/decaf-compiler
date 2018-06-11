@@ -91,13 +91,13 @@ Extender:
   T_extends type_ident       {$$ = $2;}
 ;
 
-type_identOptional:
-  %empty                     {$$ = nullptr;}
-| type_ident                 {$$ = $1;}
+type_identList:
+  type_ident                    {$$ = mkList(); extract<List>($$)->list.push_back($1); }
+| type_identList type_ident     {$$ = $1; extract<List>($$)->list.push_back($2); }
 ;
 
 Implementor:
-  T_implements type_identOptional     {$$ = $2;}
+  T_implements type_identList     {$$ = $2;}
 ;
 
 Field:
