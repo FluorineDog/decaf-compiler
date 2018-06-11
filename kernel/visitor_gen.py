@@ -111,5 +111,4 @@ def main():
       new_con += comment_eng.match(line).groups()[0] + '\a'
     # print(new_con)
     parse(new_con, visitors)
-
 main()
