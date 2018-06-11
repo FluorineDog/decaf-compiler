@@ -122,6 +122,10 @@ void PrintVisitor::visit(Assign* node){
   // TODO
 }
 
+void PrintVisitor::visit(TypedVariable* node){
+  // TODO
+}
+
 void PrintVisitor::visit(NoAction* node){
   // TODO
 }

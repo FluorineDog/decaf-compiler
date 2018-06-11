@@ -65,14 +65,18 @@ def parse(content, visitors):
     file.write(visitor_c)
 
   for name, values in result:
-    with open("../parser/generated/rules.gen.yxx", 'w') as file:
-      file.write("  {n}* {l}u{n};".format(n=name, l = (20-len(name))))
 
     entries = [(t, v) for _, t, v in entry_eng.findall(values)]
     comma_list = ", ".join(["{0} {1}".format(t, v) for (t, v) in entries])
     arrow_list = "".join(["  node->{1} = {1};\n".format(t, v) for (t, v) in entries])
     class_c = wt_mknode.format(name=name, comma_list=comma_list, arrow_list=arrow_list) 
     mknode_c += class_c
+
+  def mkRule(name): return "  {n} {l}*u{n};".format(n=name, l = " "*(16-len(name)))
+  with open("../parser/generated/union.gen.yxx", 'w') as file:
+    content_c = '\n'.join([mkRule(name) for (name, _) in result])
+    file.write(content_c)
+
   with open('generated/mknode.h', 'w') as file:
     file.write(mknode_c)
   
@@ -96,7 +100,6 @@ def parse(content, visitors):
     pass
     with open("generated/template/" + vis + "Visitor.cpp", 'w') as file:
       file.write(source_c)
-
 
 def main():
   visitors = []
