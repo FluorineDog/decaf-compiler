@@ -1,9 +1,8 @@
 #pragma once
-#include <memory>
+// #include <memory>
 #include <string>
 #include <vector>
-using std::make_shared;
-using std::shared_ptr;
+// using std::make_shared;
 using std::vector;
 // using Location = int;
 class ASTNodeBase {
@@ -12,7 +11,7 @@ class ASTNodeBase {
   // Location loc_beg;
   // Location loc_end;
 };
-using node_ptr_t = shared_ptr<ASTNodeBase>;
+using node_ptr_t = ASTNodeBase*;
 
 #include "generated/Visitor.h"
 #include "node_defs.h"
@@ -22,5 +21,5 @@ using node_ptr_t = shared_ptr<ASTNodeBase>;
 
 template <typename T>
 T* extract(node_ptr_t node){
-  return dynamic_cast<T*>(node.get());
+  return dynamic_cast<T*>(node);
 }

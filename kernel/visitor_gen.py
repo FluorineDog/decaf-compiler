@@ -7,7 +7,7 @@ entry_tmp = "(^|\a)[ ]*?(\w+) (\w+);"
 
 wt_mknode = '''
 inline auto mk{name}({comma_list}) {{
-  auto node = make_shared<{name}>();
+  auto node = new {name};
 {arrow_list} // Generated
   return node;
 }}
