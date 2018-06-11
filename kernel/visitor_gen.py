@@ -31,6 +31,9 @@ class {name}Visitor : public Visitor{{
 wt_source = '''// Template
 #include "generated/{vis}Visitor.h"
 #include "internal.h"
+/*
+{variable_list}
+*/
 {func_list}
 '''
 
@@ -40,23 +43,18 @@ wt_source_func = \
 }}
 
 '''
-def fetch(content):
-  start = content.find("/*")
-  end = content.find("*/")
-  if start == -1:
-    return ''
-  return content[start + 2:end]
 
 def parse(content, visitors):
   class_eng = re.compile(class_tmp)
   entry_eng = re.compile(entry_tmp)
   result = class_eng.findall(content)
+  nodes = [name for (name, _) in result]
   mknode_c = '#include "../common.h"'
 
   print(visitors)
   pure_list = "".join([
     "  virtual void visit(class {0}* node) = 0;\n"
-    .format(name) for (name, _) in result])
+    .format(name) for name in nodes])
   include_list = "".join([
     '#include "{0}Visitor.h"\n'
     .format(vis) for (vis) in visitors])
@@ -74,29 +72,45 @@ def parse(content, visitors):
 
   def mkRule(name): return "  {n} {l}*u{n};".format(n=name, l = " "*(16-len(name)))
   with open("../parser/generated/union.gen.yxx", 'w') as file:
-    content_c = '\n'.join([mkRule(name) for (name, _) in result])
+    content_c = '\n'.join([mkRule(name) for name in nodes])
     file.write(content_c)
 
   with open('generated/mknode.h', 'w') as file:
     file.write(mknode_c)
+  genVisCpp(visitors, nodes)
+
+
+def fetch(content):
+  start = content.find("/*")
+  end = content.find("*/")
+  if start == -1:
+    return ''
+  content = content[start:end + 2]
+  cc = "\n".join(content.splitlines()[1:-1])
+  return cc
   
+def genVisCpp(visitors, nodes):
   for vis in visitors:
     declare_list = "".join([\
       '  virtual void visit(class {0}* node);\n'\
-      .format(t) for (t, _) in result
+      .format(t) for t in nodes
     ])
     with open(vis + "Visitor.cpp") as file:
       variable_list = fetch(file.read())
 
-    header_c = wt_headers.format(declare_list + variable_list, name = vis)
+    header_c = wt_headers.format(declare_list + variable_list, 
+        name = vis)
     with open("generated/" + vis + "Visitor.h", 'w') as file:
       file.write(header_c)
     pass
     func_list = "".join([\
       wt_source_func\
-      .format(vis=vis, type=t) for (t, _) in result
+      .format(vis=vis, type=t) for t in nodes
     ])
-    source_c = wt_source.format(vis=vis, func_list=func_list)
+    source_c = wt_source.format(vis=vis, 
+        func_list=func_list,
+        variable_list=variable_list
+    )
     pass
     with open("generated/template/" + vis + "Visitor.cpp", 'w') as file:
       file.write(source_c)
