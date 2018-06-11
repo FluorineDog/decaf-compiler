@@ -17,6 +17,7 @@
 
 %union {
   node_ptr_t unode_ptr_t;
+@#union_list#@
   int intval;
 }
 

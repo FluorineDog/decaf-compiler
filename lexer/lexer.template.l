@@ -33,7 +33,7 @@ TYPE_ID       [A-Z][A-Za-z0-9_]*
 
 @#lexer_rule_list#@
 
-{ID}        { yylval.unode_ptr_t = mkTypeUser(lexer.YYText());return ID; }
+{ID}        { yylval.unode_ptr_t = mkIdentifier(lexer.YYText());return ID; }
 {TYPE_ID}        { yylval.unode_ptr_t = mkTypeUser(lexer.YYText()); return TYPE_ID; }
 
 "//".*\n    

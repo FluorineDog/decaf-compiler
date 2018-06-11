@@ -114,7 +114,7 @@ void PrintVisitor::visit(TypeUser* node){
   // TODO
 }
 
-void PrintVisitor::visit(ID* node){
+void PrintVisitor::visit(Identifier* node){
   // TODO
 }
 

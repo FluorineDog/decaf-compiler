@@ -195,7 +195,7 @@ class TypeUser : public ASTNodeBase {
   string type_name;
 };
 
-class ID : public ASTNodeBase {
+class Identifier : public ASTNodeBase {
  public:
   virtual void accept(Visitor& v) { v.visit(this); }
   string name;

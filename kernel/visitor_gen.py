@@ -65,6 +65,7 @@ def parse(content, visitors):
     file.write(visitor_c)
 
   for name, values in result:
+    print(name)
     entries = [(t, v) for _, t, v in entry_eng.findall(values)]
     comma_list = ", ".join(["{0} {1}".format(t, v) for (t, v) in entries])
     arrow_list = "".join(["  node->{1} = {1};\n".format(t, v) for (t, v) in entries])
