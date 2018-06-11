@@ -23,7 +23,7 @@ class Visitor {{
 wt_headers = '''#pragma once
 #include "common.h"
 #include "Visitor.h"
-class {name}Visitor : public Visitor{{
+class {name}Visitor : public Visitor {{
 {0}
 }};
 '''
@@ -38,8 +38,8 @@ wt_source = '''// Template
 '''
 
 wt_source_func = \
-'''void {vis}Visitor::visit({type}* node){{
-  // TODO
+'''void {vis}Visitor::visit({type}* node) {{
+{body}
 }}
 
 '''
@@ -88,6 +88,18 @@ def fetch(content):
   content = content[start:end + 2]
   cc = "\n".join(content.splitlines()[1:-1])
   return cc
+
+table_tmp = '''void PrintVisitor::visit\((\w+).*?({.*?\})'''
+def genTable(content):
+  func = re.findall(table_tmp, content, re.DOTALL)
+  def fuck(cc): return "\n".join(cc.splitlines()[1:-1])
+  table = dict()
+  for name, body in func:
+    table[name] =  fuck(body) 
+  # print(table) 
+  # print(' ' in table)
+  # print('Integer' in table)
+  return table
   
 def genVisCpp(visitors, nodes):
   for vis in visitors:
@@ -96,16 +108,20 @@ def genVisCpp(visitors, nodes):
       .format(t) for t in nodes
     ])
     with open(vis + "Visitor.cpp") as file:
-      variable_list = fetch(file.read())
+      content = file.read()
+      variable_list = fetch(content)
+      refer = genTable(content)
 
     header_c = wt_headers.format(declare_list + variable_list, 
         name = vis)
     with open("generated/" + vis + "Visitor.h", 'w') as file:
       file.write(header_c)
+    
     pass
+    def gen_body(t): return refer[t] if t in refer else "  // TODO" 
+    def gen_func(t): return wt_source_func.format(vis=vis, type=t, body=gen_body(t)) 
     func_list = "".join([\
-      wt_source_func\
-      .format(vis=vis, type=t) for t in nodes
+      gen_func(t) for t in nodes
     ])
     source_c = wt_source.format(vis=vis, 
         func_list=func_list,

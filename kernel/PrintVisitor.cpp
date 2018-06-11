@@ -6,132 +6,129 @@
 */
 
 void PrintVisitor::visit(Integer* node){
-  //  TODO
+  // TODO
 }
 
 void PrintVisitor::visit(Double* node){
-  //  TODO
+  // TODO
 }
 
 void PrintVisitor::visit(NullPointer* node){
-  //  TODO
+  // TODO
 }
 
 void PrintVisitor::visit(Call* node){
-  //  TODO
+  // TODO
 }
 
 void PrintVisitor::visit(Index* node){
-  //  TODO
+  // TODO
 }
 
 void PrintVisitor::visit(Member* node){
-  //  TODO
+  // TODO
 }
 
 void PrintVisitor::visit(NewArray* node){
-  //  TODO
+  // TODO
 }
 
 void PrintVisitor::visit(New* node){
-  //  TODO
+  // TODO
 }
 
 void PrintVisitor::visit(Read* node){
-  //  TODO
+  // TODO
 }
 
 void PrintVisitor::visit(UnaryExpr* node){
-  //  TODO
+  // TODO
 }
 
 void PrintVisitor::visit(BinaryExpr* node){
-  //  TODO
+  // TODO
 }
 
 void PrintVisitor::visit(This* node){
-  //  TODO
+  // TODO
 }
 
 void PrintVisitor::visit(Print* node){
-  //  TODO
+  // TODO
 }
 
 void PrintVisitor::visit(List* node){
-  //  TODO
+  // TODO
   cout << "hello, world";
 }
 
 void PrintVisitor::visit(Break* node){
-  //  TODO
+  // TODO
 }
 
 void PrintVisitor::visit(Return* node){
-  //  TODO
+  // TODO
 }
 
 void PrintVisitor::visit(For* node){
-  //  TODO
+  // TODO
 }
 
 void PrintVisitor::visit(While* node){
-  //  TODO
+  // TODO
 }
 
 void PrintVisitor::visit(Block* node){
-  //  TODO
+  // TODO
 }
 
 void PrintVisitor::visit(If* node){
-  //  TODO
+  // TODO
 }
 
 void PrintVisitor::visit(ProtoType* node){
-  //  TODO
+  // TODO
 }
 
 void PrintVisitor::visit(Interface* node){
-  //  TODO
+  // TODO
 }
 
 void PrintVisitor::visit(Field* node){
-  //  TODO
+  // TODO
 }
 
 void PrintVisitor::visit(ClassDecl* node){
-  //  TODO
+  // TODO
 }
 
 void PrintVisitor::visit(FunctionDecl* node){
-  //  TODO
+  // TODO
 }
 
 void PrintVisitor::visit(TypeArray* node){
-  //  TODO
+  // TODO
 }
 
 void PrintVisitor::visit(TypeBase* node){
-  //  TODO
+  // TODO
 }
 
-void PrintVisitor::visit(TypeUser* node){
-  //  TODO
-}
 
 void PrintVisitor::visit(Identifier* node){
-  //  TODO
+  // TODO
 }
 
 void PrintVisitor::visit(Assign* node){
-  //  TODO
+  // TODO
 }
 
 void PrintVisitor::visit(TypedVariable* node){
-  //  TODO
+  // TODO
 }
 
 void PrintVisitor::visit(NoAction* node){
-  //  TODO
+  // TODO
 }
 
 
