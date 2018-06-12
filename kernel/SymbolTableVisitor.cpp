@@ -53,7 +53,13 @@ class SymTableIndent {
   }
   int level;
   string list_type;
+ public:
+  SymbolTableVisitor();
+  
 */
+SymbolTableVisitor::SymbolTableVisitor(){
+
+}
 void SymbolTableVisitor::visit(Integer* node) {
   SymTableIndent logger(level);
   logger("Integer", node->num);
@@ -128,7 +134,7 @@ void SymbolTableVisitor::visit(UnaryExpr* node) {
 
 void SymbolTableVisitor::visit(BinaryExpr* node) {
   SymTableIndent logger(level);
-  string str;
+  string str = "WTF";
   if (node->op <= 255) {
     str = "\"" + string(1, node->op) + "\"";
   } else {
