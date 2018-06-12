@@ -90,8 +90,8 @@ def fetch(content):
   cc = "\n".join(content.splitlines()[1:-1])
   return cc
 
-table_tmp = '''void PrintVisitor::visit\((\w+).*?({.*?\n\})'''
-def genTable(content):
+def genTable(content, vis):
+  table_tmp = '''void {vis}Visitor::visit\((\w+).*?({{.*?\n\}})'''.format(vis=vis)
   func = re.findall(table_tmp, content, re.DOTALL)
   def fuck(cc): return "\n".join(cc.splitlines()[1:-1])
   table = dict()
@@ -102,10 +102,10 @@ def genTable(content):
   # print('Integer' in table)
   return table
 
-def genAux(content):
+def genAux(content, vis):
   end = content.find("void PrintVisitor::visit(")
   if end == -1:
-    return wt_source_aux
+    return wt_source_aux.format(vis=vis)
   return content[0:end]
    
   
@@ -118,7 +118,7 @@ def genVisCpp(visitors, nodes):
     with open(vis + "Visitor.cpp") as file:
       content = file.read()
       variable_list = fetch(content)
-      refer = genTable(content)
+      refer = genTable(content, vis)
 
     header_c = wt_headers.format(declare_list + variable_list, 
         name = vis)
@@ -131,7 +131,7 @@ def genVisCpp(visitors, nodes):
     func_list = "".join([\
       gen_func(t) for t in nodes
     ])
-    aux_list = genAux(content)
+    aux_list = genAux(content, vis)
     source_c = wt_source.format(vis=vis, 
         func_list=func_list,
         aux_list=aux_list

@@ -42,6 +42,10 @@ input:
 
 int main(){
   yyparse();
-  PrintVisitor v;
+  {
+    PrintVisitor v;
+    root->accept(v);
+  } 
+  SymbolTableVisitor v;
   root->accept(v);
 }
