@@ -92,6 +92,7 @@ def fetch(content):
 
 def genTable(content, vis):
   table_tmp = '''void {vis}Visitor::visit\((\w+).*?({{.*?\n\}})'''.format(vis=vis)
+  print(table_tmp)
   func = re.findall(table_tmp, content, re.DOTALL)
   def fuck(cc): return "\n".join(cc.splitlines()[1:-1])
   table = dict()
@@ -103,7 +104,7 @@ def genTable(content, vis):
   return table
 
 def genAux(content, vis):
-  end = content.find("void PrintVisitor::visit(")
+  end = content.find("void {vis}Visitor::visit(".format(vis=vis))
   if end == -1:
     return wt_source_aux.format(vis=vis)
   return content[0:end]
