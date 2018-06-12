@@ -23,7 +23,7 @@ class Call : public ASTNodeBase {
  public:
   virtual void accept(Visitor& v) { v.visit(this); }
   // can be nullptr
-  node_ptr_t expr;
+  node_ptr_t domain_expr;
   node_ptr_t ident;
   node_ptr_t actuals;
 };

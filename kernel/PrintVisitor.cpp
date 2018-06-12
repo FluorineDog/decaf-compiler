@@ -57,9 +57,11 @@ void PrintVisitor::visit(NullPointer* node) {
 void PrintVisitor::visit(Call* node) {
   Indent logger(level);
   logger("Call");
-  *this << node->actuals //
-  << node->expr //
-  << node->ident;
+  list_type = "expr";
+  *this << node->domain_expr;
+  *this << node->ident;
+  list_type = "actuals";
+  *this << node->actuals;
 }
 
 void PrintVisitor::visit(Index* node) {
