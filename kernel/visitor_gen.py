@@ -89,7 +89,7 @@ def fetch(content):
   cc = "\n".join(content.splitlines()[1:-1])
   return cc
 
-table_tmp = '''void PrintVisitor::visit\((\w+).*?({.*?\})'''
+table_tmp = '''void PrintVisitor::visit\((\w+).*?({.*?\n\})'''
 def genTable(content):
   func = re.findall(table_tmp, content, re.DOTALL)
   def fuck(cc): return "\n".join(cc.splitlines()[1:-1])
