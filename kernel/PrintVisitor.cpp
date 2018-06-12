@@ -1,5 +1,6 @@
 // Template
 #include "generated/PrintVisitor.h"
+#include "../build/parser.hxx"
 #include "internal.h"
 class Indent {
  public:
@@ -18,7 +19,11 @@ class Indent {
   template <typename... Args>
   void operator()(Args&&... args) {
     for (int i = 0; i < level - 1; ++i) {
-      cout << "  ";
+      switch(i % 3){
+        case 0: cout << ". "; break; 
+        case 1: cout << "| "; break; 
+        case 2: cout << "* "; break; 
+      }
     }
     std::cout << "<";
     printer_helper(args...);
@@ -112,6 +117,7 @@ void PrintVisitor::visit(Print* node) {
 void PrintVisitor::visit(List* node) {
   Indent logger(level);
   logger("ListItems", list_type);
+  list_type = "undefined";
   for (auto ptr : node->list) {
     ptr->accept(*this);
   }
@@ -154,7 +160,10 @@ void PrintVisitor::visit(ProtoType* node) {
 
 void PrintVisitor::visit(Interface* node) {
   Indent logger(level);
-  logger();
+  logger("Interface");
+  *this << node->type_ident;
+  list_type = "Prototype";
+  *this << node->prototypes;
 }
 
 void PrintVisitor::visit(Field* node) {
@@ -164,55 +173,104 @@ void PrintVisitor::visit(Field* node) {
 
 void PrintVisitor::visit(ClassDecl* node) {
   Indent logger(level);
-  logger();
+  logger("ClassDecl");
+  *this << node->type;
+  if (node->extender) {
+    Indent logger(level);
+    logger("Extender");
+    *this << node->extender;
+  }
+  if (node->implementor) {
+    list_type = "Implementor";
+    *this << node->implementor;
+  }
+
+  list_type = "Fields";
+  *this << node->fields;
 }
 
 void PrintVisitor::visit(FunctionDecl* node) {
   Indent logger(level);
-  logger();
+  logger("FunctionDecl", "return");
+  if(node->type){
+    *this << node->type;
+  } else{
+    Indent logger(level);
+    logger("void");
+  }
+  *this << node->identifier;
+  list_type = "Formals";
+  *this << node->formals;
+  list_type = "FunctionBody";
+  *this << node->body;
 }
 
 void PrintVisitor::visit(TypeArray* node) {
   Indent logger(level);
-  logger();
+  logger("ArrayOf");
+  *this << node->base;
 }
 
 void PrintVisitor::visit(TypeBase* node) {
   Indent logger(level);
-  logger();
+  string name;
+  switch (node->base_type) {
+    case T_int: {
+      name = "int";
+      break;
+    }
+    case T_double: {
+      name = "double";
+      break;
+    }
+    case T_bool: {
+      name = "bool";
+      break;
+    }
+    case T_string: {
+      name = "string";
+      break;
+    }
+    default:
+      name = "WTF";
+  }
+  logger("TypeBase", name);
 }
 
 void PrintVisitor::visit(TypeUser* node) {
   Indent logger(level);
-  logger();
+  logger("type_id", node->type_name);
 }
 
 void PrintVisitor::visit(Identifier* node) {
   Indent logger(level);
-  logger();
+  logger("Identifier", node->name);
 }
 
 void PrintVisitor::visit(Assign* node) {
   Indent logger(level);
-  logger();
+  logger("Assign");
+  *this << node->left;
+  *this << node->right;
 }
 
 void PrintVisitor::visit(TypedVariable* node) {
   Indent logger(level);
-  logger();
+  logger("TypedVariable");
+  *this << node->type;
+  *this << node->id;
 }
 
 void PrintVisitor::visit(Program* node) {
   level = 0;
+  list_type = "init";
   Indent logger(level);
-  logger("Program", 1, 2);
+  logger("Program");
   list_type = "decl";
   node->decls->accept(*this);
 }
 
 void PrintVisitor::visit(NoAction* node) {
   Indent logger(level);
-  logger();
+  logger("NoAction");
 }
-
-
