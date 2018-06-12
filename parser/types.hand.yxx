@@ -24,7 +24,7 @@
 %type <uList> PrototypeList
 %type <uList> PrototypeListOptional
 %type <uProtoType> Prototype
-%type <unode_ptr_t> StmtBlock
+%type <uBlock> StmtBlock
 %type <uList> StmtList
 %type <uList> StmtListOptional
 %type <unode_ptr_t> Stmt

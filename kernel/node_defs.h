@@ -163,8 +163,8 @@ class ClassDecl : public ASTNodeBase {
   virtual void accept(Visitor& v) { v.visit(this); }
   node_ptr_t type;
   node_ptr_t extender;
-  node_ptr_t implementor;
-  node_ptr_t fields;
+  List* implementor;
+  List* fields;
 };
 
 class FunctionDecl : public ASTNodeBase {
@@ -172,8 +172,8 @@ class FunctionDecl : public ASTNodeBase {
   virtual void accept(Visitor& v) { v.visit(this); }
   node_ptr_t type;
   node_ptr_t identifier;
-  node_ptr_t formals; 
-  node_ptr_t body;
+  List* formals; 
+  Block* body;
 };
 
 class TypeArray : public ASTNodeBase {

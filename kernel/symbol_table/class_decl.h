@@ -1,3 +1,4 @@
+#pragma once
 #include <map>
 #include <optional>
 #include <set>
@@ -16,6 +17,7 @@ using VariableEntry = std::pair<string, string>;
 struct FuncEntry {
   TypeEntry type;
   vector<VariableEntry> parameters;
+  node_ptr_t body;  // fake for prototype
   bool operator==(const FuncEntry& f) const {
     if (type != f.type) return false;
     bool is_equal =
@@ -28,6 +30,7 @@ struct FuncEntry {
                    });
     return is_equal;
   }
+  bool operator!=(const FuncEntry& f) const { return *this != f; }
 };
 
 struct ClassBody {
@@ -35,6 +38,7 @@ struct ClassBody {
   std::set<string> implementors;
   map<string, TypeEntry> variables;
   map<string, FuncEntry> functions;
+  node_ptr_t body;
 };
 
 struct InterfaceBody {
@@ -43,4 +47,19 @@ struct InterfaceBody {
 
 using ClassEntries = map<string, ClassBody>;
 using InterfaceEntries = map<string, InterfaceBody>;
+
+enum class StateType { Class, Extender, Implementor, Interface };
+#include <stack>
+using std::stack;
+class StateHolder {
+  stack<StateType>& list_call_stack;
+ public:
+  StateHolder(stack<StateType>& list_call_stack, StateType t)
+      : list_call_stack(list_call_stack) {
+    list_call_stack.push(t);
+  }
+  ~StateHolder(){
+    list_call_stack.pop();
+  }
+};
 
