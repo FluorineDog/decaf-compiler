@@ -42,7 +42,7 @@ input:
 
 int main(){
   yyparse();
-  {
+  if (false) {
     PrintVisitor v;
     root->accept(v);
   } 
