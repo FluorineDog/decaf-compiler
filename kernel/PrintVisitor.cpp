@@ -4,130 +4,136 @@
 /*
   int level;
 */
-
-void PrintVisitor::visit(Integer* node){
+void PrintVisitor::visit(Integer* node) {
   // TODO
 }
 
-void PrintVisitor::visit(Double* node){
+void PrintVisitor::visit(Double* node) {
   // TODO
 }
 
-void PrintVisitor::visit(NullPointer* node){
+void PrintVisitor::visit(NullPointer* node) {
   // TODO
 }
 
-void PrintVisitor::visit(Call* node){
+void PrintVisitor::visit(Call* node) {
   // TODO
 }
 
-void PrintVisitor::visit(Index* node){
+void PrintVisitor::visit(Index* node) {
   // TODO
 }
 
-void PrintVisitor::visit(Member* node){
+void PrintVisitor::visit(Member* node) {
   // TODO
 }
 
-void PrintVisitor::visit(NewArray* node){
+void PrintVisitor::visit(NewArray* node) {
   // TODO
 }
 
-void PrintVisitor::visit(New* node){
+void PrintVisitor::visit(New* node) {
   // TODO
 }
 
-void PrintVisitor::visit(Read* node){
+void PrintVisitor::visit(Read* node) {
   // TODO
 }
 
-void PrintVisitor::visit(UnaryExpr* node){
+void PrintVisitor::visit(UnaryExpr* node) {
   // TODO
 }
 
-void PrintVisitor::visit(BinaryExpr* node){
+void PrintVisitor::visit(BinaryExpr* node) {
   // TODO
 }
 
-void PrintVisitor::visit(This* node){
+void PrintVisitor::visit(This* node) {
   // TODO
 }
 
-void PrintVisitor::visit(Print* node){
+void PrintVisitor::visit(Print* node) {
   // TODO
 }
 
-void PrintVisitor::visit(List* node){
+void PrintVisitor::visit(List* node) {
   // TODO
   cout << "hello, world";
 }
 
-void PrintVisitor::visit(Break* node){
+void PrintVisitor::visit(Break* node) {
   // TODO
 }
 
-void PrintVisitor::visit(Return* node){
+void PrintVisitor::visit(Return* node) {
   // TODO
 }
 
-void PrintVisitor::visit(For* node){
+void PrintVisitor::visit(For* node) {
   // TODO
 }
 
-void PrintVisitor::visit(While* node){
+void PrintVisitor::visit(While* node) {
   // TODO
 }
 
-void PrintVisitor::visit(Block* node){
+void PrintVisitor::visit(Block* node) {
   // TODO
 }
 
-void PrintVisitor::visit(If* node){
+void PrintVisitor::visit(If* node) {
   // TODO
 }
 
-void PrintVisitor::visit(ProtoType* node){
+void PrintVisitor::visit(ProtoType* node) {
   // TODO
 }
 
-void PrintVisitor::visit(Interface* node){
+void PrintVisitor::visit(Interface* node) {
   // TODO
 }
 
-void PrintVisitor::visit(Field* node){
+void PrintVisitor::visit(Field* node) {
   // TODO
 }
 
-void PrintVisitor::visit(ClassDecl* node){
+void PrintVisitor::visit(ClassDecl* node) {
   // TODO
 }
 
-void PrintVisitor::visit(FunctionDecl* node){
+void PrintVisitor::visit(FunctionDecl* node) {
   // TODO
 }
 
-void PrintVisitor::visit(TypeArray* node){
+void PrintVisitor::visit(TypeArray* node) {
   // TODO
 }
 
-void PrintVisitor::visit(TypeBase* node){
+void PrintVisitor::visit(TypeBase* node) {
   // TODO
 }
 
-
-void PrintVisitor::visit(Identifier* node){
+void PrintVisitor::visit(TypeUser* node) {
   // TODO
 }
 
-void PrintVisitor::visit(Assign* node){
+void PrintVisitor::visit(Identifier* node) {
   // TODO
 }
 
-void PrintVisitor::visit(TypedVariable* node){
+void PrintVisitor::visit(Assign* node) {
   // TODO
 }
 
-void PrintVisitor::visit(NoAction* node){
+void PrintVisitor::visit(TypedVariable* node) {
+  // TODO
+}
+
+void PrintVisitor::visit(Program* node) {
+  // TODO
+}
+
+void PrintVisitor::visit(NoAction* node) {
   // TODO
 }
 

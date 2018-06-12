@@ -130,6 +130,9 @@ def genVisCpp(visitors, nodes):
     pass
     with open("generated/template/" + vis + "Visitor.cpp", 'w') as file:
       file.write(source_c)
+    
+    with open("" + vis + "Visitor.cpp", 'w') as file:
+      file.write(source_c)
 
 def main():
   visitors = []

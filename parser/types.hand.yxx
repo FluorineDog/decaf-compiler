@@ -1,4 +1,4 @@
-%type <uList> Program
+%type <uProgram> Program
 %type <uList> DeclList
 %type <uIdentifier> ident
 %type <uTypeUser> type_ident

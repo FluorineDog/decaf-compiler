@@ -5,7 +5,7 @@ DeclList:
 ;
 
 Program:
-  DeclList                   {$$ = $1;}
+  DeclList                   {$$ = mkProgram($1);}
 ;
 
 ident:
