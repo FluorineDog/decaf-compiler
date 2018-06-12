@@ -223,7 +223,7 @@ Expr:
 
 LValue:
   ident                      {$$ = $1;}
-| Expr '.' ident             {$$ = mkMember($1, $3);}
+| Expr '.' ident             {$$ = mkMemberDot($1, $3);}
 | Expr '[' Expr ']'          {$$ = mkIndex($1, $3);}
 ;
 
@@ -242,8 +242,8 @@ Actuals:
 ;
 
 Constant:
-  NUM_int                    {$$ = mkInteger(1);}
-| NUM_double                 {$$ = mkDouble(1.0); }
+  NUM_int                    {$$ = $1;}
+| NUM_double                 {$$ = $1; }
 | T_null                     {$$ = mkNullPointer();}
 ;
 %%

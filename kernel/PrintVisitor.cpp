@@ -86,9 +86,9 @@ void PrintVisitor::visit(Index* node) {
   *this << node->index_expr;
 }
 
-void PrintVisitor::visit(Member* node) {
+void PrintVisitor::visit(MemberDot* node) {
   Indent logger(level);
-  logger("Member");
+  logger("MemberDot");
   *this << node->expr;
   *this << node->ident;
 }

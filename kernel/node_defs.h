@@ -36,7 +36,7 @@ class Index : public ASTNodeBase {
   node_ptr_t index_expr;
 };
 
-class Member : public ASTNodeBase {
+class MemberDot : public ASTNodeBase {
  public:
   virtual void accept(Visitor& v) { v.visit(this); }
   // can be nullptr

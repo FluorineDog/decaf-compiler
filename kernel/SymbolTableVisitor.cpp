@@ -86,9 +86,9 @@ void SymbolTableVisitor::visit(Index* node) {
   *this << node->index_expr;
 }
 
-void SymbolTableVisitor::visit(Member* node) {
+void SymbolTableVisitor::visit(MemberDot* node) {
   SymTableIndent logger(level);
-  logger("Member");
+  logger("MemberDot");
   *this << node->expr;
   *this << node->ident;
 }
@@ -336,3 +336,5 @@ void SymbolTableVisitor::visit(NoAction* node) {
   SymTableIndent logger(level);
   logger("skip");
 }
+
+

@@ -24,7 +24,7 @@
 
 %token <intval> END_OF_FILE 0
 %token <uDouble> NUM_double
-%token <uInt> NUM_int
+%token <uInteger> NUM_int
 %token <uIdentifier> ID
 %token <uTypeUser> TYPE_ID
 @#token_list#@
