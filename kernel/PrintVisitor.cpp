@@ -31,7 +31,7 @@ class Indent {
 };
 /*
   int level;
-  string last_token;
+  string list_type;
 */
 void PrintVisitor::visit(Integer* node) {
   // TODO
@@ -88,7 +88,7 @@ void PrintVisitor::visit(Print* node) {
 void PrintVisitor::visit(List* node) {
   Indent logger(level);
   for (auto ptr : node->list) {
-    logger("ListItem", last_token);
+    logger("ListItem", list_type);
     ptr->accept(*this);
   }
 }
@@ -165,7 +165,7 @@ void PrintVisitor::visit(Program* node) {
   level = 0;
   Indent logger(level);
   logger("Program", 1, 2);
-  last_token = "decl";
+  list_type = "decl";
   node->decls->accept(*this);
 }
 

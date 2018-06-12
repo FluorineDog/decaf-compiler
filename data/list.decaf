@@ -1,8 +1,18 @@
-class ListNode {
+
+class NodeBase {
+  int base;
+}
+
+interface Fuckable {
+  void fuck(int x);
+}
+
+class ListNode extends NodeBase implements Fuckable {
   int data;
   ListNode next;
   void setData(int x) { data = x; }
 }
+
 class List {
   ListNode head;
   void show(ListNode list) {
