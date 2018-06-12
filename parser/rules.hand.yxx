@@ -1,7 +1,7 @@
 %%
 DeclList:
-  Decl                       {$$ = mkList(); extract<List>($$)->list.push_back($1);  }
-| DeclList Decl              {$$ = $1; extract<List>($$)->list.push_back($2); }       
+  Decl                       {$$ = mkList(); ($$)->list.push_back($1);  }
+| DeclList Decl              {$$ = $1; ($$)->list.push_back($2); }       
 ;
 
 Program:
@@ -50,8 +50,8 @@ FunctionDecl:
 ;
 
 VariableCommaList:
-  Variable                           {$$ = mkList(); extract<List>($$)->list.push_back($1);  }
-| VariableCommaList ',' Variable     {$$ = $1; extract<List>($$)->list.push_back($3); }       
+  Variable                           {$$ = mkList(); ($$)->list.push_back($1);  }
+| VariableCommaList ',' Variable     {$$ = $1; ($$)->list.push_back($3); }       
 ;
 
 VariableCommaListOptional:
@@ -74,8 +74,8 @@ ImplementorOptional:
 ;
 
 FieldList:
-  Field                      {$$ = mkList(); extract<List>($$)->list.push_back($1);  }
-| FieldList Field            {$$ = $1; extract<List>($$)->list.push_back($2); }       
+  Field                      {$$ = mkList(); ($$)->list.push_back($1);  }
+| FieldList Field            {$$ = $1; ($$)->list.push_back($2); }       
 ;
 
 FieldListOptional:
@@ -92,8 +92,8 @@ Extender:
 ;
 
 type_identList:
-  type_ident                    {$$ = mkList(); extract<List>($$)->list.push_back($1); }
-| type_identList type_ident     {$$ = $1; extract<List>($$)->list.push_back($2); }
+  type_ident                    {$$ = mkList(); ($$)->list.push_back($1); }
+| type_identList type_ident     {$$ = $1; ($$)->list.push_back($2); }
 ;
 
 Implementor:
@@ -106,8 +106,8 @@ Field:
 ;
 
 PrototypeList:
-  Prototype                   {$$ = mkList(); extract<List>($$)->list.push_back($1);  }
-| PrototypeList Prototype     {$$ = $1; extract<List>($$)->list.push_back($2); }       
+  Prototype                   {$$ = mkList(); ($$)->list.push_back($1);  }
+| PrototypeList Prototype     {$$ = $1; ($$)->list.push_back($2); }       
 ;
 
 PrototypeListOptional:
@@ -125,8 +125,8 @@ Prototype:
 ;
 
 StmtList:
-  Stmt                       {$$ = mkList(); extract<List>($$)->list.push_back($1);  }  
-| StmtList Stmt              {$$ = $1; extract<List>($$)->list.push_back($2); }         
+  Stmt                       {$$ = mkList(); ($$)->list.push_back($1);  }  
+| StmtList Stmt              {$$ = $1; ($$)->list.push_back($2); }         
 ;
 
 StmtListOptional:
@@ -185,8 +185,8 @@ BreakStmt:
 ;
 
 ExprCommaList:
-  Expr                       { $$ = mkList(); extract<List>($$)->list.push_back($1);  }
-| ExprCommaList ',' Expr     { $$ = $1; extract<List>($$)->list.push_back($3); }
+  Expr                       { $$ = mkList(); ($$)->list.push_back($1);  }
+| ExprCommaList ',' Expr     { $$ = $1; ($$)->list.push_back($3); }
 ;
 
 PrintStmt:

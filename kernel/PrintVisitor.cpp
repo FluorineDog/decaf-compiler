@@ -1,8 +1,37 @@
 // Template
 #include "generated/PrintVisitor.h"
 #include "internal.h"
+class Indent {
+ public:
+  Indent(int& level) : level(level) { level++; }
+
+  void printer_helper() {}
+  template <typename T>
+  void printer_helper(T a) {
+    cout << a;
+  }
+  template <typename T, typename... Args>
+  void printer_helper(T a, Args&&... args) {
+    cout << a << ", ";
+    printer_helper(args...);
+  }
+  template <typename... Args>
+  void operator()(Args&&... args) {
+    for (int i = 0; i < level - 1; ++i) {
+      cout << "  ";
+    }
+    std::cout << "<";
+    printer_helper(args...);
+    cout << ">" << endl;
+  }
+  ~Indent() { level--; }
+
+ private:
+  int& level;
+};
 /*
   int level;
+  string last_token;
 */
 void PrintVisitor::visit(Integer* node) {
   // TODO
@@ -57,8 +86,11 @@ void PrintVisitor::visit(Print* node) {
 }
 
 void PrintVisitor::visit(List* node) {
-  // TODO
-  cout << "hello, world";
+  Indent logger(level);
+  for (auto ptr : node->list) {
+    logger("ListItem", last_token);
+    ptr->accept(*this);
+  }
 }
 
 void PrintVisitor::visit(Break* node) {
@@ -130,8 +162,11 @@ void PrintVisitor::visit(TypedVariable* node) {
 }
 
 void PrintVisitor::visit(Program* node) {
-  level++;
-  // TODO
+  level = 0;
+  Indent logger(level);
+  logger("Program", 1, 2);
+  last_token = "decl";
+  node->decls->accept(*this);
 }
 
 void PrintVisitor::visit(NoAction* node) {

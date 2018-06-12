@@ -102,7 +102,7 @@ def genTable(content):
   return table
 
 def genAux(content):
-  end = content.find("void")
+  end = content.find("void PrintVisitor::visit(")
   if end == -1:
     return wt_source_aux
   return content[0:end]
