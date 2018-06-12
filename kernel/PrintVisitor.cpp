@@ -56,12 +56,12 @@ class Indent {
 */
 void PrintVisitor::visit(Integer* node) {
   Indent logger(level);
-  logger("Integer");
+  logger("Integer", node->num);
 }
 
 void PrintVisitor::visit(Double* node) {
   Indent logger(level);
-  logger("Double");
+  logger("Double", node->num);
 }
 
 void PrintVisitor::visit(NullPointer* node) {

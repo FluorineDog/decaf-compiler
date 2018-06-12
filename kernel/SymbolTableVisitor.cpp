@@ -1,14 +1,12 @@
 // Template
 #include "generated/SymbolTableVisitor.h"
-#include "internal.h"
+#include "../build/parser.hxx"
 #include "generated/SymbolTableVisitor.h"
 #include "internal.h"
-#include "../build/parser.hxx"
 #include "node_defs.h"
 class SymTableIndent {
  public:
   SymTableIndent(int& level) : level(level) { level++; }
-
   void printer_helper() {}
   template <typename T>
   void printer_helper(T a) {
@@ -21,9 +19,25 @@ class SymTableIndent {
   }
   template <typename... Args>
   void operator()(Args&&... args) {
-    
+    for (int i = 0; i < level - 1; ++i) {
+      switch (i % 3) {
+        case 0:
+          cout << ". ";
+          break;
+        case 1:
+          cout << "| ";
+          break;
+        case 2:
+          cout << "* ";
+          break;
+      }
+    }
+    std::cout << "<";
+    printer_helper(args...);
+    cout << ">" << endl;
   }
   ~SymTableIndent() { level--; }
+
  private:
   int& level;
 };
@@ -42,12 +56,12 @@ class SymTableIndent {
 */
 void SymbolTableVisitor::visit(Integer* node) {
   SymTableIndent logger(level);
-  logger("Integer");
+  logger("Integer", node->num);
 }
 
 void SymbolTableVisitor::visit(Double* node) {
   SymTableIndent logger(level);
-  logger("Double");
+  logger("Double", node->num);
 }
 
 void SymbolTableVisitor::visit(NullPointer* node) {
@@ -204,7 +218,7 @@ void SymbolTableVisitor::visit(If* node) {
 
 void SymbolTableVisitor::visit(ProtoType* node) {
   SymTableIndent logger(level);
-  if(node->type != nullptr){
+  if (node->type != nullptr) {
     *this << node->type;
   } else {
     SymTableIndent logger(level);
@@ -315,12 +329,10 @@ void SymbolTableVisitor::visit(Program* node) {
   SymTableIndent logger(level);
   logger("Program");
   list_type = "decl";
-  // node->decls->accept(*this);
+  node->decls->accept(*this);
 }
 
 void SymbolTableVisitor::visit(NoAction* node) {
   SymTableIndent logger(level);
   logger("skip");
 }
-
-
