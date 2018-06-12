@@ -27,14 +27,14 @@ class {name}Visitor : public Visitor {{
 {0}
 }};
 '''
-
-wt_source = '''// Template
+wt_source_aux = '''// Template
 #include "generated/{vis}Visitor.h"
 #include "internal.h"
 /*
-{variable_list}
 */
-{func_list}
+'''
+
+wt_source = '''{aux_list}{func_list}
 '''
 
 wt_source_func = \
@@ -100,6 +100,13 @@ def genTable(content):
   # print(' ' in table)
   # print('Integer' in table)
   return table
+
+def genAux(content):
+  end = content.find("void")
+  if end == -1:
+    return wt_source_aux
+  return content[0:end]
+   
   
 def genVisCpp(visitors, nodes):
   for vis in visitors:
@@ -123,9 +130,10 @@ def genVisCpp(visitors, nodes):
     func_list = "".join([\
       gen_func(t) for t in nodes
     ])
+    aux_list = genAux(content)
     source_c = wt_source.format(vis=vis, 
         func_list=func_list,
-        variable_list=variable_list
+        aux_list=aux_list
     )
     pass
     with open("generated/template/" + vis + "Visitor.cpp", 'w') as file:

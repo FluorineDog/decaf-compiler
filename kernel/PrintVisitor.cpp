@@ -130,6 +130,7 @@ void PrintVisitor::visit(TypedVariable* node) {
 }
 
 void PrintVisitor::visit(Program* node) {
+  level++;
   // TODO
 }
 
