@@ -45,18 +45,20 @@ wt_source_func = \
 }}
 
 '''
+mknode_c_tmp = '''#pragma once
+#include "../common.h"'''
 
 def gen_more_includes(content):
   list = re.findall('^(#include *["<].*[">] *)$', content, re.M)
   return "\n".join(list)
+
 
 def parse(content, visitors):
   class_eng = re.compile(class_tmp)
   entry_eng = re.compile(entry_tmp)
   result = class_eng.findall(content)
   nodes = [name for (name, _) in result]
-  mknode_c = '#include "../common.h"'
-
+  mknode_c = mknode_c_tmp + ""
   print(visitors)
   pure_list = "".join([
     "  virtual void visit(class {0}* node) = 0;\n"
