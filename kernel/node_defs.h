@@ -157,11 +157,6 @@ class Interface : public ASTNodeBase {
   node_ptr_t prototypes;
 };
 
-class Field : public ASTNodeBase {
- public:
-  virtual void accept(Visitor& v) { v.visit(this); }
-  int decl;
-};
 
 class ClassDecl : public ASTNodeBase {
  public:
@@ -171,7 +166,6 @@ class ClassDecl : public ASTNodeBase {
   node_ptr_t implementor;
   node_ptr_t fields;
 };
-
 
 class FunctionDecl : public ASTNodeBase {
  public:
@@ -193,7 +187,6 @@ class TypeBase : public ASTNodeBase {
   virtual void accept(Visitor& v) { v.visit(this); }
   int base_type;
 };
-
 
 class TypeUser : public ASTNodeBase {
  public:

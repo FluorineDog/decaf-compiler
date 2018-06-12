@@ -166,11 +166,6 @@ void PrintVisitor::visit(Interface* node) {
   *this << node->prototypes;
 }
 
-void PrintVisitor::visit(Field* node) {
-  Indent logger(level);
-  logger();
-}
-
 void PrintVisitor::visit(ClassDecl* node) {
   Indent logger(level);
   logger("ClassDecl");
@@ -274,3 +269,5 @@ void PrintVisitor::visit(NoAction* node) {
   Indent logger(level);
   logger("NoAction");
 }
+
+
