@@ -19,10 +19,16 @@ class Indent {
   template <typename... Args>
   void operator()(Args&&... args) {
     for (int i = 0; i < level - 1; ++i) {
-      switch(i % 3){
-        case 0: cout << ". "; break; 
-        case 1: cout << "| "; break; 
-        case 2: cout << "* "; break; 
+      switch (i % 3) {
+        case 0:
+          cout << ". ";
+          break;
+        case 1:
+          cout << "| ";
+          break;
+        case 2:
+          cout << "* ";
+          break;
       }
     }
     std::cout << "<";
@@ -72,36 +78,81 @@ void PrintVisitor::visit(Call* node) {
 void PrintVisitor::visit(Index* node) {
   Indent logger(level);
   logger("Index");
+  *this << node->expr;
+  *this << node->index_expr;
 }
 
 void PrintVisitor::visit(Member* node) {
   Indent logger(level);
-  logger();
+  logger("Member");
+  *this << node->expr;
+  *this << node->ident;
 }
 
 void PrintVisitor::visit(NewArray* node) {
   Indent logger(level);
-  logger();
+  logger("NewArray");
+  *this << node->type;
+  *this << node->expr;
 }
 
 void PrintVisitor::visit(New* node) {
   Indent logger(level);
-  logger();
+  logger("New");
+  *this << node->type;
 }
 
 void PrintVisitor::visit(Read* node) {
   Indent logger(level);
-  logger();
+  string str = "UB";
+  switch (node->option) {
+    case T_ReadInteger:
+      str = "Integer";
+      break;
+    case T_ReadLine:
+      str = "Line";
+      break;
+  }
+  logger("Read", str);
 }
 
 void PrintVisitor::visit(UnaryExpr* node) {
   Indent logger(level);
-  logger();
+  logger("Unary Expr", (char)node->op);
+  *this << node->expr;
 }
 
 void PrintVisitor::visit(BinaryExpr* node) {
   Indent logger(level);
-  logger();
+  string str;
+  if (node->op <= 255) {
+    str = "\"" + string(1, node->op) + "\"";
+  } else {
+    switch (node->op) {
+      case T_or:
+        str = "\"||\"";
+        break;
+      case T_and:
+        str = "\"&&\"";
+        break;
+      case T_less_eq:
+        str = "\"<=\"";
+        break;
+      case T_greater_eq:
+        str = "\">=\"";
+        break;
+      case T_eq:
+        str = "\"==\"";
+        break;
+      case T_not_eq:
+        str = "\"!=\"";
+        break;
+    }
+  }
+
+  logger("BinaryExpr", str);
+  *this << node->left;
+  *this << node->right;
 }
 
 void PrintVisitor::visit(This* node) {
@@ -187,9 +238,9 @@ void PrintVisitor::visit(ClassDecl* node) {
 void PrintVisitor::visit(FunctionDecl* node) {
   Indent logger(level);
   logger("FunctionDecl", "return");
-  if(node->type){
+  if (node->type) {
     *this << node->type;
-  } else{
+  } else {
     Indent logger(level);
     logger("void");
   }
@@ -210,22 +261,18 @@ void PrintVisitor::visit(TypeBase* node) {
   Indent logger(level);
   string name;
   switch (node->base_type) {
-    case T_int: {
+    case T_int:
       name = "int";
       break;
-    }
-    case T_double: {
+    case T_double:
       name = "double";
       break;
-    }
-    case T_bool: {
+    case T_bool:
       name = "bool";
       break;
-    }
-    case T_string: {
+    case T_string:
       name = "string";
       break;
-    }
     default:
       name = "WTF";
   }

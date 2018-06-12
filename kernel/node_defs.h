@@ -41,7 +41,7 @@ class Member : public ASTNodeBase {
   virtual void accept(Visitor& v) { v.visit(this); }
   // can be nullptr
   node_ptr_t expr;
-  node_ptr_t index_expr;
+  node_ptr_t ident;
 };
 
 class NewArray : public ASTNodeBase {
