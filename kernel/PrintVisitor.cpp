@@ -2,6 +2,7 @@
 #include "generated/PrintVisitor.h"
 #include "../build/parser.hxx"
 #include "internal.h"
+#include "node_defs.h"
 class Indent {
  public:
   Indent(int& level) : level(level) { level++; }
@@ -44,6 +45,9 @@ class Indent {
   PrintVisitor& operator<<(ASTNodeBase* node){
     if(node != nullptr){
       node->accept(*this);
+    } else {
+      NoAction no;
+      no.accept(*this);
     }
     return *this;
   }
@@ -157,12 +161,14 @@ void PrintVisitor::visit(BinaryExpr* node) {
 
 void PrintVisitor::visit(This* node) {
   Indent logger(level);
-  logger();
+  logger("This");
 }
 
 void PrintVisitor::visit(Print* node) {
   Indent logger(level);
-  logger();
+  logger("Print");
+  list_type = "PrintArgs";
+  *this << node->args;
 }
 
 void PrintVisitor::visit(List* node) {
@@ -176,37 +182,54 @@ void PrintVisitor::visit(List* node) {
 
 void PrintVisitor::visit(Break* node) {
   Indent logger(level);
-  logger();
+  logger("Break");
 }
 
 void PrintVisitor::visit(Return* node) {
   Indent logger(level);
-  logger();
+  logger("Return");
+  *this << node->expr;
 }
 
 void PrintVisitor::visit(For* node) {
   Indent logger(level);
-  logger();
+  logger("For");
+  *this << node->init_expr;
+  *this << node->conditional_expr;
+  *this << node->step_expr;
+  *this << node->stmt;
 }
 
 void PrintVisitor::visit(While* node) {
   Indent logger(level);
-  logger();
+  logger("While");
+  *this << node->conditional_expr;
+  *this << node->stmt;
 }
 
 void PrintVisitor::visit(Block* node) {
   Indent logger(level);
-  logger();
+  logger("Block");
+  list_type = "block";
+  *this << node->stmt_list;
 }
 
 void PrintVisitor::visit(If* node) {
   Indent logger(level);
-  logger();
+  *this << node->condition;
 }
 
 void PrintVisitor::visit(ProtoType* node) {
   Indent logger(level);
-  logger();
+  if(node->type != nullptr){
+    *this << node->type;
+  } else {
+    Indent logger(level);
+    logger("void");
+  }
+  *this << node->identifier;
+  list_type = "Parameters";
+  *this << node->formals;
 }
 
 void PrintVisitor::visit(Interface* node) {
@@ -245,7 +268,7 @@ void PrintVisitor::visit(FunctionDecl* node) {
     logger("void");
   }
   *this << node->identifier;
-  list_type = "Formals";
+  list_type = "Parameters";
   *this << node->formals;
   list_type = "FunctionBody";
   *this << node->body;
@@ -314,7 +337,7 @@ void PrintVisitor::visit(Program* node) {
 
 void PrintVisitor::visit(NoAction* node) {
   Indent logger(level);
-  logger("NoAction");
+  logger("skip");
 }
 
 

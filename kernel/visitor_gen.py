@@ -23,6 +23,7 @@ class Visitor {{
 wt_headers = '''#pragma once
 #include "common.h"
 #include "Visitor.h"
+#include "node_defs.h"
 class {name}Visitor : public Visitor {{
 {0}
 }};
