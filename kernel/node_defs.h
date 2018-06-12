@@ -211,7 +211,7 @@ class TypedVariable : public ASTNodeBase {
  public:
   virtual void accept(Visitor& v) { v.visit(this); }
   node_ptr_t type;
-  node_ptr_t id;
+  Identifier* id;
 };
 
 class Program : public ASTNodeBase {

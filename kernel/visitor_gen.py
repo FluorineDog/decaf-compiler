@@ -3,7 +3,7 @@ import re
 import os
 
 class_tmp = "class (\w+) *: *public ASTNodeBase.*?virtual.*?\a(.*?)};"
-entry_tmp = "(^|\a)[ ]*?(\w+) (\w+);"
+entry_tmp = "(^|\a)[ ]*?(\w+[ *]*?) (\w+);"
 
 wt_mknode = '''
 inline auto mk{name}({comma_list}) {{
@@ -24,6 +24,7 @@ wt_headers = '''#pragma once
 #include "common.h"
 #include "Visitor.h"
 #include "node_defs.h"
+{more_includes}
 class {name}Visitor : public Visitor {{
 {0}
 }};
@@ -44,6 +45,10 @@ wt_source_func = \
 }}
 
 '''
+
+def gen_more_includes(content):
+  list = re.findall('^(#include *["<].*[">] *)$', content, re.M)
+  return "\n".join(list)
 
 def parse(content, visitors):
   class_eng = re.compile(class_tmp)
@@ -121,8 +126,11 @@ def genVisCpp(visitors, nodes):
       variable_list = fetch(content)
       refer = genTable(content, vis)
 
+    more_includes = gen_more_includes(content)
     header_c = wt_headers.format(declare_list + variable_list, 
-        name = vis)
+        name = vis, 
+        more_includes = more_includes
+        )
     with open("generated/" + vis + "Visitor.h", 'w') as file:
       file.write(header_c)
     
