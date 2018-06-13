@@ -16,6 +16,15 @@ wt_visitor = '''#pragma once
 class Visitor {{
  public:
 {0} // Generated
+ public:
+  Visitor& operator<<(node_ptr_t node){{
+    node->accept(*this);
+    return *this;
+  }}
+  Visitor& operator<<(optional_node_ptr_t node){{
+    if(node) node.value()->accept(*this);
+    return *this;
+  }}
 }};
 {1} 
 '''
@@ -28,14 +37,6 @@ wt_headers = '''#pragma once
 class {name}Visitor : public Visitor {{
 {0}
  public:
-  {name}Visitor& operator<<(node_ptr_t node){{
-    node->accept(*this);
-    return *this;
-  }}
-  {name}Visitor& operator<<(optional_node_ptr_t node){{
-    if(node) node.value()->accept(*this);
-    return *this;
-  }}
 }};
 '''
 wt_source_aux = '''// Template
@@ -129,7 +130,7 @@ def genAux(content, vis):
 def genVisCpp(visitors, nodes):
   for vis in visitors:
     declare_list = "".join([\
-      '  virtual void visit(class {0}* node);\n'\
+      '  virtual void visit(class {0}* node) override;\n'\
       .format(t) for t in nodes
     ])
     with open(vis + "Visitor.cpp") as file:
