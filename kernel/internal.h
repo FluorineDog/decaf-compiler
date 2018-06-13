@@ -1,16 +1,19 @@
 #pragma once
 #include <iostream>
 #include <string>
+using std::cerr;
 using std::cin;
 using std::cout;
-using std::cerr;
 using std::endl;
 using std::string;
 
 class Indent {
  public:
   Indent(int& level) : level(level) { level++; }
-
+  Indent(int& level, string title) : level(level) {
+    (*this)(title);
+    level++;
+  }
   void printer_helper() {}
   template <typename T>
   void printer_helper(T a) {

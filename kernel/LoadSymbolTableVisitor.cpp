@@ -113,7 +113,7 @@ void LoadSymbolTableVisitor::visit(Prototype* node) {
   auto name = get_id(node->identifier);
 
   auto& container = current_interface.functions;
-  if(container.find(name) == container.end()){
+  if(container.find(name) != container.end()){
     cerr << "overload function not support: " << name;
   }
 
@@ -133,7 +133,7 @@ void LoadSymbolTableVisitor::visit(Interface* node) {
   auto class_name = get_id(node->type_ident);
 
   auto& container = top_pool;
-  if (container.find(class_name) == container.end()) {
+  if (container.find(class_name) != container.end()) {
     cerr << "Redeclaration of class: " << class_name << endl;
     exit(-1);
   }
@@ -157,7 +157,7 @@ void LoadSymbolTableVisitor::visit(ClassDecl* node) {
   auto class_name = get_id(node->type);
 
   auto& container = top_pool;
-  if (container.find(class_name) == container.end()) {
+  if (container.find(class_name) != container.end()) {
     cerr << "Redeclaration of class: " << class_name << endl;
     exit(-1);
   }
@@ -193,7 +193,7 @@ void LoadSymbolTableVisitor::visit(FunctionDecl* node) {
   auto name = get_id(node->identifier);
 
   auto& container = current_class.functions;
-  if(container.find(name) == container.end()){
+  if(container.find(name) != container.end()){
     cerr << "Redelaration of function" << name;
   }
 
@@ -233,6 +233,7 @@ void LoadSymbolTableVisitor::visit(TypeBase* node) {
       name = "void";
       break;
     default:
+      cerr << "[" << node->base_type << "]";
       name = "@WTF";
   }
   current_id = name;
@@ -259,7 +260,7 @@ void LoadSymbolTableVisitor::visit(TypedVariable* node) {
   switch (call_stack.top()) {
     case StateType::Field: {
       auto& entry = current_class;
-      if (entry.variables.find(id) == entry.variables.end()) {
+      if (entry.variables.find(id) != entry.variables.end()) {
         cerr << "redeclaration of id: " << id << endl;
         exit(-1);
       }
@@ -282,8 +283,9 @@ void LoadSymbolTableVisitor::visit(Program* node) {
   // *this << node->decls;
   
   for(auto entry: node->decls->list){
-    *this << node->decls;
+    *this << entry;
   }
+
 }
 
 void LoadSymbolTableVisitor::visit(NoAction* node) {

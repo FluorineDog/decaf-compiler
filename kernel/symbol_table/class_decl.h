@@ -67,17 +67,35 @@ inline void print(const ClassEntries& sym_table) {
   logger("ClassEntries", sym_table.size());
   for (const auto& [name, body] : sym_table) {
     Indent logger(level);
-    logger("Item");
+    logger("Item", name);
     std::visit(
-        overloaded{
-            // [](const auto& any) { std::cerr << "error"; },
-            [](const ClassBody& body) {
-              // if (body.extender) logger("Extender", body.extender);
-              cout << "fuck";
-            },
-            [](const InterfaceBody& body) {
-              cout << "fuck";
-            },
+        [&level](auto&& arg) {
+          using T = std::decay_t<decltype(arg)>;
+          if constexpr (std::is_same_v<T, ClassBody>) {
+            Indent logger(level);
+            logger("Class");
+            const ClassBody& body = arg;
+            if (body.extender) logger("Extender", body.extender.value());
+            for (auto impl : body.implementors) {
+              logger("ImplementItem", impl);
+            }
+            for (auto& [id, type] : body.variables) {
+              logger("Variable", type, id);
+            }
+            for (auto& [name, func] : body.functions) {
+              Indent logger(level);
+              logger("Function", name, "->",  func.type);
+              {
+                Indent logger(level);
+                for(auto [type, name]:func.parameters){
+                  logger("parameter", type, name);
+                }
+              }
+            }
+          } else if constexpr (std::is_same_v<T, InterfaceBody>) {
+            Indent logger(level);
+            logger("Interface");
+          }
         },
         body);
   }
@@ -102,7 +120,10 @@ class StateHolder {
   StateHolder(stack<StateType>& list_call_stack, StateType t)
       : list_call_stack(list_call_stack) {
     list_call_stack.push(t);
-    std::cerr << (int)t << endl;
+    // std::cerr << "(" << (int)t;
   }
-  ~StateHolder() { list_call_stack.pop(); }
+  ~StateHolder() {
+    // std::cerr << (int)list_call_stack.top() << ")";
+    list_call_stack.pop();
+  }
 };

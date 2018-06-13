@@ -7,8 +7,9 @@
 /*
   PrintVisitor& operator<<(node_ptr_t node);
   PrintVisitor& operator<<(optional_node_ptr_t node);
-  int level;
   string list_type;
+ public:
+  int level;
 */
 
 PrintVisitor& PrintVisitor::operator<<(optional_node_ptr_t node){
