@@ -13,9 +13,10 @@
     return *this;
   }
   stack<StateType> call_stack;
-  ClassEntries class_body;
-  string current_class;
-  string current_func;
+  ClassEntries top_pool;
+  ClassBody current_class;
+  InterfaceBody current_interface;
+  FuncEntry current_func;
   string current_id;
  private:
   string get_id(node_ptr_t);
@@ -107,42 +108,38 @@ void LoadSymbolTableVisitor::visit(If* node) {
 }
 
 void LoadSymbolTableVisitor::visit(ProtoType* node) {
-  // TODO
-  // auto id = node->type
+  auto id = node->type;
+   
 }
 
 void LoadSymbolTableVisitor::visit(Interface* node) {
-  // TODO
   HOLD(Interface);
-  auto prototype_name = get_id(node->type_ident);
-  current_class = prototype_name;
-  for(auto entry: node->prototypes->list){
-     
-  }
+  // auto prototype_name = get_id(node->type_ident);
+  // current_class = prototype_name;
+  // for(auto entry: node->prototypes->list){
+  //   *this << entry; 
+  // }
 }
 
 void LoadSymbolTableVisitor::visit(ClassDecl* node) {
-  // TODO
   HOLD(Class);
   auto class_name = get_id(node->type);
-  current_class = current_id;
 
-  if (class_body.find(class_name) == class_body.end()) {
+  if (top_pool.find(class_name) == top_pool.end()) {
     cerr << "Redeclear of " << class_name << endl;
     exit(-1);
   }
 
-  auto& object = class_body[class_name];
+  // auto& mix_entry = top_pool[class_name] = ClassBody();
+  auto& entry = current_class;
   if (node->extender) {
-    HOLD(Extender);
-    object.extender = get_id(node->extender.value());
+    entry.extender = get_id(node->extender.value());
   }
 
   if (node->implementor) {
-    HOLD(Implementor);
     auto list = node->implementor->list;
     for (auto id_entry : list) {
-      object.implementors.insert(get_id(id_entry));
+      entry.implementors.insert(get_id(id_entry));
     }
   }
 
@@ -153,12 +150,14 @@ void LoadSymbolTableVisitor::visit(ClassDecl* node) {
       *this << decl_entry;
     }
   }
+  // insert it lastly
+  top_pool.emplace(class_name, std::move(current_class));
   class_name = "@undefined";
 }
 
 void LoadSymbolTableVisitor::visit(FunctionDecl* node) {
-  // TODO
-  
+  HOLD(Function);
+  auto& entry = current_func = FuncEntry();
 }
 
 void LoadSymbolTableVisitor::visit(TypeArray* node) {
@@ -181,6 +180,9 @@ void LoadSymbolTableVisitor::visit(TypeBase* node) {
       break;
     case T_string:
       name = "string";
+      break;
+    case T_void:
+      name = "void";
       break;
     default:
       name = "@WTF";
@@ -206,14 +208,14 @@ void LoadSymbolTableVisitor::visit(TypedVariable* node) {
   // TODO
   switch (call_stack.top()) {
     case StateType::Field: {
-      auto& object = class_body[current_class];
+      auto& entry = current_class;
       auto type = get_id(node->type);
       auto id = get_id(node->id);
-      if(object.variables.find(id) == object.variables.end()){
+      if(entry.variables.find(id) == entry.variables.end()){
         cerr << "id conflicts: " << id << endl;
         exit(-1);
       }
-      object.variables[id] = type;
+      entry.variables[id] = type;
       break;
     }
   }
@@ -222,8 +224,8 @@ void LoadSymbolTableVisitor::visit(TypedVariable* node) {
 void LoadSymbolTableVisitor::visit(Program* node) {
   // TODO
   current_id = "@undefined";
-  current_class = "@undefined";
-  current_func = "@undefined";
+  // current_class = nullptr;
+  // current_func = "@undefined";
   node->accept(*this);  // goto functions
 }
 

@@ -4,6 +4,7 @@
 #include <set>
 #include <string>
 #include "../common.h"
+#include <variant>
 
 using std::map;
 using std::optional;
@@ -17,7 +18,7 @@ using VariableEntry = std::pair<string, string>;
 struct FuncEntry {
   TypeEntry type;
   vector<VariableEntry> parameters;
-  node_ptr_t body;  // fake for prototype
+  optional_node_ptr_t body;  // fake for prototype
   bool operator==(const FuncEntry& f) const {
     if (type != f.type) return false;
     bool is_equal =
@@ -45,10 +46,11 @@ struct InterfaceBody {
   map<string, FuncEntry> functions;
 };
 
-using ClassEntries = map<string, ClassBody>;
-using InterfaceEntries = map<string, InterfaceBody>;
+using Entry = std::variant<ClassBody, InterfaceBody>;
+using ClassEntries = map<string, Entry>;
+// using InterfaceEntries = map<string, InterfaceBody>;
 
-enum class StateType { Class, Extender, Implementor, Interface, Field };
+enum class StateType { Class, Extender, Implementor, Interface, Field, Function };
 #include <stack>
 using std::stack;
 class StateHolder {
