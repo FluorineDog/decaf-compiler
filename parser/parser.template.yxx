@@ -7,7 +7,7 @@
   using std::cin;
 }
 %code requires{
-  #include "common.h"
+  #include "external.h"
 }
 %code{
   int yylex (void);

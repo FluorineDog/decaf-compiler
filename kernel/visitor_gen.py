@@ -26,7 +26,6 @@ class Visitor {{
     return *this;
   }}
 }};
-{1} 
 '''
 
 wt_headers = '''#pragma once
@@ -76,9 +75,11 @@ def parse(content, visitors):
   include_list = "".join([
     '#include "{0}Visitor.h"\n'
     .format(vis) for (vis) in visitors])
-  visitor_c = wt_visitor.format(pure_list, include_list)
+  visitor_c = wt_visitor.format(pure_list)
   with open('generated/Visitor.h', 'w') as file:
     file.write(visitor_c)
+  with open('generated/visitor_summary.h', 'w') as file:
+    file.write(include_list)
 
   for name, values in result:
 
