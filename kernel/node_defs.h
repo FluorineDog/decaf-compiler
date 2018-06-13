@@ -154,7 +154,7 @@ class Interface : public ASTNodeBase {
  public:
   virtual void accept(Visitor& v) { v.visit(this); }
   node_ptr_t type_ident;
-  node_ptr_t prototypes;
+  List* prototypes;
 };
 
 

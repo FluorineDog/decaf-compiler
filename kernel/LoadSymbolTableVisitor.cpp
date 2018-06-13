@@ -106,10 +106,17 @@ void LoadSymbolTableVisitor::visit(If* node) {
 
 void LoadSymbolTableVisitor::visit(ProtoType* node) {
   // TODO
+  auto id = node->type
 }
 
 void LoadSymbolTableVisitor::visit(Interface* node) {
   // TODO
+  HOLD(Interface);
+  auto prototype_name = get_id(node->type_ident);
+  current_class = prototype_name;
+  for(auto entry: node->prototypes){
+     
+  }
 }
 
 void LoadSymbolTableVisitor::visit(ClassDecl* node) {
@@ -144,10 +151,12 @@ void LoadSymbolTableVisitor::visit(ClassDecl* node) {
       *this << decl_entry;
     }
   }
+  class_name = "@undefined";
 }
 
 void LoadSymbolTableVisitor::visit(FunctionDecl* node) {
   // TODO
+  
 }
 
 void LoadSymbolTableVisitor::visit(TypeArray* node) {
@@ -196,8 +205,12 @@ void LoadSymbolTableVisitor::visit(TypedVariable* node) {
   switch (call_stack.top()) {
     case StateType::Field: {
       auto& object = class_body[current_class];
-      auto id = get_id(node->id);
       auto type = get_id(node->type);
+      auto id = get_id(node->id);
+      if(object.variables.find(id) == object.variables.end()){
+        cerr << "id conflicts: " << id << endl;
+        exit(-1);
+      }
       object.variables[id] = type;
       break;
     }
