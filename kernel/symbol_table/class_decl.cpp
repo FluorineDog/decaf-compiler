@@ -23,10 +23,6 @@ bool FuncEntry::operator==(const FuncEntry& f) const {
 }
 
 void print(const ClassEntries& sym_table) {
-  std::cerr << "hwwwwwwwwwww";
-}
-/*
-void print(const ClassEntries& sym_table) {
   int level = 0;
   Indent logger(level);
   logger("TopEntries", sym_table.size());
@@ -53,9 +49,9 @@ void print(const ClassEntries& sym_table) {
                 for (auto [type, name] : func.parameters) {
                   logger("Parameter", type, name);
                 }
-                // PrintVisitor v;
-                // v.level = level + 1;
-                // v << func.body;
+                PrintVisitor v;
+                v.level = level - 1;
+                v << func.body;
               }
             }
           } else if constexpr (std::is_same_v<T, InterfaceBody>) {
@@ -77,4 +73,3 @@ void print(const ClassEntries& sym_table) {
         body);
   }
 }
-*/
