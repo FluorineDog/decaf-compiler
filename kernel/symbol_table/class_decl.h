@@ -17,6 +17,7 @@ using std::vector;
 
 using TypeEntry = std::string;
 using VariableEntry = std::pair<string, string>;
+template<class T> struct always_false : std::false_type {};
 
 struct FuncEntry {
   TypeEntry type;
@@ -87,6 +88,8 @@ inline void print(const ClassEntries& sym_table) {
           } else if constexpr (std::is_same_v<T, InterfaceBody>) {
             Indent logger(level);
             logger("Interface");
+          } else {
+            static_assert(always_false<T>::value, "WTF");
           }
         },
         body);
