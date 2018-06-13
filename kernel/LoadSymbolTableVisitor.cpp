@@ -15,7 +15,14 @@
   string current_class;
   string current_func;
   string current_id;
+ private:
+  string get_id(node_ptr_t);
 */
+string LoadSymbolTableVisitor::get_id(node_ptr_t node) {
+  current_id = "@undefined";
+  *this << node;
+  return current_id;
+}
 #define HOLD(t) StateHolder sh(call_stack, StateType::t);
 void LoadSymbolTableVisitor::visit(Integer* node) {
   // TODO
@@ -108,9 +115,8 @@ void LoadSymbolTableVisitor::visit(Interface* node) {
 void LoadSymbolTableVisitor::visit(ClassDecl* node) {
   // TODO
   HOLD(Class);
-  *this << node->type;
-  auto class_name = current_id;
-  current_id = "@undefined";
+  auto class_name = get_id(node->type);
+  current_class = current_id;
 
   if (class_body.find(class_name) == class_body.end()) {
     cerr << "Redeclear of " << class_name << endl;
@@ -119,19 +125,25 @@ void LoadSymbolTableVisitor::visit(ClassDecl* node) {
 
   auto& object = class_body[class_name];
   if (node->extender) {
-    *this << node->extender;
-    object.extender = current_id;
-    current_id = "@undefined";
+    HOLD(Extender);
+    object.extender = get_id(node->extender);
   }
 
   if (node->implementor) {
     HOLD(Implementor);
-    *this << node->implementor;
-    object.implementors.insert(current_id);
-    current_id = "@undefined";
+    auto list = node->implementor->list;
+    for (auto id_entry : list) {
+      object.implementors.insert(get_id(id_entry));
+    }
   }
 
-  *this << node->fields;
+  if (node->fields) {
+    HOLD(Field);
+    auto list = node->fields->list;
+    for (auto decl_entry : list) {
+      *this << decl_entry;
+    }
+  }
 }
 
 void LoadSymbolTableVisitor::visit(FunctionDecl* node) {
@@ -140,6 +152,7 @@ void LoadSymbolTableVisitor::visit(FunctionDecl* node) {
 
 void LoadSymbolTableVisitor::visit(TypeArray* node) {
   // TODO
+  current_id = get_id(node->base) + "[]";
 }
 
 void LoadSymbolTableVisitor::visit(TypeBase* node) {
@@ -159,7 +172,7 @@ void LoadSymbolTableVisitor::visit(TypeBase* node) {
       name = "string";
       break;
     default:
-      name = "WTF";
+      name = "@WTF";
   }
   current_id = name;
 }
@@ -171,6 +184,7 @@ void LoadSymbolTableVisitor::visit(TypeUser* node) {
 
 void LoadSymbolTableVisitor::visit(Identifier* node) {
   // TODO
+  current_id = node->name;
 }
 
 void LoadSymbolTableVisitor::visit(Assign* node) {
@@ -179,6 +193,15 @@ void LoadSymbolTableVisitor::visit(Assign* node) {
 
 void LoadSymbolTableVisitor::visit(TypedVariable* node) {
   // TODO
+  switch (call_stack.top()) {
+    case StateType::Field: {
+      auto& object = class_body[current_class];
+      auto id = get_id(node->id);
+      auto type = get_id(node->type);
+      object.variables[id] = type;
+      break;
+    }
+  }
 }
 
 void LoadSymbolTableVisitor::visit(Program* node) {
@@ -192,5 +215,3 @@ void LoadSymbolTableVisitor::visit(Program* node) {
 void LoadSymbolTableVisitor::visit(NoAction* node) {
   // TODO
 }
-
-

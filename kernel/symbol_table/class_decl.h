@@ -48,7 +48,7 @@ struct InterfaceBody {
 using ClassEntries = map<string, ClassBody>;
 using InterfaceEntries = map<string, InterfaceBody>;
 
-enum class StateType { Class, Extender, Implementor, Interface };
+enum class StateType { Class, Extender, Implementor, Interface, Field };
 #include <stack>
 using std::stack;
 class StateHolder {
