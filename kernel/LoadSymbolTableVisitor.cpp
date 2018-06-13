@@ -112,7 +112,7 @@ void LoadSymbolTableVisitor::visit(Prototype* node) {
   HOLD(Prototype);
   auto name = get_id(node->identifier);
 
-  auto& container = current_class.functions;
+  auto& container = current_interface.functions;
   if(container.find(name) == container.end()){
     cerr << "overload function not support: " << name;
   }
@@ -130,11 +130,26 @@ void LoadSymbolTableVisitor::visit(Prototype* node) {
 
 void LoadSymbolTableVisitor::visit(Interface* node) {
   HOLD(Interface);
-  // auto prototype_name = get_id(node->type_ident);
-  // current_class = prototype_name;
-  // for(auto entry: node->prototypes->list){
-  //   *this << entry;
-  // }
+  auto class_name = get_id(node->type_ident);
+
+  auto& container = top_pool;
+  if (container.find(class_name) == container.end()) {
+    cerr << "Redeclaration of class: " << class_name << endl;
+    exit(-1);
+  }
+
+  // auto& mix_entry = top_pool[class_name] = ClassBody();
+  auto& entry = current_interface;
+
+  if (node->prototypes) {
+    HOLD(Field);
+    auto list = node->prototypes->list;
+    for (auto decl_entry : list) {
+      *this << decl_entry;
+    }
+  }
+  container.emplace(class_name, std::move(current_interface));
+  current_interface = InterfaceBody();
 }
 
 void LoadSymbolTableVisitor::visit(ClassDecl* node) {
