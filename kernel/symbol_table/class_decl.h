@@ -57,16 +57,15 @@ using ClassEntries = map<string, Entry>;
 inline void print(const ClassEntries& sym_table) {
   int level = 0;
   Indent logger(level);
-  logger("ClassEntries", sym_table.size());
+  logger("TopEntries", sym_table.size());
   for (const auto& [name, body] : sym_table) {
     Indent logger(level);
-    logger("Item", name);
+    // logger("ClassOrInterface", name);
     std::visit(
-        [&level](auto&& arg) {
+        [&level, name](auto&& arg) {
           using T = std::decay_t<decltype(arg)>;
           if constexpr (std::is_same_v<T, ClassBody>) {
-            Indent logger(level);
-            logger("Class");
+            Indent logger(level, "Class", name);
             const ClassBody& body = arg;
             if (body.extender) logger("Extender", body.extender.value());
             for (auto impl : body.implementors) {
@@ -76,8 +75,19 @@ inline void print(const ClassEntries& sym_table) {
               logger("Variable", type, id);
             }
             for (auto& [name, func] : body.functions) {
-              Indent logger(level);
               logger("Function", name, "->", func.type);
+              {
+                Indent logger(level);
+                for (auto [type, name] : func.parameters) {
+                  logger("Parameter", type, name);
+                }
+              }
+            }
+          } else if constexpr (std::is_same_v<T, InterfaceBody>) {
+            Indent logger(level, "Interface", name);
+            const InterfaceBody& body = arg;
+            for (auto& [name, func] : body.functions) {
+              logger("Prototype", name, "->", func.type);
               {
                 Indent logger(level);
                 for (auto [type, name] : func.parameters) {
@@ -85,9 +95,6 @@ inline void print(const ClassEntries& sym_table) {
                 }
               }
             }
-          } else if constexpr (std::is_same_v<T, InterfaceBody>) {
-            Indent logger(level);
-            logger("Interface");
           } else {
             static_assert(always_false<T>::value, "WTF");
           }

@@ -10,8 +10,9 @@ using std::string;
 class Indent {
  public:
   Indent(int& level) : level(level) { level++; }
-  Indent(int& level, string title) : level(level) {
-    (*this)(title);
+  template <typename... Args>
+  Indent(int& level, Args&&... args) : level(level) {
+    (*this)(args...);
     level++;
   }
   void printer_helper() {}
