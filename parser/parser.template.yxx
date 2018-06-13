@@ -41,6 +41,7 @@ input:
 %%
 
 int main(){
+  freopen("/home/mike/compiler/data/list.decaf", "r", stdin);
   yyparse();
   if (false) {
     PrintVisitor v;

@@ -3,8 +3,8 @@
 #include <optional>
 #include <set>
 #include <string>
-#include "../common.h"
 #include <variant>
+#include "../common.h"
 
 using std::map;
 using std::optional;
@@ -50,18 +50,24 @@ using Entry = std::variant<ClassBody, InterfaceBody>;
 using ClassEntries = map<string, Entry>;
 // using InterfaceEntries = map<string, InterfaceBody>;
 
-enum class StateType { Class, Extender, Implementor, Interface, Field, Function };
+enum class StateType {
+  Class,
+  Extender,
+  Implementor,
+  Interface,
+  Field,
+  Function,
+  Program
+};
 #include <stack>
 using std::stack;
 class StateHolder {
   stack<StateType>& list_call_stack;
+
  public:
   StateHolder(stack<StateType>& list_call_stack, StateType t)
       : list_call_stack(list_call_stack) {
     list_call_stack.push(t);
   }
-  ~StateHolder(){
-    list_call_stack.pop();
-  }
+  ~StateHolder() { list_call_stack.pop(); }
 };
-

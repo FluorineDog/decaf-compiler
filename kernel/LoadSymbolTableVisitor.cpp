@@ -107,17 +107,14 @@ void LoadSymbolTableVisitor::visit(If* node) {
   // TODO
 }
 
-void LoadSymbolTableVisitor::visit(ProtoType* node) {
-  auto id = node->type;
-   
-}
+void LoadSymbolTableVisitor::visit(ProtoType* node) { auto id = node->type; }
 
 void LoadSymbolTableVisitor::visit(Interface* node) {
   HOLD(Interface);
   // auto prototype_name = get_id(node->type_ident);
   // current_class = prototype_name;
   // for(auto entry: node->prototypes->list){
-  //   *this << entry; 
+  //   *this << entry;
   // }
 }
 
@@ -125,7 +122,8 @@ void LoadSymbolTableVisitor::visit(ClassDecl* node) {
   HOLD(Class);
   auto class_name = get_id(node->type);
 
-  if (top_pool.find(class_name) == top_pool.end()) {
+  auto& container = top_pool;
+  if (container.find(class_name) == container.end()) {
     cerr << "Redeclear of " << class_name << endl;
     exit(-1);
   }
@@ -150,14 +148,30 @@ void LoadSymbolTableVisitor::visit(ClassDecl* node) {
       *this << decl_entry;
     }
   }
-  // insert it lastly
-  top_pool.emplace(class_name, std::move(current_class));
-  class_name = "@undefined";
+
+  // insert it finally
+  container.emplace(class_name, std::move(current_class));
+  current_class = ClassBody();
 }
 
 void LoadSymbolTableVisitor::visit(FunctionDecl* node) {
   HOLD(Function);
+  auto name = get_id(node->identifier);
+
+  auto& container = current_class.functions;
+  if(container.find(name) == container.end()){
+    cerr << "duplicate function" << name;
+  }
+
   auto& entry = current_func = FuncEntry();
+  entry.type = get_id(node->type);
+  for (auto variable_node : node->formals->list) {
+    *this << variable_node;
+  }
+  entry.body = node->body;
+
+  container.emplace(name, std::move(entry));
+  entry = FuncEntry();
 }
 
 void LoadSymbolTableVisitor::visit(TypeArray* node) {
@@ -206,31 +220,32 @@ void LoadSymbolTableVisitor::visit(Assign* node) {
 
 void LoadSymbolTableVisitor::visit(TypedVariable* node) {
   // TODO
+  auto type = get_id(node->type);
+  auto id = get_id(node->id);
   switch (call_stack.top()) {
     case StateType::Field: {
       auto& entry = current_class;
-      auto type = get_id(node->type);
-      auto id = get_id(node->id);
-      if(entry.variables.find(id) == entry.variables.end()){
+      if (entry.variables.find(id) == entry.variables.end()) {
         cerr << "id conflicts: " << id << endl;
         exit(-1);
       }
       entry.variables[id] = type;
       break;
     }
+    case StateType::Function: {
+      auto& entry = current_func;
+      entry.parameters.emplace_back(type, id);
+      break;
+    }
   }
 }
 
 void LoadSymbolTableVisitor::visit(Program* node) {
-  // TODO
+  HOLD(Program);
   current_id = "@undefined";
-  // current_class = nullptr;
-  // current_func = "@undefined";
-  node->accept(*this);  // goto functions
+  *this << node->decls;
 }
 
 void LoadSymbolTableVisitor::visit(NoAction* node) {
   // TODO
 }
-
-
