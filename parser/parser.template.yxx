@@ -46,6 +46,6 @@ int main(){
     PrintVisitor v;
     root->accept(v);
   } 
-  SymbolTableVisitor v;
+  LoadSymbolTableVisitor v;
   root->accept(v);
 }

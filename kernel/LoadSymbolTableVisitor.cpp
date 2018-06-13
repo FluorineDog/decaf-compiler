@@ -4,13 +4,15 @@
 #include "symbol_table/class_decl.h"
 /*
  public:
-  LoadSymbolTableVisitor& operator<<(ASTNodeBase* node){
-    if(node != nullptr){
-      node->accept(*this);
-    }
+  LoadSymbolTableVisitor& operator<<(node_ptr_t node){
+    node->accept(*this);
     return *this;
   }
-  stack<StateType>& call_stack;
+  LoadSymbolTableVisitor& operator<<(optional_node_ptr_t node){
+    if(node) node.value()->accept(*this);
+    return *this;
+  }
+  stack<StateType> call_stack;
   ClassEntries class_body;
   string current_class;
   string current_func;
@@ -106,7 +108,7 @@ void LoadSymbolTableVisitor::visit(If* node) {
 
 void LoadSymbolTableVisitor::visit(ProtoType* node) {
   // TODO
-  auto id = node->type
+  // auto id = node->type
 }
 
 void LoadSymbolTableVisitor::visit(Interface* node) {
@@ -114,7 +116,7 @@ void LoadSymbolTableVisitor::visit(Interface* node) {
   HOLD(Interface);
   auto prototype_name = get_id(node->type_ident);
   current_class = prototype_name;
-  for(auto entry: node->prototypes){
+  for(auto entry: node->prototypes->list){
      
   }
 }
@@ -133,7 +135,7 @@ void LoadSymbolTableVisitor::visit(ClassDecl* node) {
   auto& object = class_body[class_name];
   if (node->extender) {
     HOLD(Extender);
-    object.extender = get_id(node->extender);
+    object.extender = get_id(node->extender.value());
   }
 
   if (node->implementor) {
@@ -228,3 +230,5 @@ void LoadSymbolTableVisitor::visit(Program* node) {
 void LoadSymbolTableVisitor::visit(NoAction* node) {
   // TODO
 }
+
+

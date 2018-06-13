@@ -23,7 +23,7 @@ class Call : public ASTNodeBase {
  public:
   virtual void accept(Visitor& v) { v.visit(this); }
   // can be nullptr
-  node_ptr_t domain_expr;
+  optional_node_ptr_t domain_expr;
   node_ptr_t ident;
   node_ptr_t actuals;
 };
@@ -31,7 +31,6 @@ class Call : public ASTNodeBase {
 class Index : public ASTNodeBase {
  public:
   virtual void accept(Visitor& v) { v.visit(this); }
-  // can be nullptr
   node_ptr_t expr;
   node_ptr_t index_expr;
 };
@@ -39,7 +38,6 @@ class Index : public ASTNodeBase {
 class MemberDot : public ASTNodeBase {
  public:
   virtual void accept(Visitor& v) { v.visit(this); }
-  // can be nullptr
   node_ptr_t expr;
   node_ptr_t ident;
 };
@@ -162,7 +160,7 @@ class ClassDecl : public ASTNodeBase {
  public:
   virtual void accept(Visitor& v) { v.visit(this); }
   node_ptr_t type;
-  node_ptr_t extender;
+  optional_node_ptr_t extender;
   List* implementor;
   List* fields;
 };

@@ -42,18 +42,24 @@ class Indent {
   int& level;
 };
 /*
-  PrintVisitor& operator<<(ASTNodeBase* node){
-    if(node != nullptr){
-      node->accept(*this);
-    } else {
-      NoAction no;
-      no.accept(*this);
-    }
-    return *this;
-  }
+  PrintVisitor& operator<<(node_ptr_t node);
+  PrintVisitor& operator<<(optional_node_ptr_t node);
   int level;
   string list_type;
 */
+
+PrintVisitor& PrintVisitor::operator<<(optional_node_ptr_t node){
+  if(node){
+    node.value()->accept(*this);
+  } 
+  return *this;
+}
+
+PrintVisitor& PrintVisitor::operator<<(ASTNodeBase* node){
+  node->accept(*this);
+  return *this;
+}
+
 void PrintVisitor::visit(Integer* node) {
   Indent logger(level);
   logger("Integer", node->num);
@@ -292,6 +298,9 @@ void PrintVisitor::visit(TypeBase* node) {
       break;
     case T_bool:
       name = "bool";
+      break;
+    case T_void:
+      name = "void";
       break;
     case T_string:
       name = "string";

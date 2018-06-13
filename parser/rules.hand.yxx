@@ -46,7 +46,7 @@ Type:
 
 FunctionDecl:
   Type ident '(' Formals ')' StmtBlock      {$$ = mkFunctionDecl($1, $2, $4, $6);}
-| T_void ident '(' Formals ')' StmtBlock    {$$ = mkFunctionDecl(nullptr, $2, $4, $6);}
+| T_void ident '(' Formals ')' StmtBlock    {$$ = mkFunctionDecl(mkTypeBase($1), $2, $4, $6);}
 ;
 
 VariableCommaList:
@@ -55,7 +55,7 @@ VariableCommaList:
 ;
 
 VariableCommaListOptional:
-  %empty                     {$$ = nullptr;}
+  %empty                     {$$ = mkList();}
 | VariableCommaList          {$$ = $1;}
 ;
 
@@ -69,7 +69,7 @@ ExtenderOptional:
 ;
 
 ImplementorOptional:
-  %empty                     {$$ = nullptr;}
+  %empty                     {$$ = mkList();}
 | Implementor                {$$ = $1;}
 ;
 
@@ -79,12 +79,15 @@ FieldList:
 ;
 
 FieldListOptional:
-  %empty                     {$$ = nullptr;}
+  %empty                     {$$ = mkList();}
 | FieldList                  {$$ = $1;}
 ;
 
 ClassDecl:
-  T_class type_ident ExtenderOptional ImplementorOptional '{' FieldListOptional '}' {$$ = mkClassDecl($2, $3, $4, $6);}
+  T_class type_ident ExtenderOptional ImplementorOptional '{' FieldListOptional '}' {
+    auto extender = $3 ? optional_node_ptr_t($3) : std::nullopt;
+    $$ = mkClassDecl($2, extender, $4, $6);
+    }
 ;
 
 Extender:
@@ -111,7 +114,7 @@ PrototypeList:
 ;
 
 PrototypeListOptional:
-  %empty                     {$$ = nullptr;}
+  %empty                     {$$ = mkList();}
 | PrototypeList              {$$ = $1;}
 ;
 
@@ -121,7 +124,7 @@ InterfaceDecl:
 
 Prototype:
   Type ident '(' Formals ')' ';'      {$$ = mkProtoType($1, $2, $4);}
-| T_void ident '(' Formals ')' ';'    {$$ = mkProtoType(nullptr, $2, $4);}
+| T_void ident '(' Formals ')' ';'    {$$ = mkProtoType(mkTypeBase($1), $2, $4);}
 ;
 
 StmtList:
@@ -130,7 +133,7 @@ StmtList:
 ;
 
 StmtListOptional:
-  %empty                     {$$ = nullptr;}
+  %empty                     {$$ = mkList();}
 | StmtList                   {$$ = $1;}
 ;
 
@@ -139,7 +142,7 @@ StmtBlock:
 ;
 
 ExprOptional:
-  %empty                     {$$ = nullptr;}
+  %empty                     {$$ = mkNoAction();}
 | Expr                       {$$ = $1;}
 ;
 
@@ -156,7 +159,7 @@ Stmt:
 ;
 
 ElseTailOptional:
-  %empty                     {$$ = nullptr;}
+  %empty                     {$$ = mkNoAction();}
 | ElseTail                   {$$ = $1;}
 ;
 
@@ -228,12 +231,12 @@ LValue:
 ;
 
 Call:
-  ident '(' Actuals ')'      {$$ = mkCall(nullptr, $1, $3);}
+  ident '(' Actuals ')'      {$$ = mkCall(std::nullopt, $1, $3);}
 | Expr '.' ident '(' Actuals ')'     {$$ = mkCall($1, $3, $5);}
 ;
 
 ExprCommaListOptional:
-  %empty                     {$$ = nullptr;}
+  %empty                     {$$ = mkList();}
 | ExprCommaList              {$$ = $1;}
 ;
 
