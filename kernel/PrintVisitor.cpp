@@ -1,7 +1,7 @@
 // Template
 #include "generated/PrintVisitor.h"
 #include "../build/parser.hxx"
-#include "internal.h"
+#include "indent.h"
 #include "node_defs.h"
 /*
   string list_type;

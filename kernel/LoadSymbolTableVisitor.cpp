@@ -1,6 +1,6 @@
 // Template
 #include "generated/LoadSymbolTableVisitor.h"
-#include "internal.h"
+#include "indent.h"
 #include "symbol_table/class_decl.h"
 /*
  public:

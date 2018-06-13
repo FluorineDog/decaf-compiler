@@ -1,5 +1,5 @@
 #pragma once
-#include "common.h"
+#include "pure_common.h"
 #include <string>
 using std::string;
 class Integer : public ASTNodeBase {

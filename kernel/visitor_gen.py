@@ -41,7 +41,7 @@ class {name}Visitor : public Visitor {{
 '''
 wt_source_aux = '''// Template
 #include "generated/{vis}Visitor.h"
-#include "internal.h"
+#include "indent.h"
 /*
 */
 '''
