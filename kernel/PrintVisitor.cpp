@@ -3,12 +3,11 @@
 #include "../build/parser.hxx"
 #include "internal.h"
 #include "node_defs.h"
-
 /*
-  PrintVisitor& operator<<(node_ptr_t node);
-  PrintVisitor& operator<<(optional_node_ptr_t node);
   string list_type;
  public:
+  PrintVisitor& operator<<(node_ptr_t node);
+  PrintVisitor& operator<<(optional_node_ptr_t node);
   int level;
 */
 
