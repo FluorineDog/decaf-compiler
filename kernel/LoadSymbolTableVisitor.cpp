@@ -107,7 +107,10 @@ void LoadSymbolTableVisitor::visit(If* node) {
   // TODO
 }
 
-void LoadSymbolTableVisitor::visit(ProtoType* node) { auto id = node->type; }
+void LoadSymbolTableVisitor::visit(ProtoType* node) { 
+  // TODO
+  auto id = node->type; 
+}
 
 void LoadSymbolTableVisitor::visit(Interface* node) {
   HOLD(Interface);
