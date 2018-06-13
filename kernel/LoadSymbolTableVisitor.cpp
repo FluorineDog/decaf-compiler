@@ -114,7 +114,7 @@ void LoadSymbolTableVisitor::visit(Prototype* node) {
 
   auto& container = current_class.functions;
   if(container.find(name) == container.end()){
-    cerr << "duplicate function" << name;
+    cerr << "overload function not support: " << name;
   }
 
   auto& entry = current_func = FuncEntry();
@@ -143,7 +143,7 @@ void LoadSymbolTableVisitor::visit(ClassDecl* node) {
 
   auto& container = top_pool;
   if (container.find(class_name) == container.end()) {
-    cerr << "Redeclear of " << class_name << endl;
+    cerr << "Redeclaration of class: " << class_name << endl;
     exit(-1);
   }
 
@@ -179,7 +179,7 @@ void LoadSymbolTableVisitor::visit(FunctionDecl* node) {
 
   auto& container = current_class.functions;
   if(container.find(name) == container.end()){
-    cerr << "duplicate function" << name;
+    cerr << "Redelaration of function" << name;
   }
 
   auto& entry = current_func = FuncEntry();
@@ -245,7 +245,7 @@ void LoadSymbolTableVisitor::visit(TypedVariable* node) {
     case StateType::Field: {
       auto& entry = current_class;
       if (entry.variables.find(id) == entry.variables.end()) {
-        cerr << "id conflicts: " << id << endl;
+        cerr << "redeclaration of id: " << id << endl;
         exit(-1);
       }
       entry.variables[id] = type;
