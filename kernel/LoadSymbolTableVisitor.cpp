@@ -107,9 +107,25 @@ void LoadSymbolTableVisitor::visit(If* node) {
   // TODO
 }
 
-void LoadSymbolTableVisitor::visit(ProtoType* node) { 
+void LoadSymbolTableVisitor::visit(ProtoType* node) {
   // TODO
-  auto id = node->type; 
+  HOLD(ProtoType);
+  auto name = get_id(node->identifier);
+
+  auto& container = current_class.functions;
+  if(container.find(name) == container.end()){
+    cerr << "duplicate function" << name;
+  }
+
+  auto& entry = current_func = FuncEntry();
+  entry.type = get_id(node->type);
+  for (auto variable_node : node->formals->list) {
+    *this << variable_node;
+  }
+  entry.body = std::nullopt;
+
+  container.emplace(name, std::move(entry));
+  entry = FuncEntry();
 }
 
 void LoadSymbolTableVisitor::visit(Interface* node) {
@@ -235,7 +251,9 @@ void LoadSymbolTableVisitor::visit(TypedVariable* node) {
       entry.variables[id] = type;
       break;
     }
-    case StateType::Function: {
+    case StateType::Function: 
+    case StateType::ProtoType: 
+    {
       auto& entry = current_func;
       entry.parameters.emplace_back(type, id);
       break;
@@ -252,3 +270,5 @@ void LoadSymbolTableVisitor::visit(Program* node) {
 void LoadSymbolTableVisitor::visit(NoAction* node) {
   // TODO
 }
+
+

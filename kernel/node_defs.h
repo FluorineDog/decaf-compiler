@@ -145,7 +145,7 @@ class ProtoType : public ASTNodeBase {
   virtual void accept(Visitor& v) { v.visit(this); }
   node_ptr_t type;
   node_ptr_t identifier;
-  node_ptr_t formals; 
+  List* formals; 
 };
 
 class Interface : public ASTNodeBase {
