@@ -15,14 +15,6 @@ using std::string;
 using std::tuple;
 using std::vector;
 
-template <class... Ts>
-struct overloaded : Ts... {
-  using Ts::operator()...;
-};
-
-template <class... Ts>
-overloaded(Ts...)->overloaded<Ts...>;
-
 using TypeEntry = std::string;
 using VariableEntry = std::pair<string, string>;
 
@@ -84,10 +76,10 @@ inline void print(const ClassEntries& sym_table) {
             }
             for (auto& [name, func] : body.functions) {
               Indent logger(level);
-              logger("Function", name, "->",  func.type);
+              logger("Function", name, "->", func.type);
               {
                 Indent logger(level);
-                for(auto [type, name]:func.parameters){
+                for (auto [type, name] : func.parameters) {
                   logger("parameter", type, name);
                 }
               }
