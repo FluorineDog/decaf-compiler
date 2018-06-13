@@ -279,7 +279,11 @@ void LoadSymbolTableVisitor::visit(TypedVariable* node) {
 void LoadSymbolTableVisitor::visit(Program* node) {
   HOLD(Program);
   current_id = "@undefined";
-  *this << node->decls;
+  // *this << node->decls;
+  
+  for(auto entry: node->decls->list){
+    *this << node->decls;
+  }
 }
 
 void LoadSymbolTableVisitor::visit(NoAction* node) {
