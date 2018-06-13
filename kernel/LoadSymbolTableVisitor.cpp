@@ -4,14 +4,6 @@
 #include "symbol_table/class_decl.h"
 /*
  public:
-  LoadSymbolTableVisitor& operator<<(node_ptr_t node){
-    node->accept(*this);
-    return *this;
-  }
-  LoadSymbolTableVisitor& operator<<(optional_node_ptr_t node){
-    if(node) node.value()->accept(*this);
-    return *this;
-  }
   stack<StateType> call_stack;
   ClassEntries top_pool;
   ClassBody current_class;

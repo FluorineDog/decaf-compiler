@@ -27,6 +27,15 @@ wt_headers = '''#pragma once
 {more_includes}
 class {name}Visitor : public Visitor {{
 {0}
+ public:
+  {name}Visitor& operator<<(node_ptr_t node){{
+    node->accept(*this);
+    return *this;
+  }}
+  {name}Visitor& operator<<(optional_node_ptr_t node){{
+    if(node) node.value()->accept(*this);
+    return *this;
+  }}
 }};
 '''
 wt_source_aux = '''// Template

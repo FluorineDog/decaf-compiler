@@ -6,22 +6,8 @@
 /*
   string list_type;
  public:
-  PrintVisitor& operator<<(node_ptr_t node);
-  PrintVisitor& operator<<(optional_node_ptr_t node);
   int level;
 */
-
-PrintVisitor& PrintVisitor::operator<<(optional_node_ptr_t node){
-  if(node){
-    node.value()->accept(*this);
-  } 
-  return *this;
-}
-
-PrintVisitor& PrintVisitor::operator<<(ASTNodeBase* node){
-  node->accept(*this);
-  return *this;
-}
 
 void PrintVisitor::visit(Integer* node) {
   Indent logger(level);
