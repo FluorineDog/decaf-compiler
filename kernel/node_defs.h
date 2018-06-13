@@ -140,7 +140,7 @@ class If : public ASTNodeBase {
   node_ptr_t else_stmt;
 };
 
-class ProtoType : public ASTNodeBase {
+class Prototype : public ASTNodeBase {
  public:
   virtual void accept(Visitor& v) { v.visit(this); }
   node_ptr_t type;

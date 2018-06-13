@@ -225,7 +225,7 @@ void PrintVisitor::visit(If* node) {
   *this << node->condition;
 }
 
-void PrintVisitor::visit(ProtoType* node) {
+void PrintVisitor::visit(Prototype* node) {
   Indent logger(level);
   if(node->type != nullptr){
     *this << node->type;

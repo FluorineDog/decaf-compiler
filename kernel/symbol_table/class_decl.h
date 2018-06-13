@@ -57,7 +57,7 @@ enum class StateType {
   Interface,
   Field,
   Function,
-  ProtoType,
+  Prototype,
   Program
 };
 #include <stack>

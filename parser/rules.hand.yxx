@@ -123,8 +123,8 @@ InterfaceDecl:
 ;
 
 Prototype:
-  Type ident '(' Formals ')' ';'      {$$ = mkProtoType($1, $2, $4);}
-| T_void ident '(' Formals ')' ';'    {$$ = mkProtoType(mkTypeBase($1), $2, $4);}
+  Type ident '(' Formals ')' ';'      {$$ = mkPrototype($1, $2, $4);}
+| T_void ident '(' Formals ')' ';'    {$$ = mkPrototype(mkTypeBase($1), $2, $4);}
 ;
 
 StmtList:

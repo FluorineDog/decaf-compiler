@@ -107,9 +107,9 @@ void LoadSymbolTableVisitor::visit(If* node) {
   // TODO
 }
 
-void LoadSymbolTableVisitor::visit(ProtoType* node) {
+void LoadSymbolTableVisitor::visit(Prototype* node) {
   // TODO
-  HOLD(ProtoType);
+  HOLD(Prototype);
   auto name = get_id(node->identifier);
 
   auto& container = current_class.functions;
@@ -252,7 +252,7 @@ void LoadSymbolTableVisitor::visit(TypedVariable* node) {
       break;
     }
     case StateType::Function: 
-    case StateType::ProtoType: 
+    case StateType::Prototype: 
     {
       auto& entry = current_func;
       entry.parameters.emplace_back(type, id);

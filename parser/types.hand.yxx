@@ -23,7 +23,7 @@
 %type <uInterface> InterfaceDecl
 %type <uList> PrototypeList
 %type <uList> PrototypeListOptional
-%type <uProtoType> Prototype
+%type <uPrototype> Prototype
 %type <uBlock> StmtBlock
 %type <uList> StmtList
 %type <uList> StmtListOptional
