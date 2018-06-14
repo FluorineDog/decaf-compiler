@@ -104,11 +104,11 @@ void LoadSymbolTableVisitor::visit(Prototype* node) {
   HOLD(Prototype);
   auto name = get_id(node->identifier);
 
-  auto& container = current_interface.functions;
-  if(container.find(name) != container.end()){
+  if(current_interface.get_function(name)){
     cerr << "overload function not support: " << name;
   }
 
+  auto& container = current_interface.functions;
   auto& entry = current_func = FuncEntry();
   entry.type = get_id(node->type);
   for (auto variable_node : node->formals->list) {
@@ -184,11 +184,11 @@ void LoadSymbolTableVisitor::visit(FunctionDecl* node) {
   HOLD(Function);
   auto name = get_id(node->identifier);
 
-  auto& container = current_class.functions;
-  if(container.find(name) != container.end()){
+  if(current_class.get_function(name) == nullptr){
     cerr << "Redelaration of function" << name;
   }
 
+  auto& container = current_class.functions;
   auto& entry = current_func = FuncEntry();
   entry.type = get_id(node->type);
   for (auto variable_node : node->formals->list) {
@@ -252,7 +252,7 @@ void LoadSymbolTableVisitor::visit(TypedVariable* node) {
   switch (call_stack.top()) {
     case StateType::Field: {
       auto& entry = current_class;
-      if (entry.variables.find(id) != entry.variables.end()) {
+      if (entry.get_variable(id) == nullptr) {
         cerr << "redeclaration of id: " << id << endl;
         exit(-1);
       }

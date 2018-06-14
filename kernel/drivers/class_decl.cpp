@@ -22,7 +22,7 @@ bool FuncEntry::operator==(const FuncEntry& f) const {
   return is_equal;
 }
 
-void print(const ClassEntries& sym_table) {
+void print_sym_table(const ClassEntries& sym_table) {
   int level = 0;
   Indent logger(level);
   logger("TopEntries", sym_table.size());

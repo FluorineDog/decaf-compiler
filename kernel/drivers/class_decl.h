@@ -2,16 +2,16 @@
 #include <map>
 #include <optional>
 #include <set>
+#include <stack>
 #include <string>
 #include <type_traits>
 #include <variant>
-#include <stack>
 #include <vector>
 #include "pure_common.h"
-using std::stack;
 using std::map;
 using std::optional;
 using std::set;
+using std::stack;
 using std::string;
 using std::tuple;
 using std::vector;
@@ -25,7 +25,7 @@ struct FuncEntry {
   TypeEntry type;
   vector<VariableEntry> parameters;
   optional_node_ptr_t body;  // fake for prototype
-  bool operator==(const FuncEntry& f) const; 
+  bool operator==(const FuncEntry& f) const;
   bool operator!=(const FuncEntry& f) const { return *this != f; }
 };
 
@@ -35,17 +35,29 @@ struct ClassBody {
   map<string, TypeEntry> variables;
   map<string, FuncEntry> functions;
   node_ptr_t body;
+  // nullable
+  const TypeEntry* get_variable(string id) const {
+    auto iter = variables.find(id);
+    return iter == variables.end() ? nullptr : &iter->second;
+  }
+  // nullable
+  const FuncEntry* get_function(string id) const {
+    auto iter = functions.find(id);
+    return iter == functions.end() ? nullptr : &iter->second;
+  }
 };
 
 struct InterfaceBody {
   map<string, FuncEntry> functions;
+  const FuncEntry* get_function(string id) const {
+    auto iter = functions.find(id);
+    return iter == functions.end() ? nullptr : &iter->second;
+  }
 };
 
 using Entry = std::variant<ClassBody, InterfaceBody>;
 using ClassEntries = map<string, Entry>;
 // using InterfaceEntries = map<string, InterfaceBody>;
-
-void print(const ClassEntries& sym_table);
 
 enum class StateType {
   Class,
@@ -71,3 +83,5 @@ class StateHolder {
     list_call_stack.pop();
   }
 };
+
+void print_sym_table(const ClassEntries& sym_table);

@@ -38,6 +38,7 @@ add_library(visitors ${VISITOR_CPPS})
 add_dependencies(visitors parser_hxx)
 
 add_library(major ${MAJOR})
+target_link_libraries(major visitors)
 
 add_library(parser parser.cpp)
 

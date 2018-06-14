@@ -9,6 +9,8 @@ using std::vector;
 class ASTNodeBase {
  public:
   virtual void accept(class Visitor& v) = 0;
+ private:
+  std::optional<std::string> token_type;
   // Location loc_beg;
   // Location loc_end;
 };
