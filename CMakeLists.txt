@@ -36,14 +36,18 @@ add_custom_target(parser_hxx DEPENDS parser.hxx)
 
 add_library(visitors ${VISITOR_CPPS})
 add_dependencies(visitors parser_hxx)
+
 add_library(major ${MAJOR})
 
-add_executable(main parser.cpp )
+add_library(parser parser.cpp)
+
 add_library(lexer lexer.cpp)
-target_link_libraries(main lexer)
+add_dependencies(lexer parser_hxx)
+
+add_executable(main kernel/main.cpp)
 target_link_libraries(main visitors)
 target_link_libraries(main major)
+target_link_libraries(main parser)
+target_link_libraries(main lexer)
 
-
-add_dependencies(lexer parser_hxx)
 

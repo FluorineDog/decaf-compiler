@@ -12,7 +12,7 @@
 %code{
   int yylex (void);
   void yyerror (char const *);
-  node_ptr_t root;
+  extern node_ptr_t root;
 }
 
 %union {
@@ -40,14 +40,3 @@ input:
 
 %%
 
-int main(){
-  freopen("/home/mike/compiler/data/list.decaf", "r", stdin);
-  yyparse();
-  if (true) {
-    PrintVisitor v;
-    root->accept(v);
-  } 
-  LoadSymbolTableVisitor v;
-  root->accept(v);
-  print(v.top_pool);
-}
