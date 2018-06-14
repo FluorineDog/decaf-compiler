@@ -51,7 +51,7 @@ void print(const ClassEntries& sym_table) {
                 }
                 PrintVisitor v;
                 v.level = level - 1;
-                v << func.body;
+                // v << func.body;
               }
             }
           } else if constexpr (std::is_same_v<T, InterfaceBody>) {
