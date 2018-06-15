@@ -1,6 +1,8 @@
 #pragma once
+#include <algorithm>
 #include <map>
 #include <optional>
+// #include <range/v3/algorithm/find_if.hpp>
 #include <set>
 #include <stack>
 #include <string>
@@ -32,16 +34,20 @@ struct FuncEntry {
 struct ClassBody {
   optional<string> extender;
   std::set<string> implementors;
-  map<string, TypeEntry> variables;
+  vector<std::pair<string, TypeEntry>> variables;
   map<string, FuncEntry> functions;
   node_ptr_t body;
+
   // nullable
-  const TypeEntry* get_variable(string id) const {
-    auto iter = variables.find(id);
+  TypeEntry* get_variable(string id) {
+    auto iter = std::find_if(variables.begin(), variables.end(),
+                             [&](const auto& x) { return x.first == id; });
     return iter == variables.end() ? nullptr : &iter->second;
   }
+  void insert_variable(string id, TypeEntry type) {}
+
   // nullable
-  const FuncEntry* get_function(string id) const {
+  FuncEntry* get_function(string id) {
     auto iter = functions.find(id);
     return iter == functions.end() ? nullptr : &iter->second;
   }
@@ -69,6 +75,7 @@ enum class StateType {
   Prototype,
   Program
 };
+
 class StateHolder {
   stack<StateType>& list_call_stack;
 

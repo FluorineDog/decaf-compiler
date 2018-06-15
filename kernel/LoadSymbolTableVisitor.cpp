@@ -184,7 +184,7 @@ void LoadSymbolTableVisitor::visit(FunctionDecl* node) {
   HOLD(Function);
   auto name = get_id(node->identifier);
 
-  if(current_class.get_function(name) == nullptr){
+  if(current_class.get_function(name) != nullptr){
     cerr << "Redelaration of function" << name;
   }
 
@@ -252,11 +252,11 @@ void LoadSymbolTableVisitor::visit(TypedVariable* node) {
   switch (call_stack.top()) {
     case StateType::Field: {
       auto& entry = current_class;
-      if (entry.get_variable(id) == nullptr) {
+      if (entry.get_variable(id) != nullptr) {
         cerr << "redeclaration of id: " << id << endl;
         exit(-1);
       }
-      entry.variables[id] = type;
+      // entry.variables[id] = type;
       break;
     }
     case StateType::Function: 

@@ -2,7 +2,7 @@
 import sys
 import argparse
 import lexer.engine
-import hack.parser.engine
+import parser.engine
 from lexer.engine import custom_format
 
 def main(*argv):
@@ -21,7 +21,7 @@ def main(*argv):
   token_list, lexer_rule_list = lexer.engine.gen(lexer_dir)
 
   lexer_content = lexer.engine.lexer_l_gen(lexer_rule_list, lexer_dir)
-  parser_content = hack.parser.engine.gen(parser_dir, token_list)
+  parser_content = parser.engine.gen(parser_dir, token_list)
 
   contents = {"/lexer.l": lexer_content, "/parser.yxx": parser_content}
   if(output_dir):
