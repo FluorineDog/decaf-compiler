@@ -116,7 +116,7 @@ void LoadSymbolTableVisitor::visit(Prototype* node) {
   }
   entry.body = std::nullopt;
 
-  container.emplace(name, std::move(entry));
+  container.append(std::move(name), std::move(entry));
   entry = FuncEntry();
 }
 
@@ -125,7 +125,7 @@ void LoadSymbolTableVisitor::visit(Interface* node) {
   auto class_name = get_id(node->type_ident);
 
   auto& container = top_pool;
-  if (container.find(class_name) != container.end()) {
+  if (container.find(class_name)) {
     cerr << "Redeclaration of class: " << class_name << endl;
     exit(-1);
   }
@@ -140,7 +140,7 @@ void LoadSymbolTableVisitor::visit(Interface* node) {
       *this << decl_entry;
     }
   }
-  container.emplace(class_name, std::move(current_interface));
+  container.append(std::move(class_name), std::move(current_interface));
   current_interface = InterfaceBody();
 }
 
@@ -149,7 +149,7 @@ void LoadSymbolTableVisitor::visit(ClassDecl* node) {
   auto class_name = get_id(node->type);
 
   auto& container = top_pool;
-  if (container.find(class_name) != container.end()) {
+  if (container.find(class_name)) {
     cerr << "Redeclaration of class: " << class_name << endl;
     exit(-1);
   }
@@ -176,7 +176,7 @@ void LoadSymbolTableVisitor::visit(ClassDecl* node) {
   }
 
   // insert it finally
-  container.emplace(class_name, std::move(current_class));
+  container.append(class_name, std::move(current_class));
   current_class = ClassBody();
 }
 
@@ -196,7 +196,7 @@ void LoadSymbolTableVisitor::visit(FunctionDecl* node) {
   }
   entry.body = node->body;
 
-  container.emplace(name, std::move(entry));
+  container.append(std::move(name), std::move(entry));
   entry = FuncEntry();
 }
 

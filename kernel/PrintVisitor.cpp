@@ -7,6 +7,7 @@
   string list_type;
  public:
   int level;
+  PrintVisitor(): level(0){}
 */
 
 void PrintVisitor::visit(Integer* node) {

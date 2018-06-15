@@ -5,11 +5,10 @@
 using std::find_if;
 using std::string;
 using std::vector;
-// template <typename Key, typename Value>
-using Key = std::string;
-using Value = double;
-
-class MapSeq {
+// using Key = std::string;
+// using Value = double;
+template <typename Key, typename Value>
+class SeqMap {
  private:
   vector<std::pair<Key, Value>> record;
   using EntryType = std::pair<Key, Value>;
@@ -18,9 +17,9 @@ class MapSeq {
   // nullable
   const Value* find(const Key& key) const {
     auto iter = find_if(record.begin(), record.end(),
-                        [=](EntryType&& entry) { return entry.first == key; });
+                        [=](auto&& entry) { return entry.first == key; });
     if (iter != record.end()) {
-      return &iter->second;
+      return &(iter->second);
     } else {
       return nullptr;
     }
@@ -29,14 +28,14 @@ class MapSeq {
     auto ans = std::as_const(*this).find(key);
     return const_cast<Value*>(ans);
   }
-
-  void append(Key&& key, Value&& value) {
-    record.emplace_back(std::make_pair(  //
-        std::forward<Key>(key),          //
-        std::forward<Value>(value)));
+  template <typename K, typename V>
+  void append(K&& key, V&& value) {
+    record.emplace_back(std::forward<Key>(key),  //
+                        std::forward<Value>(value));
   }
   auto begin() const { return record.begin(); }
   auto begin() { return record.begin(); }
   auto end() const { return record.end(); }
   auto end() { return record.end(); }
+  size_t size() const { return record.size(); }
 };

@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <map>
 #include <optional>
-// #include <range/v3/algorithm/find_if.hpp>
+#include "driver_helper.h"
 #include <set>
 #include <stack>
 #include <string>
@@ -34,36 +34,42 @@ struct FuncEntry {
 struct ClassBody {
   optional<string> extender;
   std::set<string> implementors;
-  vector<std::pair<string, TypeEntry>> variables;
-  map<string, FuncEntry> functions;
+  SeqMap<string, TypeEntry> variables;
+  SeqMap<string, FuncEntry> functions;
   node_ptr_t body;
 
   // nullable
   TypeEntry* get_variable(string id) {
-    auto iter = std::find_if(variables.begin(), variables.end(),
-                             [&](const auto& x) { return x.first == id; });
-    return iter == variables.end() ? nullptr : &iter->second;
+    return variables.find(id);
   }
   void insert_variable(string id, TypeEntry type) {}
 
   // nullable
   FuncEntry* get_function(string id) {
     auto iter = functions.find(id);
-    return iter == functions.end() ? nullptr : &iter->second;
+    return iter;
   }
 };
 
 struct InterfaceBody {
-  map<string, FuncEntry> functions;
-  const FuncEntry* get_function(string id) const {
-    auto iter = functions.find(id);
-    return iter == functions.end() ? nullptr : &iter->second;
+  SeqMap<string, FuncEntry> functions;
+  const FuncEntry* get_function(const string& id) const {
+    // auto iter = functions.find(id);
+    // return iter == functions.end() ? nullptr : &iter->second;
+    return functions.find(id);
   }
 };
 
 using Entry = std::variant<ClassBody, InterfaceBody>;
-using ClassEntries = map<string, Entry>;
+using ClassEntries = SeqMap<string, Entry>;
 // using InterfaceEntries = map<string, InterfaceBody>;
+
+
+
+
+
+
+
 
 enum class StateType {
   Class,
