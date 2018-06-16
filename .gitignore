@@ -3,4 +3,5 @@
 **/__*__/*
 build/*
 data/bak/*
+**/generated/*
 !.gitignore

@@ -3,6 +3,7 @@
 #include "indent.h"
 /*
 */
+
 void StaticAnalyseVisitor::visit(Integer* node) {
   // TODO
 }
@@ -125,6 +126,7 @@ void StaticAnalyseVisitor::visit(TypedVariable* node) {
 
 void StaticAnalyseVisitor::visit(Program* node) {
   // TODO
+//  engine.run();
 }
 
 void StaticAnalyseVisitor::visit(NoAction* node) {

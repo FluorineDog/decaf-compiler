@@ -1,14 +1,15 @@
-#include "static_analyse.h"
 #include <cassert>
 #include "../generated/StaticAnalyseVisitor.h"
 #include "../pure_common.h"
+#include "class_decl.h"
 using std::make_tuple;
 
-void static_analyse(ClassEntries &sym_table) {}
+void static_analyse(ClassEntries& ce){
 
-#define HOLD(t) StateHolder sh(call_stack, StateType::t);
+}
+
 class StaticAnalyse {
-  friend class StaticAnalyseVisitor;
+public:
   enum class State { Unknown = 0, Processing, Ready, Base };
 
   void load_default() {
@@ -18,9 +19,12 @@ class StaticAnalyse {
     }
   }
 
-  StaticAnalyse(ClassEntries &sym_table) : sym_table(sym_table) {
-    //
+  StaticAnalyse(ClassEntries& sym_table): sym_table(sym_table) {
+
   }
+//  StaticAnalyse(ClassEntries &sym_table): sym_table(sym_table) {
+//
+//  }
 
   // int as array_deep
   tuple<State, optional<TypeEntry>> visit_type(TypeEntry type) {
@@ -34,7 +38,7 @@ class StaticAnalyse {
       len = type.size();
     }
     auto state = type_record[type];
-    auto typeOpt = isArray ? optional<TypeEntry>(type) : std::nullopt;
+    auto typeOpt = isArray ? std::optional<TypeEntry>(type) : std::nullopt;
     return make_tuple(state, typeOpt);
   }
 
@@ -104,6 +108,11 @@ class StaticAnalyse {
         visit_type(type);
       }
       // use map: override
+      if (body.available.functors.count(func_name)) {
+        auto &actual_class = body.available.functors[func_name];
+        auto &actual_body = fetch_complete_function(actual_class, func_name);
+        assert(actual_body == func_body);
+      }
       body.available.functors[func_name] = class_name;
     }
 
@@ -112,7 +121,7 @@ class StaticAnalyse {
 
     // checkInterface
     for (auto interface_name : body.implementors) {
-      if(body.available.interfaces.count(interface_name)){
+      if (body.available.interfaces.count(interface_name)) {
         continue;
       }
       auto &interface_body = fetch_complete_interface(interface_name);
@@ -146,7 +155,7 @@ class StaticAnalyse {
     std::visit([=](auto &body) { decl(decl_name, body); }, body);
   }
 
-  void top() {
+  void run() {
     for (auto&[decl_name, decl_body] : sym_table) {
       decl(decl_name, decl_body);
     }
@@ -156,7 +165,5 @@ private:
   map<TypeEntry, State> type_record;
   // Trace::Core core;
   StaticAnalyseVisitor visitor;
-  std::set<string> type_visited;
-  stack<StateType> call_stack;
   ClassEntries &sym_table;
 };
