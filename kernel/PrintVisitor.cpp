@@ -1,6 +1,6 @@
 // Template
 #include "generated/PrintVisitor.h"
-#include "../parser/parser.hxx"
+#include "parser.hxx"
 #include "indent.h"
 #include "node_defs.h"
 /*

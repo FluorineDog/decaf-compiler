@@ -4,7 +4,7 @@
 #include "../pure_common.h"
 using std::make_tuple;
 
-void static_analyse(ClassEntries& sym_table) {}
+void static_analyse(ClassEntries &sym_table) {}
 
 #define HOLD(t) StateHolder sh(call_stack, StateType::t);
 class StaticAnalyse {
@@ -18,7 +18,7 @@ class StaticAnalyse {
     }
   }
 
-  StaticAnalyse(ClassEntries& sym_table) : sym_table(sym_table) {
+  StaticAnalyse(ClassEntries &sym_table) : sym_table(sym_table) {
     //
   }
 
@@ -39,7 +39,7 @@ class StaticAnalyse {
   }
 
   bool is_decl_visited(string decl_name) {
-    auto [s, arr_type] = visit_type(decl_name);
+    auto[s, arr_type] = visit_type(decl_name);
     assert(!arr_type);
     if (s == State::Ready) {
       return true;
@@ -49,27 +49,33 @@ class StaticAnalyse {
     return false;
   }
 
-  InterfaceBody& fetch_complete_interface(string name){
+  InterfaceBody &fetch_complete_interface(string name) {
     auto body_ptr = sym_table.find(name);
     assert(body_ptr != nullptr);
     // assert(std::holds_alternative(*body_ptr));
-    auto& body = std::get<InterfaceBody>(*body_ptr);
+    auto &body = std::get<InterfaceBody>(*body_ptr);
     decl(name, body);
-    assert(is_decl_visited(name));   
-    return body;   
-  }
-
-  ClassBody& fetch_complete_class(string name){
-    auto body_ptr = sym_table.find(name);
-    assert(body_ptr != nullptr);
-    auto& body = std::get<ClassBody>(*body_ptr);
-    decl(name, body);
-    assert(is_decl_visited(name));   
+    assert(is_decl_visited(name));
     return body;
   }
 
+  ClassBody &fetch_complete_class(string name) {
+    auto body_ptr = sym_table.find(name);
+    assert(body_ptr != nullptr);
+    auto &body = std::get<ClassBody>(*body_ptr);
+    decl(name, body);
+    assert(is_decl_visited(name));
+    return body;
+  }
 
-  void decl(string decl_name, ClassBody& body) {
+  FuncEntry &fetch_complete_function(string class_name, string func_name) {
+    auto &class_body = fetch_complete_class(class_name);
+    auto ptr = class_body.functions.find(func_name);
+    assert(ptr);
+    return *ptr;
+  }
+
+  void decl(string decl_name, ClassBody &body) {
     if (is_decl_visited(decl_name)) {
       return;
     }
@@ -78,23 +84,23 @@ class StaticAnalyse {
     if (body.extender) {
       // visit parent first
       string parent_name = body.extender.value();
-      auto& parent_body = fetch_complete_class(parent_name);
+      auto &parent_body = fetch_complete_class(parent_name);
       // load_extender
       body.available = parent_body.available;
     }
 
     // variables
-    for (auto [var_name, var_type] : body.variables) {
+    for (auto[var_name, var_type] : body.variables) {
       visit_type(var_type);
       // use SeqMap: overlap
       body.available.variables.append(var_name, var_type);
     }
 
     // functions
-    for (auto& [func_name, func_body] : body.functions) {
+    for (auto&[func_name, func_body] : body.functions) {
       auto rt_type = func_body.type;
       visit_type(rt_type);
-      for (const auto& [type, _] : func_body.parameters) {
+      for (const auto&[type, _] : func_body.parameters) {
         visit_type(type);
       }
       // use map: override
@@ -106,18 +112,28 @@ class StaticAnalyse {
 
     // checkInterface
     for (auto interface_name : body.implementors) {
-      auto& interface_body = fetch_complete_interface(interface_name);
+      if(body.available.interfaces.count(interface_name)){
+        continue;
+      }
+      auto &interface_body = fetch_complete_interface(interface_name);
+      for (auto&[func_name, func_body]: interface_body.functions) {
+        assert(body.available.functors.count(func_name));
+        auto &actual_class = body.available.functors[func_name];
+        auto &actual_body = fetch_complete_function(actual_class, func_name);
+        assert(actual_body == func_body);
+      }
+      body.available.interfaces.insert(interface_name);
     }
   }
 
-  void decl(string decl_name, InterfaceBody& body) {
+  void decl(string decl_name, InterfaceBody &body) {
     if (is_decl_visited(decl_name)) {
       return;
     }
-    for (auto& [func_name, func_body] : body.functions) {
+    for (auto&[func_name, func_body] : body.functions) {
       auto rt_type = func_body.type;
       visit_type(rt_type);
-      for (const auto& [type, _] : func_body.parameters) {
+      for (const auto&[type, _] : func_body.parameters) {
         visit_type(type);
       }
       assert(!func_body.body);
@@ -126,21 +142,21 @@ class StaticAnalyse {
     // classes
   }
 
-  void decl(string decl_name, DeclEntry& body) {
-    std::visit([=](auto& body) { decl(decl_name, body); }, body);
+  void decl(string decl_name, DeclEntry &body) {
+    std::visit([=](auto &body) { decl(decl_name, body); }, body);
   }
 
   void top() {
-    for (auto& [decl_name, decl_body] : sym_table) {
+    for (auto&[decl_name, decl_body] : sym_table) {
       decl(decl_name, decl_body);
     }
   }
 
- private:
+private:
   map<TypeEntry, State> type_record;
   // Trace::Core core;
   StaticAnalyseVisitor visitor;
   std::set<string> type_visited;
   stack<StateType> call_stack;
-  ClassEntries& sym_table;
+  ClassEntries &sym_table;
 };

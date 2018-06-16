@@ -1,5 +1,5 @@
 #include "class_decl.h"
-// #include "../../parser/parser.hxx"
+// #include "parser.hxx"
 #include "common.h"
 // #include "../node_defs.h"
 // #include "../generated/Visitor.h"

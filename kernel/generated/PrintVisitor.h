@@ -3,7 +3,7 @@
 #include "Visitor.h"
 #include "node_defs.h"
 #include "generated/PrintVisitor.h"
-#include "../parser/parser.hxx"
+#include "parser.hxx"
 #include "indent.h"
 #include "node_defs.h"
 class PrintVisitor : public Visitor {

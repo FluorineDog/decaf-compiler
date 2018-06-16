@@ -4,6 +4,7 @@ file(GLOB VISITOR_CPPS kernel/*Visitor.cpp)
 file(GLOB MAJOR kernel/drivers/*.cpp)
 set(ROOT ${CMAKE_CURRENT_SOURCE_DIR})
 
+
 add_custom_command(
   OUTPUT lexer.l parser.yxx
   COMMAND ${ROOT}/gen.py --root_dir ${ROOT} --output_dir .
@@ -32,9 +33,7 @@ SET_SOURCE_FILES_PROPERTIES(parser.cpp GENERATED)
 
 set(CMAKE_CXX_STANDARD 17)
 include_directories(kernel)
-include_directories(kernel/generated)
-include_directories(lexer/generated)
-include_directories(parser/generated)
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 add_custom_target(parser_hxx DEPENDS parser.hxx)
 
 add_library(visitors ${VISITOR_CPPS})

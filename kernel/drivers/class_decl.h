@@ -41,6 +41,7 @@ struct ClassBody {
   struct Available{
     SeqMap<string, TypeEntry> variables;
     map<string, string> functors;
+    set<string> interfaces;
   } available;
 
 
