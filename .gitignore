@@ -1,8 +1,6 @@
 **/.*
 **/cmake-build-*/**
 **/__*__/*
-**/generated/
-**/handout/*
 build/*
 data/bak/*
 !.gitignore

@@ -32,6 +32,9 @@ SET_SOURCE_FILES_PROPERTIES(parser.cpp GENERATED)
 
 set(CMAKE_CXX_STANDARD 17)
 include_directories(kernel)
+include_directories(kernel/generated)
+include_directories(lexer/generated)
+include_directories(parser/generated)
 add_custom_target(parser_hxx DEPENDS parser.hxx)
 
 add_library(visitors ${VISITOR_CPPS})
