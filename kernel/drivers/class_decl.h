@@ -79,14 +79,14 @@ using ClassEntries = SeqMap<string, DeclEntry>;
 
 
 enum class StateType {
-  Class,
-  Extender,
-  Implementor,
-  Interface,
-  Field,
-  Function,
-  Prototype,
-  Program
+  CLASS,
+  EXTENDER,
+  IMPLEMENTOR,
+  INTERFACE,
+  FIELD,
+  FUNCTION,
+  PROTOTYPE,
+  PROGRAM
 };
 
 class StateHolder {

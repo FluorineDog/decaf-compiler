@@ -101,7 +101,7 @@ void LoadSymbolTableVisitor::visit(If* node) {
 
 void LoadSymbolTableVisitor::visit(Prototype* node) {
   // TODO
-  HOLD(Prototype);
+  HOLD(PROTOTYPE);
   auto name = get_id(node->identifier);
 
   if(current_interface.get_function(name)){
@@ -121,7 +121,7 @@ void LoadSymbolTableVisitor::visit(Prototype* node) {
 }
 
 void LoadSymbolTableVisitor::visit(Interface* node) {
-  HOLD(Interface);
+  HOLD(INTERFACE);
   auto class_name = get_id(node->type_ident);
 
   auto& container = top_pool;
@@ -134,7 +134,7 @@ void LoadSymbolTableVisitor::visit(Interface* node) {
   auto& entry = current_interface;
 
   if (node->prototypes) {
-    HOLD(Field);
+    HOLD(FIELD);
     auto list = node->prototypes->list;
     for (auto decl_entry : list) {
       *this << decl_entry;
@@ -145,7 +145,7 @@ void LoadSymbolTableVisitor::visit(Interface* node) {
 }
 
 void LoadSymbolTableVisitor::visit(ClassDecl* node) {
-  HOLD(Class);
+  HOLD(CLASS);
   auto class_name = get_id(node->type);
 
   auto& container = top_pool;
@@ -168,7 +168,7 @@ void LoadSymbolTableVisitor::visit(ClassDecl* node) {
   }
 
   if (node->fields) {
-    HOLD(Field);
+    HOLD(FIELD);
     auto list = node->fields->list;
     for (auto decl_entry : list) {
       *this << decl_entry;
@@ -181,7 +181,7 @@ void LoadSymbolTableVisitor::visit(ClassDecl* node) {
 }
 
 void LoadSymbolTableVisitor::visit(FunctionDecl* node) {
-  HOLD(Function);
+  HOLD(FUNCTION);
   auto name = get_id(node->identifier);
 
   if(current_class.get_function(name) != nullptr){
@@ -250,7 +250,7 @@ void LoadSymbolTableVisitor::visit(TypedVariable* node) {
   auto type = get_id(node->type);
   auto id = get_id(node->id);
   switch (call_stack.top()) {
-    case StateType::Field: {
+    case StateType::FIELD: {
       auto& entry = current_class;
       if (entry.get_variable(id) != nullptr) {
         cerr << "redeclaration of id: " << id << endl;
@@ -259,8 +259,8 @@ void LoadSymbolTableVisitor::visit(TypedVariable* node) {
       // entry.variables[id] = type;
       break;
     }
-    case StateType::Function: 
-    case StateType::Prototype: 
+    case StateType::FUNCTION: 
+    case StateType::PROTOTYPE: 
     {
       auto& entry = current_func;
       entry.parameters.emplace_back(type, id);
@@ -270,7 +270,7 @@ void LoadSymbolTableVisitor::visit(TypedVariable* node) {
 }
 
 void LoadSymbolTableVisitor::visit(Program* node) {
-  HOLD(Program);
+  HOLD(PROGRAM);
   current_id = "@undefined";
   // *this << node->decls;
   
