@@ -4,9 +4,6 @@
 #include "class_decl.h"
 using std::make_tuple;
 
-void static_analyse(ClassEntries& ce){
-
-}
 
 class StaticAnalyse {
 public:
@@ -22,9 +19,6 @@ public:
   StaticAnalyse(ClassEntries& sym_table): sym_table(sym_table) {
 
   }
-//  StaticAnalyse(ClassEntries &sym_table): sym_table(sym_table) {
-//
-//  }
 
   // int as array_deep
   tuple<State, optional<TypeEntry>> visit_type(TypeEntry type) {
@@ -48,7 +42,7 @@ public:
     if (s == State::Ready) {
       return true;
     }
-    assert(s != State::Unknown);
+    assert(s == State::Unknown);
     type_record[decl_name] = State::Processing;
     return false;
   }
@@ -167,3 +161,8 @@ private:
   StaticAnalyseVisitor visitor;
   ClassEntries &sym_table;
 };
+
+void static_analyse(ClassEntries& ce){
+  StaticAnalyse engine(ce);
+  engine.run();
+}
