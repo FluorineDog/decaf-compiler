@@ -283,5 +283,5 @@ void LoadSymbolTableVisitor::visit(Program* node) {
 void LoadSymbolTableVisitor::visit(NoAction* node) {
   // TODO
 }
-
+#undef HOLD
 

@@ -60,8 +60,8 @@ struct InterfaceBody {
   }
 };
 
-using Entry = std::variant<ClassBody, InterfaceBody>;
-using ClassEntries = SeqMap<string, Entry>;
+using DeclEntry = std::variant<ClassBody, InterfaceBody>;
+using ClassEntries = SeqMap<string, DeclEntry>;
 // using InterfaceEntries = map<string, InterfaceBody>;
 
 
