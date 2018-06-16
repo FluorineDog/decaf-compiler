@@ -5,7 +5,7 @@
 using std::make_tuple;
 
 
-class StaticAnalyse {
+class BuildAuxInfo {
 public:
   enum class State { Unknown = 0, Processing, Ready, Base };
 
@@ -16,7 +16,7 @@ public:
     }
   }
 
-  StaticAnalyse(ClassEntries& sym_table): sym_table(sym_table) {
+  BuildAuxInfo(ClassEntries& sym_table): sym_table(sym_table) {
 
   }
 
@@ -143,7 +143,7 @@ public:
       }
       assert(!func_body.body);
     }
-    cerr << "wtf" << decl_name;
+//    cerr << "wtf" << decl_name;
     type_record[decl_name] = State::Ready;
     // classes
   }
@@ -157,8 +157,8 @@ public:
     for (auto&[decl_name, decl_body] : sym_table) {
       decl(decl_name, decl_body);
     }
-    for(auto [t, s]: type_record){
-      cerr << "&&" << t;
+    for(auto [t, s]: type_record) {
+//      cerr << "&&" << t;
       assert(s == State::Ready || s == State::Base);
     }
   }
@@ -170,7 +170,19 @@ private:
   ClassEntries &sym_table;
 };
 
+void build_stmt(ClassEntries& sym_table){
+  for(auto& [class_name, class_body_x]:sym_table){
+    if(!std::holds_alternative<ClassBody>(class_body_x)){
+      continue;
+    }
+    ClassBody& class_body = std::get<ClassBody>(class_body_x);
+    for(auto &[func_name, func_body]: class_body.functions){
+      assert(func_body.body);
+    }
+  }
+};
+
 void static_analyse(ClassEntries& ce){
-  StaticAnalyse engine(ce);
+  BuildAuxInfo engine(ce);
   engine.run();
 }
