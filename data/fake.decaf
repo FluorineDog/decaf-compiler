@@ -1,8 +1,23 @@
-class ListNode {
+
+
+
+
+
+class ListNode extends NodeBase implements Fuckable {
   int data;
   ListNode next;
   void setData(int x) { data = x; }
+  int fuck(int x) { return data * x;}
 }
+
+interface Fuckable {
+  int fuck(int x);
+}
+
+class NodeBase {
+  int base;
+}
+
 class List {
   ListNode head;
   void show(ListNode list) {
@@ -10,24 +25,24 @@ class List {
     int count;
     count = 0;
     cursor = list;
-    while (cursor) {
-      count = count;
-      print(count, cursor.data);
+    while (cursor != null) {
+      count = count + 1;
+      Print(count, cursor.data);
       cursor = cursor.next;
     }
   }
   void main() {
     ListNode second;
     ListNode third;
-    head = new ListNode();
+    head = New ListNode;
     head.setData(4);  //  Could use "head.data = 4;"
-    print(head.data);
-    second = new ListNode();
+    Print(head.data);
+    second = New ListNode;
     second.setData(5);
-    print(second.data);
-    third = new ListNode();
+    Print(second.data);
+    third = New ListNode;
     third.setData(11);
-    print(third.data);
+    Print(third.data);
     head.next = second;
     second.next = third;
     third.next = null;

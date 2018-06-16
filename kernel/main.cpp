@@ -4,7 +4,7 @@
 node_ptr_t root;
 
 int main() {
-  freopen("/home/mike/compiler/data/list.decaf", "r", stdin);
+  freopen("/home/mike/compiler/data/fake.decaf", "r", stdin);
   yyparse();
   if (false) {
     PrintVisitor v;

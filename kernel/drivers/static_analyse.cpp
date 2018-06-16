@@ -39,9 +39,10 @@ public:
   bool is_decl_visited(string decl_name) {
     auto[s, arr_type] = visit_type(decl_name);
     assert(!arr_type);
-    if (s == State::Ready) {
+    if (s == State::Ready || s == State::Base) {
       return true;
     }
+    assert(s != State::Processing && "circular extends");
     assert(s == State::Unknown);
     type_record[decl_name] = State::Processing;
     return false;
@@ -50,7 +51,7 @@ public:
   InterfaceBody &fetch_complete_interface(string name) {
     auto body_ptr = sym_table.find(name);
     assert(body_ptr != nullptr);
-    // assert(std::holds_alternative(*body_ptr));
+    assert(std::holds_alternative<InterfaceBody>(*body_ptr));
     auto &body = std::get<InterfaceBody>(*body_ptr);
     decl(name, body);
     assert(is_decl_visited(name));
@@ -60,6 +61,7 @@ public:
   ClassBody &fetch_complete_class(string name) {
     auto body_ptr = sym_table.find(name);
     assert(body_ptr != nullptr);
+    assert(std::holds_alternative<ClassBody>(*body_ptr));
     auto &body = std::get<ClassBody>(*body_ptr);
     decl(name, body);
     assert(is_decl_visited(name));
@@ -141,6 +143,7 @@ public:
       }
       assert(!func_body.body);
     }
+    cerr << "wtf" << decl_name;
     type_record[decl_name] = State::Ready;
     // classes
   }
@@ -150,8 +153,13 @@ public:
   }
 
   void run() {
+    load_default();
     for (auto&[decl_name, decl_body] : sym_table) {
       decl(decl_name, decl_body);
+    }
+    for(auto [t, s]: type_record){
+      cerr << "&&" << t;
+      assert(s == State::Ready || s == State::Base);
     }
   }
 
