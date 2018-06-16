@@ -1,4 +1,5 @@
 #include "static_analyse.h"
+#include <cassert>
 #include "../generated/StaticAnalyseVisitor.h"
 #include "../pure_common.h"
 using std::make_tuple;
@@ -9,7 +10,6 @@ void static_analyse(ClassEntries& sym_table) {}
 class StaticAnalyse {
   friend class StaticAnalyseVisitor;
   enum class State { Unknown = 0, Processing, Ready, Base };
-  map<TypeEntry, State> type_record;
 
   void load_default() {
     auto base_vec = {"void", "bool", "int", "double", "string"};
@@ -17,7 +17,10 @@ class StaticAnalyse {
       type_record[type] = State::Base;
     }
   }
-  StaticAnalyse(ClassEntries& sym_table) : sym_table(sym_table) {}
+
+  StaticAnalyse(ClassEntries& sym_table) : sym_table(sym_table) {
+    //
+  }
 
   // int as array_deep
   tuple<State, optional<TypeEntry>> visit_type(TypeEntry type) {
@@ -35,29 +38,107 @@ class StaticAnalyse {
     return make_tuple(state, typeOpt);
   }
 
-  void decl(string class_name, ClassBody& body) {}
+  bool is_decl_visited(string decl_name) {
+    auto [s, arr_type] = visit_type(decl_name);
+    assert(!arr_type);
+    if (s == State::Ready) {
+      return true;
+    }
+    assert(s != State::Unknown);
+    type_record[decl_name] = State::Processing;
+    return false;
+  }
 
-  void decl(string interface_name, InterfaceBody& body) {
-    // nothing to do
+  InterfaceBody& fetch_complete_interface(string name){
+    auto body_ptr = sym_table.find(name);
+    assert(body_ptr != nullptr);
+    // assert(std::holds_alternative(*body_ptr));
+    auto& body = std::get<InterfaceBody>(*body_ptr);
+    decl(name, body);
+    assert(is_decl_visited(name));   
+    return body;   
+  }
+
+  ClassBody& fetch_complete_class(string name){
+    auto body_ptr = sym_table.find(name);
+    assert(body_ptr != nullptr);
+    auto& body = std::get<ClassBody>(*body_ptr);
+    decl(name, body);
+    assert(is_decl_visited(name));   
+    return body;
+  }
+
+
+  void decl(string decl_name, ClassBody& body) {
+    if (is_decl_visited(decl_name)) {
+      return;
+    }
+
+    auto class_name = decl_name;
+    if (body.extender) {
+      // visit parent first
+      string parent_name = body.extender.value();
+      auto& parent_body = fetch_complete_class(parent_name);
+      // load_extender
+      body.available = parent_body.available;
+    }
+
+    // variables
+    for (auto [var_name, var_type] : body.variables) {
+      visit_type(var_type);
+      // use SeqMap: overlap
+      body.available.variables.append(var_name, var_type);
+    }
+
+    // functions
     for (auto& [func_name, func_body] : body.functions) {
       auto rt_type = func_body.type;
-      for (auto& [type, _] : func_body.parameters) {
+      visit_type(rt_type);
+      for (const auto& [type, _] : func_body.parameters) {
         visit_type(type);
       }
+      // use map: override
+      body.available.functors[func_name] = class_name;
     }
+
+    // checkup
+    type_record[decl_name] = State::Ready;
+
+    // checkInterface
+    for (auto interface_name : body.implementors) {
+      auto& interface_body = fetch_complete_interface(interface_name);
+    }
+  }
+
+  void decl(string decl_name, InterfaceBody& body) {
+    if (is_decl_visited(decl_name)) {
+      return;
+    }
+    for (auto& [func_name, func_body] : body.functions) {
+      auto rt_type = func_body.type;
+      visit_type(rt_type);
+      for (const auto& [type, _] : func_body.parameters) {
+        visit_type(type);
+      }
+      assert(!func_body.body);
+    }
+    type_record[decl_name] = State::Ready;
+    // classes
+  }
+
+  void decl(string decl_name, DeclEntry& body) {
+    std::visit([=](auto& body) { decl(decl_name, body); }, body);
   }
 
   void top() {
     for (auto& [decl_name, decl_body] : sym_table) {
-      cout << decl_name;
-      std::visit(
-          [&](auto&& decl_body) {
-            using T = std::decay_t<decltype(decl_body)>;
-            decl(decl_name, decl_body);
-          },
-          decl_body);
+      decl(decl_name, decl_body);
     }
   }
+
+ private:
+  map<TypeEntry, State> type_record;
+  // Trace::Core core;
   StaticAnalyseVisitor visitor;
   std::set<string> type_visited;
   stack<StateType> call_stack;

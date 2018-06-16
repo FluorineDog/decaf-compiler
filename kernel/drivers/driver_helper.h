@@ -16,9 +16,9 @@ class SeqMap {
  public:
   // nullable
   const Value* find(const Key& key) const {
-    auto iter = find_if(record.begin(), record.end(),
+    auto iter = find_if(record.rbegin(), record.rend(),
                         [=](auto&& entry) { return entry.first == key; });
-    if (iter != record.end()) {
+    if (iter != record.rend()) {
       return &(iter->second);
     } else {
       return nullptr;

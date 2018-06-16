@@ -47,8 +47,8 @@ add_dependencies(lexer parser_hxx)
 
 add_executable(main kernel/main.cpp)
 target_link_libraries(main visitors)
-target_link_libraries(main major)
 target_link_libraries(main parser)
 target_link_libraries(main lexer)
+target_link_libraries(main major)
 
 

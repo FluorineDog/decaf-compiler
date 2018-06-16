@@ -17,6 +17,7 @@ using std::stack;
 using std::string;
 using std::tuple;
 using std::vector;
+using std::pair;
 
 // #include "../common.h"
 // #include "indent.h"
@@ -36,7 +37,12 @@ struct ClassBody {
   std::set<string> implementors;
   SeqMap<string, TypeEntry> variables;
   SeqMap<string, FuncEntry> functions;
-  node_ptr_t body;
+
+  struct Available{
+    SeqMap<string, TypeEntry> variables;
+    map<string, string> functors;
+  } available;
+
 
   // nullable
   TypeEntry* get_variable(string id) {
