@@ -6,10 +6,7 @@ node_ptr_t root;
 int main() {
   freopen("/home/mike/compiler/data/fake.decaf", "r", stdin);
   yyparse();
-  if (false) {
-    PrintVisitor v;
-    root->accept(v);
-  }
+
 
   ClassEntries ce;
   {
@@ -19,4 +16,8 @@ int main() {
   }
   print_sym_table(ce);
   static_analyse(ce);
+  if (true) {
+    PrintVisitor v;
+    root->accept(v);
+  }
 }

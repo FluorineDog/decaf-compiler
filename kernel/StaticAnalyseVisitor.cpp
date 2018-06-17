@@ -71,7 +71,7 @@ void StaticAnalyseVisitor::visit(Call *node) {
     auto type = get_type(expr_node);
     types.push(type);
   }
-  for (auto [para_type, _]: func.parameters) {
+  for (auto& [para_type, _]: func.parameters) {
     assert(!types.empty());
     auto expr_type = types.front();
     types.pop();

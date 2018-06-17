@@ -11,22 +11,22 @@
 */
 
 void PrintVisitor::visit(Integer* node) {
-  Indent logger(level);
+  Indent logger(level, node->token_type);
   logger("Integer", node->num);
 }
 
 void PrintVisitor::visit(Double* node) {
-  Indent logger(level);
+  Indent logger(level, node->token_type);
   logger("Double", node->num);
 }
 
 void PrintVisitor::visit(NullPointer* node) {
-  Indent logger(level);
+  Indent logger(level, node->token_type);
   logger("NullPointer");
 }
 
 void PrintVisitor::visit(Call* node) {
-  Indent logger(level);
+  Indent logger(level, node->token_type);
   logger("Call");
   list_type = "expr";
   *this << node->domain_expr;
@@ -36,34 +36,34 @@ void PrintVisitor::visit(Call* node) {
 }
 
 void PrintVisitor::visit(Index* node) {
-  Indent logger(level);
+  Indent logger(level, node->token_type);
   logger("Index");
   *this << node->expr;
   *this << node->index_expr;
 }
 
 void PrintVisitor::visit(MemberDot* node) {
-  Indent logger(level);
+  Indent logger(level, node->token_type);
   logger("MemberDot");
   *this << node->expr;
   *this << node->ident;
 }
 
 void PrintVisitor::visit(NewArray* node) {
-  Indent logger(level);
+  Indent logger(level, node->token_type);
   logger("NewArray");
   *this << node->type;
   *this << node->expr;
 }
 
 void PrintVisitor::visit(New* node) {
-  Indent logger(level);
+  Indent logger(level, node->token_type);
   logger("New");
   *this << node->type;
 }
 
 void PrintVisitor::visit(Read* node) {
-  Indent logger(level);
+  Indent logger(level, node->token_type);
   string str = "UB";
   switch (node->option) {
     case T_ReadInteger:
@@ -77,13 +77,13 @@ void PrintVisitor::visit(Read* node) {
 }
 
 void PrintVisitor::visit(UnaryExpr* node) {
-  Indent logger(level);
+  Indent logger(level, node->token_type);
   logger("Unary Expr", (char)node->op);
   *this << node->expr;
 }
 
 void PrintVisitor::visit(BinaryExpr* node) {
-  Indent logger(level);
+  Indent logger(level, node->token_type);
   string str;
   if (node->op <= 255) {
     str = "\"" + string(1, node->op) + "\"";
@@ -116,19 +116,19 @@ void PrintVisitor::visit(BinaryExpr* node) {
 }
 
 void PrintVisitor::visit(This* node) {
-  Indent logger(level);
+  Indent logger(level, node->token_type);
   logger("This");
 }
 
 void PrintVisitor::visit(Print* node) {
-  Indent logger(level);
+  Indent logger(level, node->token_type);
   logger("Print");
   list_type = "PrintArgs";
   *this << node->args;
 }
 
 void PrintVisitor::visit(List* node) {
-  Indent logger(level);
+  Indent logger(level, node->token_type);
   logger("ListItems", list_type);
   list_type = "undefined";
   for (auto ptr : node->list) {
@@ -137,18 +137,18 @@ void PrintVisitor::visit(List* node) {
 }
 
 void PrintVisitor::visit(Break* node) {
-  Indent logger(level);
+  Indent logger(level, node->token_type);
   logger("Break");
 }
 
 void PrintVisitor::visit(Return* node) {
-  Indent logger(level);
+  Indent logger(level, node->token_type);
   logger("Return");
   *this << node->expr;
 }
 
 void PrintVisitor::visit(For* node) {
-  Indent logger(level);
+  Indent logger(level, node->token_type);
   logger("For");
   *this << node->init_expr;
   *this << node->conditional_expr;
@@ -157,30 +157,30 @@ void PrintVisitor::visit(For* node) {
 }
 
 void PrintVisitor::visit(While* node) {
-  Indent logger(level);
+  Indent logger(level, node->token_type);
   logger("While");
   *this << node->conditional_expr;
   *this << node->stmt;
 }
 
 void PrintVisitor::visit(Block* node) {
-  Indent logger(level);
+  Indent logger(level, node->token_type);
   logger("Block");
   list_type = "block";
   *this << node->stmt_list;
 }
 
 void PrintVisitor::visit(If* node) {
-  Indent logger(level);
+  Indent logger(level, node->token_type);
   *this << node->condition;
 }
 
 void PrintVisitor::visit(Prototype* node) {
-  Indent logger(level);
+  Indent logger(level, node->token_type);
   if(node->type != nullptr){
     *this << node->type;
   } else {
-    Indent logger(level);
+    Indent logger(level, node->token_type);
     logger("void");
   }
   *this << node->identifier;
@@ -189,7 +189,7 @@ void PrintVisitor::visit(Prototype* node) {
 }
 
 void PrintVisitor::visit(Interface* node) {
-  Indent logger(level);
+  Indent logger(level, node->token_type);
   logger("Interface");
   *this << node->type_ident;
   list_type = "Prototype";
@@ -197,11 +197,11 @@ void PrintVisitor::visit(Interface* node) {
 }
 
 void PrintVisitor::visit(ClassDecl* node) {
-  Indent logger(level);
+  Indent logger(level, node->token_type);
   logger("ClassDecl");
   *this << node->type;
   if (node->extender) {
-    Indent logger(level);
+    Indent logger(level, node->token_type);
     logger("Extender");
     *this << node->extender;
   }
@@ -215,12 +215,12 @@ void PrintVisitor::visit(ClassDecl* node) {
 }
 
 void PrintVisitor::visit(FunctionDecl* node) {
-  Indent logger(level);
+  Indent logger(level, node->token_type);
   logger("FunctionDecl", "return");
   if (node->type) {
     *this << node->type;
   } else {
-    Indent logger(level);
+    Indent logger(level, node->token_type);
     logger("void");
   }
   *this << node->identifier;
@@ -231,13 +231,13 @@ void PrintVisitor::visit(FunctionDecl* node) {
 }
 
 void PrintVisitor::visit(TypeArray* node) {
-  Indent logger(level);
+  Indent logger(level, node->token_type);
   logger("ArrayOf");
   *this << node->base;
 }
 
 void PrintVisitor::visit(TypeBase* node) {
-  Indent logger(level);
+  Indent logger(level, node->token_type);
   string name;
   switch (node->base_type) {
     case T_int:
@@ -262,24 +262,24 @@ void PrintVisitor::visit(TypeBase* node) {
 }
 
 void PrintVisitor::visit(TypeUser* node) {
-  Indent logger(level);
+  Indent logger(level, node->token_type);
   logger("type_id", node->type_name);
 }
 
 void PrintVisitor::visit(Identifier* node) {
-  Indent logger(level);
+  Indent logger(level, node->token_type);
   logger("Identifier", node->name);
 }
 
 void PrintVisitor::visit(Assign* node) {
-  Indent logger(level);
+  Indent logger(level, node->token_type);
   logger("Assign");
   *this << node->left;
   *this << node->right;
 }
 
 void PrintVisitor::visit(TypedVariable* node) {
-  Indent logger(level);
+  Indent logger(level, node->token_type);
   logger("TypedVariable");
   *this << node->type;
   *this << node->id;
@@ -288,14 +288,14 @@ void PrintVisitor::visit(TypedVariable* node) {
 void PrintVisitor::visit(Program* node) {
   level = 0;
   list_type = "init";
-  Indent logger(level);
+  Indent logger(level, node->token_type);
   logger("Program");
   list_type = "decl";
   node->decls->accept(*this);
 }
 
 void PrintVisitor::visit(NoAction* node) {
-  Indent logger(level);
+  Indent logger(level, node->token_type);
   logger("skip");
 }
 
