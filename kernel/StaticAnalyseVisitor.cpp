@@ -87,15 +87,17 @@ void StaticAnalyseVisitor::visit(Call *node) {
 
 void StaticAnalyseVisitor::visit(Index *node) {
   auto type = get_type(node->expr);
-  auto index_type = get_type(node->expr);
+  auto index_type = get_type(node->index_expr);
+  int len = type.size();
   assert(index_type == "int");
-  assert(type.size() >= 2 && type.substr(type.size() - 2, 2) == "[]");
-  node->token_type = type.substr(type.size() - 2, 2);
+  assert(len >= 2 && type.substr(len - 2, 2) == "[]");
+  node->token_type = type.substr(0, len - 2);
 }
 
 void StaticAnalyseVisitor::visit(MemberDot *node) {
   auto class_name = get_type(node->expr);
   node->token_type = sym_table.fetch_complete_variable(class_name, get_id(node->ident));
+  node->ident->token_type = node->token_type;
 }
 
 void StaticAnalyseVisitor::visit(NewArray *node) {
@@ -135,7 +137,7 @@ void StaticAnalyseVisitor::visit(UnaryExpr *node) {
 
 void StaticAnalyseVisitor::visit(BinaryExpr *node) {
   auto left_type = get_type(node->left);
-  auto right_type = get_type(node->left);
+  auto right_type = get_type(node->right);
   switch (node->op) {
   case '+': {
     assert(set<string>({"double", "int", "string"}).count(left_type));

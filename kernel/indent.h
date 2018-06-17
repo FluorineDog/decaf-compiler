@@ -12,8 +12,8 @@ class Indent {
   Indent(int& level) : level(level) { level++; }
   template <typename... Args>
   Indent(int& level, Args&&... args) : level(level) {
-    (*this)(args...);
     level++;
+    (*this)(args...);
   }
   void printer_helper() {}
   template <typename T>

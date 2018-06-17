@@ -1,0 +1,381 @@
+<TopEntries, 4>
+. | <Class, ListNode>
+. | <Extender, NodeBase>
+. | <ImplementItem, Fuckable>
+. | <Variable, int, data>
+. | <Variable, ListNode, next>
+. | <Function, setData, ->, void>
+. | * <Parameter, int, x>
+. | <Function, fuck, ->, int>
+. | * <Parameter, int, x>
+. | <Interface, Fuckable>
+. | <Prototype, fuck, ->, int>
+. | * <parameter, int, x>
+. | <Class, NodeBase>
+. | <Variable, int, base>
+. | <Class, List>
+. | <Variable, ListNode, head>
+. | <Function, show, ->, void>
+. | * <Parameter, ListNode, list>
+. | <Function, main, ->, void>
+<291, void>
+<Program>
+. <131, void>
+. <ListItems, decl>
+. | <200, void>
+. | <ClassDecl>
+. | * <265, void>
+. | * <type_id, ListNode>
+. | * <204, void>
+. | * <Extender>
+. | * . <265, void>
+. | * . <type_id, NodeBase>
+. | * <131, void>
+. | * <ListItems, Implementor>
+. | * . <265, void>
+. | * . <type_id, Fuckable>
+. | * <131, void>
+. | * <ListItems, Fields>
+. | * . <282, void>
+. | * . <TypedVariable>
+. | * . | <240, void>
+. | * . | <TypeBase, int>
+. | * . | <270, void>
+. | * . | <Identifier, data>
+. | * . <282, void>
+. | * . <TypedVariable>
+. | * . | <265, void>
+. | * . | <type_id, ListNode>
+. | * . | <270, void>
+. | * . | <Identifier, next>
+. | * . <218, void>
+. | * . <FunctionDecl, return>
+. | * . | <240, void>
+. | * . | <TypeBase, void>
+. | * . | <270, void>
+. | * . | <Identifier, setData>
+. | * . | <131, void>
+. | * . | <ListItems, Parameters>
+. | * . | * <282, void>
+. | * . | * <TypedVariable>
+. | * . | * . <240, void>
+. | * . | * . <TypeBase, int>
+. | * . | * . <270, void>
+. | * . | * . <Identifier, x>
+. | * . | <167, void>
+. | * . | <Block>
+. | * . | * <131, void>
+. | * . | * <ListItems, block>
+. | * . | * . <275, int>
+. | * . | * . <Assign>
+. | * . | * . | <270, int>
+. | * . | * . | <Identifier, data>
+. | * . | * . | <270, int>
+. | * . | * . | <Identifier, x>
+. | * . <218, void>
+. | * . <FunctionDecl, return>
+. | * . | <240, void>
+. | * . | <TypeBase, int>
+. | * . | <270, void>
+. | * . | <Identifier, fuck>
+. | * . | <131, void>
+. | * . | <ListItems, Parameters>
+. | * . | * <282, void>
+. | * . | * <TypedVariable>
+. | * . | * . <240, void>
+. | * . | * . <TypeBase, int>
+. | * . | * . <270, void>
+. | * . | * . <Identifier, x>
+. | * . | <167, void>
+. | * . | <Block>
+. | * . | * <131, void>
+. | * . | * <ListItems, block>
+. | * . | * . <145, void>
+. | * . | * . <Return>
+. | * . | * . | <86, int>
+. | * . | * . | <BinaryExpr, "*">
+. | * . | * . | * <270, int>
+. | * . | * . | * <Identifier, data>
+. | * . | * . | * <270, int>
+. | * . | * . | * <Identifier, x>
+. | <192, void>
+. | <Interface>
+. | * <265, void>
+. | * <type_id, Fuckable>
+. | * <131, void>
+. | * <ListItems, Prototype>
+. | * . <179, void>
+. | * . | <240, void>
+. | * . | <TypeBase, int>
+. | * . | <270, void>
+. | * . | <Identifier, fuck>
+. | * . | <131, void>
+. | * . | <ListItems, Parameters>
+. | * . | * <282, void>
+. | * . | * <TypedVariable>
+. | * . | * . <240, void>
+. | * . | * . <TypeBase, int>
+. | * . | * . <270, void>
+. | * . | * . <Identifier, x>
+. | <200, void>
+. | <ClassDecl>
+. | * <265, void>
+. | * <type_id, NodeBase>
+. | * <131, void>
+. | * <ListItems, Implementor>
+. | * <131, void>
+. | * <ListItems, Fields>
+. | * . <282, void>
+. | * . <TypedVariable>
+. | * . | <240, void>
+. | * . | <TypeBase, int>
+. | * . | <270, void>
+. | * . | <Identifier, base>
+. | <200, void>
+. | <ClassDecl>
+. | * <265, void>
+. | * <type_id, List>
+. | * <131, void>
+. | * <ListItems, Implementor>
+. | * <131, void>
+. | * <ListItems, Fields>
+. | * . <282, void>
+. | * . <TypedVariable>
+. | * . | <265, void>
+. | * . | <type_id, ListNode>
+. | * . | <270, void>
+. | * . | <Identifier, head>
+. | * . <218, void>
+. | * . <FunctionDecl, return>
+. | * . | <240, void>
+. | * . | <TypeBase, void>
+. | * . | <270, void>
+. | * . | <Identifier, show>
+. | * . | <131, void>
+. | * . | <ListItems, Parameters>
+. | * . | * <282, void>
+. | * . | * <TypedVariable>
+. | * . | * . <265, void>
+. | * . | * . <type_id, ListNode>
+. | * . | * . <270, void>
+. | * . | * . <Identifier, list>
+. | * . | <167, void>
+. | * . | <Block>
+. | * . | * <131, void>
+. | * . | * <ListItems, block>
+. | * . | * . <282, void>
+. | * . | * . <TypedVariable>
+. | * . | * . | <265, void>
+. | * . | * . | <type_id, ListNode>
+. | * . | * . | <270, void>
+. | * . | * . | <Identifier, cursor>
+. | * . | * . <282, void>
+. | * . | * . <TypedVariable>
+. | * . | * . | <240, void>
+. | * . | * . | <TypeBase, int>
+. | * . | * . | <270, void>
+. | * . | * . | <Identifier, count>
+. | * . | * . <275, int>
+. | * . | * . <Assign>
+. | * . | * . | <270, int>
+. | * . | * . | <Identifier, count>
+. | * . | * . | <14, int>
+. | * . | * . | <Integer, 0>
+. | * . | * . <275, ListNode>
+. | * . | * . <Assign>
+. | * . | * . | <270, ListNode>
+. | * . | * . | <Identifier, cursor>
+. | * . | * . | <270, ListNode>
+. | * . | * . | <Identifier, list>
+. | * . | * . <160, void>
+. | * . | * . <While>
+. | * . | * . | <86, bool>
+. | * . | * . | <BinaryExpr, "!=">
+. | * . | * . | * <270, ListNode>
+. | * . | * . | * <Identifier, cursor>
+. | * . | * . | * <24, nullptr>
+. | * . | * . | * <NullPointer>
+. | * . | * . | <167, void>
+. | * . | * . | <Block>
+. | * . | * . | * <167, void>
+. | * . | * . | * <Block>
+. | * . | * . | * . <131, void>
+. | * . | * . | * . <ListItems, block>
+. | * . | * . | * . | <275, int>
+. | * . | * . | * . | <Assign>
+. | * . | * . | * . | * <270, int>
+. | * . | * . | * . | * <Identifier, count>
+. | * . | * . | * . | * <86, int>
+. | * . | * . | * . | * <BinaryExpr, "+">
+. | * . | * . | * . | * . <270, int>
+. | * . | * . | * . | * . <Identifier, count>
+. | * . | * . | * . | * . <14, int>
+. | * . | * . | * . | * . <Integer, 1>
+. | * . | * . | * . | <124, void>
+. | * . | * . | * . | <Print>
+. | * . | * . | * . | * <131, void>
+. | * . | * . | * . | * <ListItems, PrintArgs>
+. | * . | * . | * . | * . <270, int>
+. | * . | * . | * . | * . <Identifier, count>
+. | * . | * . | * . | * . <46, int>
+. | * . | * . | * . | * . <MemberDot>
+. | * . | * . | * . | * . | <270, ListNode>
+. | * . | * . | * . | * . | <Identifier, cursor>
+. | * . | * . | * . | * . | <270, void>
+. | * . | * . | * . | * . | <Identifier, data>
+. | * . | * . | * . | <275, ListNode>
+. | * . | * . | * . | <Assign>
+. | * . | * . | * . | * <270, ListNode>
+. | * . | * . | * . | * <Identifier, cursor>
+. | * . | * . | * . | * <46, ListNode>
+. | * . | * . | * . | * <MemberDot>
+. | * . | * . | * . | * . <270, ListNode>
+. | * . | * . | * . | * . <Identifier, cursor>
+. | * . | * . | * . | * . <270, void>
+. | * . | * . | * . | * . <Identifier, next>
+. | * . <218, void>
+. | * . <FunctionDecl, return>
+. | * . | <240, void>
+. | * . | <TypeBase, void>
+. | * . | <270, void>
+. | * . | <Identifier, main>
+. | * . | <131, void>
+. | * . | <ListItems, Parameters>
+. | * . | <167, void>
+. | * . | <Block>
+. | * . | * <131, void>
+. | * . | * <ListItems, block>
+. | * . | * . <282, void>
+. | * . | * . <TypedVariable>
+. | * . | * . | <265, void>
+. | * . | * . | <type_id, ListNode>
+. | * . | * . | <270, void>
+. | * . | * . | <Identifier, second>
+. | * . | * . <282, void>
+. | * . | * . <TypedVariable>
+. | * . | * . | <265, void>
+. | * . | * . | <type_id, ListNode>
+. | * . | * . | <270, void>
+. | * . | * . | <Identifier, third>
+. | * . | * . <275, ListNode>
+. | * . | * . <Assign>
+. | * . | * . | <270, ListNode>
+. | * . | * . | <Identifier, head>
+. | * . | * . | <60, ListNode>
+. | * . | * . | <New>
+. | * . | * . | * <265, void>
+. | * . | * . | * <type_id, ListNode>
+. | * . | * . <29, void>
+. | * . | * . <Call>
+. | * . | * . | <270, ListNode>
+. | * . | * . | <Identifier, head>
+. | * . | * . | <270, void>
+. | * . | * . | <Identifier, setData>
+. | * . | * . | <131, void>
+. | * . | * . | <ListItems, actuals>
+. | * . | * . | * <14, int>
+. | * . | * . | * <Integer, 4>
+. | * . | * . <124, void>
+. | * . | * . <Print>
+. | * . | * . | <131, void>
+. | * . | * . | <ListItems, PrintArgs>
+. | * . | * . | * <46, int>
+. | * . | * . | * <MemberDot>
+. | * . | * . | * . <270, ListNode>
+. | * . | * . | * . <Identifier, head>
+. | * . | * . | * . <270, void>
+. | * . | * . | * . <Identifier, data>
+. | * . | * . <275, ListNode>
+. | * . | * . <Assign>
+. | * . | * . | <270, ListNode>
+. | * . | * . | <Identifier, second>
+. | * . | * . | <60, ListNode>
+. | * . | * . | <New>
+. | * . | * . | * <265, void>
+. | * . | * . | * <type_id, ListNode>
+. | * . | * . <29, void>
+. | * . | * . <Call>
+. | * . | * . | <270, ListNode>
+. | * . | * . | <Identifier, second>
+. | * . | * . | <270, void>
+. | * . | * . | <Identifier, setData>
+. | * . | * . | <131, void>
+. | * . | * . | <ListItems, actuals>
+. | * . | * . | * <14, int>
+. | * . | * . | * <Integer, 5>
+. | * . | * . <124, void>
+. | * . | * . <Print>
+. | * . | * . | <131, void>
+. | * . | * . | <ListItems, PrintArgs>
+. | * . | * . | * <46, int>
+. | * . | * . | * <MemberDot>
+. | * . | * . | * . <270, ListNode>
+. | * . | * . | * . <Identifier, second>
+. | * . | * . | * . <270, void>
+. | * . | * . | * . <Identifier, data>
+. | * . | * . <275, ListNode>
+. | * . | * . <Assign>
+. | * . | * . | <270, ListNode>
+. | * . | * . | <Identifier, third>
+. | * . | * . | <60, ListNode>
+. | * . | * . | <New>
+. | * . | * . | * <265, void>
+. | * . | * . | * <type_id, ListNode>
+. | * . | * . <29, void>
+. | * . | * . <Call>
+. | * . | * . | <270, ListNode>
+. | * . | * . | <Identifier, third>
+. | * . | * . | <270, void>
+. | * . | * . | <Identifier, setData>
+. | * . | * . | <131, void>
+. | * . | * . | <ListItems, actuals>
+. | * . | * . | * <14, int>
+. | * . | * . | * <Integer, 11>
+. | * . | * . <124, void>
+. | * . | * . <Print>
+. | * . | * . | <131, void>
+. | * . | * . | <ListItems, PrintArgs>
+. | * . | * . | * <46, int>
+. | * . | * . | * <MemberDot>
+. | * . | * . | * . <270, ListNode>
+. | * . | * . | * . <Identifier, third>
+. | * . | * . | * . <270, void>
+. | * . | * . | * . <Identifier, data>
+. | * . | * . <275, ListNode>
+. | * . | * . <Assign>
+. | * . | * . | <46, ListNode>
+. | * . | * . | <MemberDot>
+. | * . | * . | * <270, ListNode>
+. | * . | * . | * <Identifier, head>
+. | * . | * . | * <270, void>
+. | * . | * . | * <Identifier, next>
+. | * . | * . | <270, ListNode>
+. | * . | * . | <Identifier, second>
+. | * . | * . <275, ListNode>
+. | * . | * . <Assign>
+. | * . | * . | <46, ListNode>
+. | * . | * . | <MemberDot>
+. | * . | * . | * <270, ListNode>
+. | * . | * . | * <Identifier, second>
+. | * . | * . | * <270, void>
+. | * . | * . | * <Identifier, next>
+. | * . | * . | <270, ListNode>
+. | * . | * . | <Identifier, third>
+. | * . | * . <275, ListNode>
+. | * . | * . <Assign>
+. | * . | * . | <46, ListNode>
+. | * . | * . | <MemberDot>
+. | * . | * . | * <270, ListNode>
+. | * . | * . | * <Identifier, third>
+. | * . | * . | * <270, void>
+. | * . | * . | * <Identifier, next>
+. | * . | * . | <24, nullptr>
+. | * . | * . | <NullPointer>
+. | * . | * . <29, void>
+. | * . | * . <Call>
+. | * . | * . | <270, void>
+. | * . | * . | <Identifier, show>
+. | * . | * . | <131, void>
+. | * . | * . | <ListItems, actuals>
+. | * . | * . | * <270, ListNode>
+. | * . | * . | * <Identifier, head>

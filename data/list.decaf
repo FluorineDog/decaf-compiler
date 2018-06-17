@@ -30,8 +30,8 @@ class List {
   void main() {
     ListNode second;
     ListNode third;
-    // ListNode[] headarr;
-    // headarr = NewArray(1, ListNode);
+    ListNode[] headarr;
+    headarr = NewArray(1, ListNode);
     head = New ListNode;
     head.setData(4);  //  Could use "head.data = 4;"
     Print(head.data);
