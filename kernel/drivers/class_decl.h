@@ -26,7 +26,7 @@ using TypeEntry = std::string;
 using VariableEntry = std::pair<string, string>;
 
 struct FuncEntry {
-  TypeEntry type;
+  TypeEntry return_type;
   vector<VariableEntry> parameters;
   optional<class Block*> body;  // fake for prototype
   bool operator==(const FuncEntry &f) const;

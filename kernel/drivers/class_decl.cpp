@@ -10,7 +10,7 @@ struct always_false : std::false_type {};
 
 
 bool FuncEntry::operator==(const FuncEntry& f) const {
-  if (type != f.type) return false;
+  if (return_type != f.return_type) return false;
   bool is_equal =
       std::equal(parameters.begin(),    //
                  parameters.end(),      //
@@ -43,7 +43,7 @@ void print_sym_table(const ClassEntries& sym_table) {
               logger("Variable", type, id);
             }
             for (auto& [name, func] : body.functions) {
-              logger("Function", name, "->", func.type);
+              logger("Function", name, "->", func.return_type);
               {
                 Indent logger(level);
                 for (auto [type, name] : func.parameters) {
@@ -58,7 +58,7 @@ void print_sym_table(const ClassEntries& sym_table) {
             Indent logger(level, "Interface", name);
             const InterfaceBody& body = arg;
             for (auto& [name, func] : body.functions) {
-              logger("Prototype", name, "->", func.type);
+              logger("Prototype", name, "->", func.return_type);
               {
                 Indent logger(level);
                 for (auto [type, name] : func.parameters) {

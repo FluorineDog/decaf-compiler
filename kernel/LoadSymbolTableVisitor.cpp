@@ -110,7 +110,7 @@ void LoadSymbolTableVisitor::visit(Prototype* node) {
 
   auto& container = current_interface.functions;
   auto& entry = current_func = FuncEntry();
-  entry.type = get_id(node->type);
+  entry.return_type = get_id(node->type);
   for (auto variable_node : node->formals->list) {
     *this << variable_node;
   }
@@ -190,7 +190,7 @@ void LoadSymbolTableVisitor::visit(FunctionDecl* node) {
 
   auto& container = current_class.functions;
   auto& entry = current_func = FuncEntry();
-  entry.type = get_id(node->type);
+  entry.return_type = get_id(node->type);
   for (auto variable_node : node->formals->list) {
     *this << variable_node;
   }

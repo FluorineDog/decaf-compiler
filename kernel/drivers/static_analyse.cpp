@@ -98,7 +98,7 @@ public:
 
     // functions
     for (auto&[func_name, func_body] : body.functions) {
-      auto rt_type = func_body.type;
+      auto rt_type = func_body.return_type;
       visit_type(rt_type);
       for (const auto&[type, _] : func_body.parameters) {
         visit_type(type);
@@ -136,7 +136,7 @@ public:
       return;
     }
     for (auto&[func_name, func_body] : body.functions) {
-      auto rt_type = func_body.type;
+      auto rt_type = func_body.return_type;
       visit_type(rt_type);
       for (const auto&[type, _] : func_body.parameters) {
         visit_type(type);
