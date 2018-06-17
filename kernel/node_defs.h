@@ -27,7 +27,7 @@ class Call : public ASTNodeBase {
   // can be nullptr
   optional_node_ptr_t domain_expr;
   node_ptr_t ident;
-  node_ptr_t actuals;
+  List* actuals;
 };
 
 class Index : public ASTNodeBase {

@@ -1,6 +1,7 @@
 // Template
 #include "generated/StaticAnalyseVisitor.h"
 #include "indent.h"
+#include <queue>
 #include "drivers/class_decl.h"
 /*
   const FuncEntry& binded_function;
@@ -38,7 +39,7 @@ StaticAnalyseVisitor::StaticAnalyseVisitor(const ClassEntries &sym_table,
                                            const ClassBody &class_decl,
                                            const FuncEntry &binded_function)
     : sym_table(sym_table),
-      class_name(class_name),
+      current_class_name(class_name),
       class_decl(class_decl),
       binded_function(binded_function) {
   current_block = &superblock;
@@ -60,13 +61,26 @@ void StaticAnalyseVisitor::visit(NullPointer *node) {
 }
 
 void StaticAnalyseVisitor::visit(Call *node) {
-  string type = class_name;
+  string domain_type = current_class_name;
   if (node->domain_expr) {
-    type = get_type(node->domain_expr.value());
+    domain_type = get_type(node->domain_expr.value());
   }
-  auto &func = sym_table.fetch_complete_function(type, get_id(node->ident));
-  vector<string> types;
-
+  auto &func = sym_table.fetch_complete_function(domain_type, get_id(node->ident));
+  std::queue<string> types;
+  for (auto expr_node: node->actuals->list) {
+    auto type = get_type(expr_node);
+    types.push(type);
+  }
+  for (auto [para_type, _]: func.parameters) {
+    assert(!types.empty());
+    auto expr_type = types.front();
+    types.pop();
+    if (expr_type == "nullptr") {
+      assert(!set<string>({"int", "bool", "double", "void"}).count(para_type));
+    } else {
+      assert(para_type == expr_type);
+    }
+  }
   // TODO check args
   node->token_type = func.return_type;
 }
@@ -149,12 +163,12 @@ void StaticAnalyseVisitor::visit(BinaryExpr *node) {
   }
 
   case T_not_eq:
-  case T_greater_eq:{
-    if(left_type == "nullptr"){
+  case T_greater_eq: {
+    if (left_type == "nullptr") {
       assert(!is_basic_type(right_type));
-    } else if(right_type == "nullptr"){
+    } else if (right_type == "nullptr") {
       assert(!is_basic_type(left_type));
-    } else{
+    } else {
       assert(left_type == right_type);
     }
     node->token_type = "bool";
@@ -171,7 +185,7 @@ void StaticAnalyseVisitor::visit(BinaryExpr *node) {
 }
 
 void StaticAnalyseVisitor::visit(This *node) {
-  node->token_type = class_name;
+  node->token_type = current_class_name;
 }
 
 void StaticAnalyseVisitor::visit(Print *node) {
