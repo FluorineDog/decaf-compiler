@@ -148,9 +148,9 @@ ExprOptional:
 
 Stmt:
   ExprOptional ';'           {$$ = $1;}
-| IfStmt                     {$$ = $1;}
-| WhileStmt                  {$$ = $1;}
-| ForStmt                    {$$ = $1;}
+| IfStmt                     {$$ = mkBlock($1);}
+| WhileStmt                  {$$ = mkBlock($1);}
+| ForStmt                    {$$ = mkBlock($1);}
 | BreakStmt                  {$$ = $1;}
 | ReturnStmt                 {$$ = $1;}
 | PrintStmt                  {$$ = $1;}

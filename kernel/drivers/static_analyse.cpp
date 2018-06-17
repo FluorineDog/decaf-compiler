@@ -3,7 +3,7 @@
 #include "../pure_common.h"
 #include "class_decl.h"
 using std::make_tuple;
-
+int BlockExt::global_uid = 0;
 
 class BuildAuxInfo {
 public:
@@ -157,27 +157,31 @@ public:
     for (auto&[decl_name, decl_body] : sym_table) {
       decl(decl_name, decl_body);
     }
-    for(auto [t, s]: type_record) {
+    for(auto& [t, s]: type_record) {
 //      cerr << "&&" << t;
       assert(s == State::Ready || s == State::Base);
     }
+
   }
 
 private:
   map<TypeEntry, State> type_record;
   // Trace::Core core;
-  StaticAnalyseVisitor visitor;
   ClassEntries &sym_table;
 };
 
 void build_stmt(ClassEntries& sym_table){
+
   for(auto& [class_name, class_body_x]:sym_table){
     if(!std::holds_alternative<ClassBody>(class_body_x)){
       continue;
     }
-    ClassBody& class_body = std::get<ClassBody>(class_body_x);
+    auto& class_body = std::get<ClassBody>(class_body_x);
     for(auto &[func_name, func_body]: class_body.functions){
+      StaticAnalyseVisitor visitor(sym_table, func_body);
       assert(func_body.body);
+      func_body.body.value()->aux.load(func_body);
+      visitor << func_body.body.value();
     }
   }
 };
@@ -185,4 +189,5 @@ void build_stmt(ClassEntries& sym_table){
 void static_analyse(ClassEntries& ce){
   BuildAuxInfo engine(ce);
   engine.run();
+  build_stmt(ce);
 }

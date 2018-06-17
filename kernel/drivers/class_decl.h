@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <map>
 #include <optional>
+#include <cassert>
 #include "driver_helper.h"
 #include <set>
 #include <stack>
@@ -27,9 +28,9 @@ using VariableEntry = std::pair<string, string>;
 struct FuncEntry {
   TypeEntry type;
   vector<VariableEntry> parameters;
-  optional_node_ptr_t body;  // fake for prototype
-  bool operator==(const FuncEntry& f) const;
-  bool operator!=(const FuncEntry& f) const { return *this != f; }
+  optional<class Block*> body;  // fake for prototype
+  bool operator==(const FuncEntry &f) const;
+  bool operator!=(const FuncEntry &f) const { return *this != f; }
 };
 
 struct ClassBody {
@@ -38,21 +39,20 @@ struct ClassBody {
   SeqMap<string, TypeEntry> variables;
   SeqMap<string, FuncEntry> functions;
 
-  struct Available{
+  struct Available {
     SeqMap<string, TypeEntry> variables;
     map<string, string> functors;
     set<string> interfaces;
   } available;
 
-
   // nullable
-  TypeEntry* get_variable(string id) {
+  TypeEntry *get_variable(string id) {
     return variables.find(id);
   }
   void insert_variable(string id, TypeEntry type) {}
 
   // nullable
-  FuncEntry* get_function(string id) {
+  FuncEntry *get_function(string id) {
     auto iter = functions.find(id);
     return iter;
   }
@@ -60,7 +60,7 @@ struct ClassBody {
 
 struct InterfaceBody {
   SeqMap<string, FuncEntry> functions;
-  const FuncEntry* get_function(const string& id) const {
+  const FuncEntry *get_function(const string &id) const {
     // auto iter = functions.find(id);
     // return iter == functions.end() ? nullptr : &iter->second;
     return functions.find(id);
@@ -68,15 +68,34 @@ struct InterfaceBody {
 };
 
 using DeclEntry = std::variant<ClassBody, InterfaceBody>;
-using ClassEntries = SeqMap<string, DeclEntry>;
+//using ClassEntries = SeqMap<string, DeclEntry>;
 // using InterfaceEntries = map<string, InterfaceBody>;
+class ClassEntries : public SeqMap<string, DeclEntry> {
+public:
+  using SeqMap<string, DeclEntry>::SeqMap;
+  InterfaceBody &fetch_complete_interface(string name) {
+    auto body_ptr = this->find(name);
+    assert(body_ptr != nullptr);
+    assert(std::holds_alternative<InterfaceBody>(*body_ptr));
+    auto &body = std::get<InterfaceBody>(*body_ptr);
+    return body;
+  }
 
+  ClassBody &fetch_complete_class(string name) {
+    auto body_ptr = this->find(name);
+    assert(body_ptr != nullptr);
+    assert(std::holds_alternative<ClassBody>(*body_ptr));
+    auto &body = std::get<ClassBody>(*body_ptr);
+    return body;
+  }
 
-
-
-
-
-
+  FuncEntry &fetch_complete_function(string class_name, string func_name) {
+    auto &class_body = fetch_complete_class(class_name);
+    auto ptr = class_body.functions.find(func_name);
+    assert(ptr);
+    return *ptr;
+  }
+};
 
 enum class StateType {
   CLASS,
@@ -90,10 +109,10 @@ enum class StateType {
 };
 
 class StateHolder {
-  stack<StateType>& list_call_stack;
+  stack<StateType> &list_call_stack;
 
- public:
-  StateHolder(stack<StateType>& list_call_stack, StateType t)
+public:
+  StateHolder(stack<StateType> &list_call_stack, StateType t)
       : list_call_stack(list_call_stack) {
     list_call_stack.push(t);
     // std::cerr << "(" << (int)t;
@@ -104,4 +123,4 @@ class StateHolder {
   }
 };
 
-void print_sym_table(const ClassEntries& sym_table);
+void print_sym_table(const ClassEntries &sym_table);

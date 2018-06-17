@@ -1,8 +1,18 @@
 // Template
 #include "generated/StaticAnalyseVisitor.h"
 #include "indent.h"
+#include "drivers/class_decl.h"
 /*
+  const FuncEntry& binded_function;
+  const ClassEntries& sym_table;
+  BlockExt* current_block;
+ public:
+  StaticAnalyseVisitor(const ClassEntries& sym_table, const FuncEntry& binded_function);
 */
+StaticAnalyseVisitor::StaticAnalyseVisitor(const ClassEntries &sym_table, const FuncEntry &binded_function)
+    : sym_table(sym_table), binded_function(binded_function) {
+  current_block = nullptr;
+}
 
 void StaticAnalyseVisitor::visit(Integer* node) {
   // TODO
@@ -78,6 +88,10 @@ void StaticAnalyseVisitor::visit(While* node) {
 
 void StaticAnalyseVisitor::visit(Block* node) {
   // TODO
+  // set parent
+  node->aux.parent = current_block;
+  // point to here
+  current_block = &node->aux;
 }
 
 void StaticAnalyseVisitor::visit(If* node) {
@@ -121,12 +135,12 @@ void StaticAnalyseVisitor::visit(Assign* node) {
 }
 
 void StaticAnalyseVisitor::visit(TypedVariable* node) {
-  // TODO
+  // CreateDeclForVariables
+
 }
 
 void StaticAnalyseVisitor::visit(Program* node) {
   // TODO
-//  engine.run();
 }
 
 void StaticAnalyseVisitor::visit(NoAction* node) {

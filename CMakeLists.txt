@@ -39,7 +39,7 @@ add_custom_target(parser_hxx DEPENDS parser.hxx)
 add_library(visitors ${VISITOR_CPPS})
 add_dependencies(visitors parser_hxx)
 
-add_library(major ${MAJOR})
+add_library(major ${MAJOR} kernel/drivers/local_sym_table_defs.h)
 target_link_libraries(major visitors)
 
 add_library(parser parser.cpp)

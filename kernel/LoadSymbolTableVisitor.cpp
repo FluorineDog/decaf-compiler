@@ -277,7 +277,6 @@ void LoadSymbolTableVisitor::visit(Program* node) {
   for(auto entry: node->decls->list){
     *this << entry;
   }
-
 }
 
 void LoadSymbolTableVisitor::visit(NoAction* node) {

@@ -1,4 +1,5 @@
 #pragma once
+#include "drivers/local_sym_table_defs.h"
 #include "pure_common.h"
 #include <string>
 using std::string;
@@ -130,6 +131,7 @@ class Block : public ASTNodeBase {
  public:
   virtual void accept(Visitor& v) { v.visit(this); }
   node_ptr_t stmt_list;
+  BlockExt /*no ctor*/aux;
 };
 
 class If : public ASTNodeBase {
