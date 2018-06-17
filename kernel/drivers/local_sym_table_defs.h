@@ -20,9 +20,13 @@ struct BlockExt {
   void load(FuncEntry &entry) {
     assert(local_uid.empty());
     for (auto& [type, id] : entry.parameters) {
-      assert(local_uid.count(id) == 0);
-      local_uid[id] = std::make_pair(get_uid(), type);
+      insert(type, id);
     }
+  }
+
+  void insert(TypeEntry type, string id){
+    assert(local_uid.count(id) == 0);
+    local_uid[id] = std::make_pair(get_uid(), type);
   }
 
   static int get_uid() { return global_uid++; }

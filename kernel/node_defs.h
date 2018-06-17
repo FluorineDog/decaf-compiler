@@ -101,6 +101,7 @@ class List : public ASTNodeBase {
 class Break : public ASTNodeBase {
  public:
   virtual void accept(Visitor& v) { v.visit(this); }
+  std::variant<class While*, class For*> loop_point;
 };
 
 class Return : public ASTNodeBase {
@@ -198,6 +199,7 @@ class Identifier : public ASTNodeBase {
  public:
   virtual void accept(Visitor& v) { v.visit(this); }
   string name;
+  int /**/ uid;
 };
 
 class Assign : public ASTNodeBase {

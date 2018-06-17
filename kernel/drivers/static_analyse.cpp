@@ -9,7 +9,7 @@ class BuildAuxInfo {
 public:
   enum class State { Unknown = 0, Processing, Ready, Base };
 
-  void load_default() {
+  void load_basetype() {
     auto base_vec = {"void", "bool", "int", "double", "string"};
     for (string type : base_vec) {
       type_record[type] = State::Base;
@@ -24,8 +24,7 @@ public:
   tuple<State, optional<TypeEntry>> visit_type(TypeEntry type) {
     // assign unknown for unknown type
     int len = type.size();
-    bool isArray = false;
-    while (len >= 2 && type.substr(len - 2, 2) == "[]") {
+    bool isArray = false; while (len >= 2 && type.substr(len - 2, 2) == "[]") {
       // is array
       isArray = true;
       type = type.substr(0, len - 2);
@@ -153,7 +152,7 @@ public:
   }
 
   void run() {
-    load_default();
+    load_basetype();
     for (auto&[decl_name, decl_body] : sym_table) {
       decl(decl_name, decl_body);
     }

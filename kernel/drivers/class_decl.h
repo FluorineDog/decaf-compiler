@@ -105,7 +105,9 @@ enum class StateType {
   FIELD,
   FUNCTION,
   PROTOTYPE,
-  PROGRAM
+  PROGRAM,
+  GET_ID,
+  GET_TYPE
 };
 
 class StateHolder {

@@ -148,8 +148,8 @@ ExprOptional:
 
 Stmt:
   ExprOptional ';'           {$$ = $1;}
-| IfStmt                     {$$ = mkBlock($1);}
-| WhileStmt                  {$$ = mkBlock($1);}
+| IfStmt                     {$$ = $1;}
+| WhileStmt                  {$$ = $1;}
 | ForStmt                    {$$ = mkBlock($1);}
 | BreakStmt                  {$$ = $1;}
 | ReturnStmt                 {$$ = $1;}
@@ -164,7 +164,7 @@ ElseTailOptional:
 ;
 
 IfStmt:
-  T_if '(' Expr ')' Stmt ElseTailOptional     { $$ = mkIf($3, $5, $6);}
+  T_if '(' Expr ')' Stmt ElseTailOptional     { $$ = mkIf($3, mkBlock($5), mkBlock($6));}
 ;
 
 ElseTail:
@@ -172,7 +172,7 @@ ElseTail:
 ;
 
 WhileStmt:
-  T_while '(' Expr ')' Stmt     {$$ = mkWhile($3, $5);}
+  T_while '(' Expr ')' Stmt     {$$ = mkWhile($3, mkBlock($5));}
 ;
 
 ForStmt:
