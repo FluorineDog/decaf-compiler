@@ -34,9 +34,9 @@ TypeEntry StaticAnalyseVisitor::get_type(node_ptr_t node) {
 }
 
 StaticAnalyseVisitor::StaticAnalyseVisitor(const ClassEntries &sym_table,
-                     string class_name,
-                     const ClassBody &class_decl,
-                     const FuncEntry &binded_function)
+                                           string class_name,
+                                           const ClassBody &class_decl,
+                                           const FuncEntry &binded_function)
     : sym_table(sym_table),
       class_name(class_name),
       class_decl(class_decl),
@@ -48,12 +48,10 @@ StaticAnalyseVisitor::StaticAnalyseVisitor(const ClassEntries &sym_table,
 }
 
 void StaticAnalyseVisitor::visit(Integer *node) {
-  // TODO
   node->token_type = "int";
 }
 
 void StaticAnalyseVisitor::visit(Double *node) {
-  // TODO
   node->token_type = "double";
 }
 
@@ -63,10 +61,12 @@ void StaticAnalyseVisitor::visit(NullPointer *node) {
 
 void StaticAnalyseVisitor::visit(Call *node) {
   string type = class_name;
-  if(node->domain_expr){
+  if (node->domain_expr) {
     type = get_type(node->domain_expr.value());
   }
-  auto& func = sym_table.fetch_complete_function(class_name, get_id(node->ident));
+  auto &func = sym_table.fetch_complete_function(class_name, get_id(node->ident));
+  vector<string> types;
+
   // TODO check args
   node->token_type = func.return_type;
 }
@@ -87,11 +87,11 @@ void StaticAnalyseVisitor::visit(MemberDot *node) {
 void StaticAnalyseVisitor::visit(NewArray *node) {
   auto count = get_type(node->expr);
   assert(count == "int");
-  node->token_type = get_type(node->type);
+  node->token_type = get_id(node->type) + "[]";
 }
 
 void StaticAnalyseVisitor::visit(New *node) {
-  node->token_type = get_type(node->type);
+  node->token_type = get_id(node->type);
 }
 
 void StaticAnalyseVisitor::visit(Read *node) {
@@ -112,7 +112,7 @@ void StaticAnalyseVisitor::visit(UnaryExpr *node) {
   }
   case '!': {
     auto expr_type = get_type(node->expr);
-    assert(set<string>({"bool", "int"}).count(expr_type));
+    assert(set<string>({"bool"}).count(expr_type));
     node->token_type = "bool";
     break;
   }
@@ -141,11 +141,22 @@ void StaticAnalyseVisitor::visit(BinaryExpr *node) {
   case '<':
   case '>':
   case T_eq:
-  case T_not_eq:
-  case T_greater_eq:
   case T_less_eq: {
     assert(set<string>({"double", "int"}).count(left_type));
     assert(left_type == right_type);
+    node->token_type = "bool";
+    break;
+  }
+
+  case T_not_eq:
+  case T_greater_eq:{
+    if(left_type == "nullptr"){
+      assert(!is_basic_type(right_type));
+    } else if(right_type == "nullptr"){
+      assert(!is_basic_type(left_type));
+    } else{
+      assert(left_type == right_type);
+    }
     node->token_type = "bool";
     break;
   }
@@ -165,7 +176,10 @@ void StaticAnalyseVisitor::visit(This *node) {
 
 void StaticAnalyseVisitor::visit(Print *node) {
   HOLD(PRINT);
-  *this << node->args;
+  for (auto ptr: node->args->list) {
+    auto type = get_type(ptr);
+    assert(is_basic_type(type));
+  }
 }
 
 void StaticAnalyseVisitor::visit(List *node) {
@@ -175,13 +189,9 @@ void StaticAnalyseVisitor::visit(List *node) {
     for (auto ptr: node->list) {
       *this << ptr;
     }
+    break;
   }
-  case StateType::PRINT: {
-    for (auto ptr: node->list) {
-      auto type = get_type(ptr);
-      assert(set<std::string>({"int", "double", "bool", "string"}).count(type));
-    }
-  }
+  default: assert(false);
   }
 }
 
@@ -282,6 +292,7 @@ void StaticAnalyseVisitor::visit(Identifier *node) {
   switch (call_stack.top()) {
   case StateType::GET_ID: {
     current_id = node->name;
+    break;
   }
   default: {
     // as an expr;

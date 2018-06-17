@@ -2,7 +2,9 @@
 #include <algorithm>
 #include <string>
 #include <vector>
+#include <set>
 using std::find_if;
+
 using std::string;
 using std::vector;
 // using Key = std::string;
@@ -39,3 +41,7 @@ class SeqMap {
   auto end() { return record.end(); }
   size_t size() const { return record.size(); }
 };
+
+inline bool is_basic_type(string type){
+  return std::set<std::string>({"int", "double", "bool", "string"}).count(type);
+}

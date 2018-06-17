@@ -2,6 +2,7 @@
 #include "drivers/local_sym_table_defs.h"
 #include "pure_common.h"
 #include <string>
+class List;
 using std::string;
 class Integer : public ASTNodeBase {
  public:
@@ -88,7 +89,7 @@ class This : public ASTNodeBase {
 class Print : public ASTNodeBase {
  public:
   virtual void accept(Visitor& v) { v.visit(this); }
-  node_ptr_t args;
+  List* args;
 };
 
 class List : public ASTNodeBase {
