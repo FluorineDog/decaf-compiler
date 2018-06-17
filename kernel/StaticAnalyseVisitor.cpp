@@ -224,7 +224,6 @@ void StaticAnalyseVisitor::visit(ClassDecl *node) {
 
 void StaticAnalyseVisitor::visit(FunctionDecl *node) {
   // SKIP
-
 }
 
 void StaticAnalyseVisitor::visit(TypeArray *node) {
@@ -267,7 +266,6 @@ void StaticAnalyseVisitor::visit(Identifier *node) {
   default: {
     // as an expr;
     auto symbol = current_block->get_symbol(node->name);
-
     assert(symbol);
     auto&[uid, type] = symbol.value();
     assert(type != "void");

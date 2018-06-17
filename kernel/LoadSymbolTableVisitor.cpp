@@ -256,7 +256,7 @@ void LoadSymbolTableVisitor::visit(TypedVariable* node) {
         cerr << "redeclaration of id: " << id << endl;
         exit(-1);
       }
-      // entry.variables[id] = type;
+      entry.variables.append(id, type);
       break;
     }
     case StateType::FUNCTION: 
