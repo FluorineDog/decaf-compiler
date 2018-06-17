@@ -64,7 +64,7 @@ void StaticAnalyseVisitor::visit(Call *node) {
   if (node->domain_expr) {
     type = get_type(node->domain_expr.value());
   }
-  auto &func = sym_table.fetch_complete_function(class_name, get_id(node->ident));
+  auto &func = sym_table.fetch_complete_function(type, get_id(node->ident));
   vector<string> types;
 
   // TODO check args
