@@ -17,14 +17,19 @@ struct BlockExt {
     return std::nullopt;
   }
 
-  void load(FuncEntry &entry) {
-    assert(local_uid.empty());
-    for (auto& [type, id] : entry.parameters) {
+  void load_function(const FuncEntry &entry) {
+    for (auto&[type, id] : entry.parameters) {
       insert(type, id);
     }
   }
 
-  void insert(TypeEntry type, string id){
+  void load_class(const ClassBody &entry) {
+    for (auto&[id, type] : entry.variables) {
+      insert(type, id);
+    }
+  }
+
+  void insert(TypeEntry type, string id) {
     assert(local_uid.count(id) == 0);
     local_uid[id] = std::make_pair(get_uid(), type);
   }

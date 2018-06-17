@@ -177,9 +177,8 @@ void build_stmt(ClassEntries& sym_table){
     }
     auto& class_body = std::get<ClassBody>(class_body_x);
     for(auto &[func_name, func_body]: class_body.functions){
-      StaticAnalyseVisitor visitor(sym_table, func_body);
+      StaticAnalyseVisitor visitor(sym_table, class_body, func_body);
       assert(func_body.body);
-      func_body.body.value()->aux.load(func_body);
       visitor << func_body.body.value();
     }
   }

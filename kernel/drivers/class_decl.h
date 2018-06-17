@@ -107,7 +107,8 @@ enum class StateType {
   PROTOTYPE,
   PROGRAM,
   GET_ID,
-  GET_TYPE
+  GET_TYPE,
+  PRINT
 };
 
 class StateHolder {
