@@ -73,7 +73,13 @@ using DeclEntry = std::variant<ClassBody, InterfaceBody>;
 class ClassEntries : public SeqMap<string, DeclEntry> {
 public:
   using SeqMap<string, DeclEntry>::SeqMap;
-  InterfaceBody &fetch_complete_interface(string name) {
+  TypeEntry fetch_complete_variable(string class_name, string id) const{
+    auto cls = fetch_complete_class(class_name);
+    auto variable_ptr = cls.get_variable(id);
+    assert(variable_ptr);
+    return *variable_ptr;
+  }
+  const InterfaceBody &fetch_complete_interface(string name) const{
     auto body_ptr = this->find(name);
     assert(body_ptr != nullptr);
     assert(std::holds_alternative<InterfaceBody>(*body_ptr));
@@ -81,7 +87,7 @@ public:
     return body;
   }
 
-  ClassBody &fetch_complete_class(string name) {
+  const ClassBody &fetch_complete_class(string name) const{
     auto body_ptr = this->find(name);
     assert(body_ptr != nullptr);
     assert(std::holds_alternative<ClassBody>(*body_ptr));
@@ -89,7 +95,7 @@ public:
     return body;
   }
 
-  FuncEntry &fetch_complete_function(string class_name, string func_name) {
+  const FuncEntry &fetch_complete_function(string class_name, string func_name) const{
     auto &class_body = fetch_complete_class(class_name);
     auto ptr = class_body.functions.find(func_name);
     assert(ptr);

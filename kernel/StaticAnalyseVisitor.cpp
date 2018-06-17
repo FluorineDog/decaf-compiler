@@ -13,9 +13,10 @@
   std::optional<std::variant<While*, For*>> loop_point;
   stack<StateType> call_stack;
   const ClassBody& class_decl;
+  const string class_name;
   BlockExt superblock;
  public:
-  StaticAnalyseVisitor(const ClassEntries& sym_table, const ClassBody& class_decl, const FuncEntry& binded_function);
+  StaticAnalyseVisitor(const ClassEntries& sym_table, std::string class_name, const ClassBody& class_decl, const FuncEntry& binded_function);
 */
 
 #define HOLD(t) StateHolder sh(call_stack, StateType::t);
@@ -33,51 +34,72 @@ TypeEntry StaticAnalyseVisitor::get_type(node_ptr_t node) {
 }
 
 StaticAnalyseVisitor::StaticAnalyseVisitor(const ClassEntries &sym_table,
-                                           const ClassBody &class_decl,
-                                           const FuncEntry &binded_function)
-    : sym_table(sym_table), binded_function(binded_function), class_decl(class_decl) {
-
+                     string class_name,
+                     const ClassBody &class_decl,
+                     const FuncEntry &binded_function)
+    : sym_table(sym_table),
+      class_name(class_name),
+      class_decl(class_decl),
+      binded_function(binded_function) {
   current_block = &superblock;
   superblock.load_class(class_decl);
   binded_function.body.value()->aux.load_function(binded_function);
   call_stack.push(StateType::FUNCTION);
-
 }
 
 void StaticAnalyseVisitor::visit(Integer *node) {
   // TODO
+  node->token_type = "int";
 }
 
 void StaticAnalyseVisitor::visit(Double *node) {
   // TODO
+  node->token_type = "double";
 }
 
 void StaticAnalyseVisitor::visit(NullPointer *node) {
-  // TODO
+  node->token_type = "nullptr";
 }
 
 void StaticAnalyseVisitor::visit(Call *node) {
-  // TODO
+  string type = class_name;
+  if(node->domain_expr){
+    type = get_type(node->domain_expr.value());
+  }
+  auto& func = sym_table.fetch_complete_function(class_name, get_id(node->ident));
+  // TODO check args
+  node->token_type = func.return_type;
 }
 
 void StaticAnalyseVisitor::visit(Index *node) {
-  // TODO
+  auto type = get_type(node->expr);
+  auto index_type = get_type(node->expr);
+  assert(index_type == "int");
+  assert(type.size() >= 2 && type.substr(type.size() - 2, 2) == "[]");
+  node->token_type = type.substr(type.size() - 2, 2);
 }
 
 void StaticAnalyseVisitor::visit(MemberDot *node) {
-  // TODO
+  auto class_name = get_type(node->expr);
+  node->token_type = sym_table.fetch_complete_variable(class_name, get_id(node->ident));
 }
 
 void StaticAnalyseVisitor::visit(NewArray *node) {
-  // TODO
+  auto count = get_type(node->expr);
+  assert(count == "int");
+  node->token_type = get_type(node->type);
 }
 
 void StaticAnalyseVisitor::visit(New *node) {
-  // TODO
+  node->token_type = get_type(node->type);
 }
 
 void StaticAnalyseVisitor::visit(Read *node) {
-  // TODO
+  if (node->option == T_ReadInteger) {
+    node->token_type = "int";
+  } else {
+    node->token_type = "string";
+  }
 }
 
 void StaticAnalyseVisitor::visit(UnaryExpr *node) {
@@ -138,12 +160,10 @@ void StaticAnalyseVisitor::visit(BinaryExpr *node) {
 }
 
 void StaticAnalyseVisitor::visit(This *node) {
-  // TODO
-
+  node->token_type = class_name;
 }
 
 void StaticAnalyseVisitor::visit(Print *node) {
-  // TODO
   HOLD(PRINT);
   *this << node->args;
 }
@@ -279,7 +299,11 @@ void StaticAnalyseVisitor::visit(Assign *node) {
   // SKIP
   auto lv_type = get_type(node->left);
   auto expr_type = get_type(node->right);
-  assert(lv_type == expr_type);
+  if (expr_type == "nullptr") {
+    assert(!set<string>({"int", "bool", "double", "void"}).count(lv_type));
+  } else {
+    assert(lv_type == expr_type);
+  }
   node->token_type = lv_type;
 }
 
