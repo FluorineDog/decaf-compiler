@@ -42,12 +42,15 @@ int main() {
   // TheModule->setPICLevel(PICLevel::NotPIC);
   assert(TheModule);
   assert(ExtModule);
+
   auto CalleeF1 = ExtModule->getFunction("readint");
   Function::Create(CalleeF1->getFunctionType(), Function::ExternalLinkage,
                    "readint", TheModule.get());
   auto CalleeF2 = ExtModule->getFunction("refint");
-  Function::Create(CalleeF2->getFunctionType(), Function::ExternalLinkage,
-                   "refint", TheModule.get());
+  TheModule->getOrInsertFunction(CalleeF2->getName(),
+                                 CalleeF2->getFunctionType());
+  // Function::Create(CalleeF2->getFunctionType(), Function::ExternalLinkage,
+  //  "refint", TheModule.get());
 
   // TheModule->setPICLevel(PICLevel::BigPIC);
   // std::map<std::string, Value *> NamedValues;
