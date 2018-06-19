@@ -7,8 +7,8 @@ void llvm_test();
 class LLVMEngine {
  public:
   LLVMEngine();
-  
-
+   
+  void insert_type(string name); 
  private:
   Function* load_extfunc(string name);
   LLVMContext theContext;
