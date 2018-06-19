@@ -21,6 +21,7 @@
 #include "llvm/IR/DerivedTypes.h"
 #include "llvm/IR/Function.h"
 #include "llvm/IR/IRBuilder.h"
+#include "llvm/IR/Instructions.h"
 #include "llvm/IR/LLVMContext.h"
 #include "llvm/IR/Module.h"
 #include "llvm/IR/Type.h"
@@ -32,7 +33,6 @@ using namespace llvm;
 
 int main() {
   LLVMContext TheContext;
-  IRBuilder<> Builder(TheContext);
   SMDiagnostic error;
   // std::ifstream
   // fin("/home/mike/workspace/compiler/llvm_playground/lib/runtime.h.gch",
@@ -63,14 +63,19 @@ int main() {
                                    TheModule.get());
 
     BasicBlock *BB = BasicBlock::Create(TheContext, "god_see", F);
+    IRBuilder<> Builder(TheContext);
     Builder.SetInsertPoint(BB);
     {
+      auto ai = Builder.CreateAlloca(Type::getInt32Ty(TheContext), 0, "tmp");
+      auto const66 = ConstantInt::get(TheContext, APInt(32, 100, true));
+      auto st = Builder.CreateStore(const66, ai);
+      auto ld = Builder.CreateLoad(ai, "ld");
       auto s = Builder.CreateCall(CalleeF1, {}, "calltmp");
-      auto s2 = Builder.CreateCall(CalleeF2, {s}, "calltmp");
+      auto add = Builder.CreateAdd(ld, s, "addtmp");
+      auto s2 = Builder.CreateCall(CalleeF2, {add}, "calltmp");
 
       Builder.CreateRet(s);
     }
-    // auto s = ConstantInt::get(TheContext, APInt(32, 42, true));
     // F->print(errs());
   }
   // ExtModule->print(errs(), nullptr);
