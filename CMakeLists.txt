@@ -39,7 +39,6 @@ SET_SOURCE_FILES_PROPERTIES(parser.cpp GENERATED)
 
 set(CMAKE_CXX_STANDARD 17)
 
-file(GLOB STATIC_ANALYSE kernel/static_analyse_driver/*.cpp)
 include_directories(kernel)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 add_custom_target(parser_hxx DEPENDS parser.hxx)
@@ -48,6 +47,7 @@ file(GLOB VISITOR_CPPS kernel/*Visitor.cpp)
 add_library(visitors ${VISITOR_CPPS})
 add_dependencies(visitors parser_hxx)
 
+file(GLOB STATIC_ANALYSE kernel/static_analyse_driver/*.cpp)
 add_library(static_analyse ${STATIC_ANALYSE})
 target_link_libraries(static_analyse visitors)
 

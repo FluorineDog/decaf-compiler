@@ -1,9 +1,8 @@
+#pragma once
 #include "llvm_inc.h"
 using namespace llvm;
 using std::string;
-void llvm_test();
 
-#include "../static_analyse_driver/class_decl.h"
 class LLVMEngine {
  public:
   LLVMEngine();

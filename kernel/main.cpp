@@ -2,7 +2,7 @@
 #include "static_analyse_driver/class_decl.h"
 #include "static_analyse_driver/static_analyse.h"
 node_ptr_t root;
-#include "llvm_driver/llvm.h"
+#include "llvm_driver/llvm_external.h"
 
 int main() {
   freopen("/home/mike/compiler/data/naive.decaf", "r", stdin);
@@ -22,6 +22,6 @@ int main() {
     PrintVisitor v;
     root->accept(v);
   }
-  
-  // llvm_test();
+
+  codegen(ce);
 }

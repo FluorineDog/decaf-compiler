@@ -12,7 +12,8 @@ using std::vector;
 template <typename Key, typename Value>
 class SeqMap {
  private:
-  vector<std::pair<Key, Value>> record;
+  using Entry = std::pair<Key, Value>;
+  vector<Entry> record;
   using EntryType = std::pair<Key, Value>;
 
  public:
@@ -30,10 +31,17 @@ class SeqMap {
     auto ans = std::as_const(*this).find(key);
     return const_cast<Value*>(ans);
   }
+
   template <typename K, typename V>
   void append(K&& key, V&& value) {
     record.emplace_back(std::forward<Key>(key),  //
                         std::forward<Value>(value));
+  }
+  Entry& operator[](int i){
+    return (*this)[i];
+  }
+  const Entry& operator[](int i) const{
+    return (*this)[i];
   }
   auto begin() const { return record.begin(); }
   auto begin() { return record.begin(); }
