@@ -4,8 +4,8 @@
 #include <assert.h>
 
 typedef struct string{
-  char* content;
   int len;
+  char* content;
 }string;
 
 int readint(){
@@ -31,6 +31,10 @@ string* readline(){
   mem->content = str;
   mem->len = strlen(str);
   return mem;
+}
+
+void printss(string* a){
+  printf("%d:%s\n", a->len,  a->content);
 }
 
 string* string_cat(string* a, string* b) {

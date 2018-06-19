@@ -3,24 +3,41 @@ source_filename = "runtime.c"
 target datalayout = "e-m:e-i64:64-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-pc-linux-gnu"
 
-%struct.string = type { i8*, i32 }
+%struct.string = type { i32, i8* }
 
 @.str = private unnamed_addr constant [3 x i8] c"%d\00", align 1
-@.str.1 = private unnamed_addr constant [3 x i8] c"%s\00", align 1
-@.str.2 = private unnamed_addr constant [2 x i8] c"a\00", align 1
-@.str.3 = private unnamed_addr constant [10 x i8] c"runtime.c\00", align 1
+@.str.1 = private unnamed_addr constant [7 x i8] c"tmp=%d\00", align 1
+@.str.2 = private unnamed_addr constant [7 x i8] c"ref=%d\00", align 1
+@.str.3 = private unnamed_addr constant [3 x i8] c"%s\00", align 1
+@.str.4 = private unnamed_addr constant [7 x i8] c"%d:%s\0A\00", align 1
+@.str.5 = private unnamed_addr constant [2 x i8] c"a\00", align 1
+@.str.6 = private unnamed_addr constant [10 x i8] c"runtime.c\00", align 1
 @__PRETTY_FUNCTION__.string_cat = private unnamed_addr constant [39 x i8] c"string *string_cat(string *, string *)\00", align 1
-@.str.4 = private unnamed_addr constant [2 x i8] c"b\00", align 1
+@.str.7 = private unnamed_addr constant [2 x i8] c"b\00", align 1
 
 ; Function Attrs: noinline nounwind optnone sspstrong uwtable
 define i32 @readint() #0 {
   %1 = alloca i32, align 4
   %2 = call i32 (i8*, ...) @__isoc99_scanf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i32 0, i32 0), i32* %1)
   %3 = load i32, i32* %1, align 4
-  ret i32 %3
+  %4 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([7 x i8], [7 x i8]* @.str.1, i32 0, i32 0), i32 %3)
+  %5 = load i32, i32* %1, align 4
+  ret i32 %5
 }
 
 declare i32 @__isoc99_scanf(i8*, ...) #1
+
+declare i32 @printf(i8*, ...) #1
+
+; Function Attrs: noinline nounwind optnone sspstrong uwtable
+define i32 @refint(i32) #0 {
+  %2 = alloca i32, align 4
+  store i32 %0, i32* %2, align 4
+  %3 = load i32, i32* %2, align 4
+  %4 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([7 x i8], [7 x i8]* @.str.2, i32 0, i32 0), i32 %3)
+  %5 = load i32, i32* %2, align 4
+  ret i32 %5
+}
 
 ; Function Attrs: noinline nounwind optnone sspstrong uwtable
 define i8* @dog_malloc(i32) #0 {
@@ -42,19 +59,19 @@ define %struct.string* @readline() #0 {
   %3 = call noalias i8* @malloc(i64 100) #5
   store i8* %3, i8** %1, align 8
   %4 = load i8*, i8** %1, align 8
-  %5 = call i32 (i8*, ...) @__isoc99_scanf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str.1, i32 0, i32 0), i8* %4)
+  %5 = call i32 (i8*, ...) @__isoc99_scanf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str.3, i32 0, i32 0), i8* %4)
   %6 = call i8* @dog_malloc(i32 16)
   %7 = bitcast i8* %6 to %struct.string*
   store %struct.string* %7, %struct.string** %2, align 8
   %8 = load i8*, i8** %1, align 8
   %9 = load %struct.string*, %struct.string** %2, align 8
-  %10 = getelementptr inbounds %struct.string, %struct.string* %9, i32 0, i32 0
+  %10 = getelementptr inbounds %struct.string, %struct.string* %9, i32 0, i32 1
   store i8* %8, i8** %10, align 8
   %11 = load i8*, i8** %1, align 8
   %12 = call i64 @strlen(i8* %11) #6
   %13 = trunc i64 %12 to i32
   %14 = load %struct.string*, %struct.string** %2, align 8
-  %15 = getelementptr inbounds %struct.string, %struct.string* %14, i32 0, i32 1
+  %15 = getelementptr inbounds %struct.string, %struct.string* %14, i32 0, i32 0
   store i32 %13, i32* %15, align 8
   %16 = load %struct.string*, %struct.string** %2, align 8
   ret %struct.string* %16
@@ -62,6 +79,20 @@ define %struct.string* @readline() #0 {
 
 ; Function Attrs: nounwind readonly
 declare i64 @strlen(i8*) #3
+
+; Function Attrs: noinline nounwind optnone sspstrong uwtable
+define void @printss(%struct.string*) #0 {
+  %2 = alloca %struct.string*, align 8
+  store %struct.string* %0, %struct.string** %2, align 8
+  %3 = load %struct.string*, %struct.string** %2, align 8
+  %4 = getelementptr inbounds %struct.string, %struct.string* %3, i32 0, i32 0
+  %5 = load i32, i32* %4, align 8
+  %6 = load %struct.string*, %struct.string** %2, align 8
+  %7 = getelementptr inbounds %struct.string, %struct.string* %6, i32 0, i32 1
+  %8 = load i8*, i8** %7, align 8
+  %9 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([7 x i8], [7 x i8]* @.str.4, i32 0, i32 0), i32 %5, i8* %8)
+  ret void
+}
 
 ; Function Attrs: noinline nounwind optnone sspstrong uwtable
 define %struct.string* @string_cat(%struct.string*, %struct.string*) #0 {
@@ -80,7 +111,7 @@ define %struct.string* @string_cat(%struct.string*, %struct.string*) #0 {
   br label %12
 
 ; <label>:11:                                     ; preds = %2
-  call void @__assert_fail(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @.str.2, i32 0, i32 0), i8* getelementptr inbounds ([10 x i8], [10 x i8]* @.str.3, i32 0, i32 0), i32 33, i8* getelementptr inbounds ([39 x i8], [39 x i8]* @__PRETTY_FUNCTION__.string_cat, i32 0, i32 0)) #7
+  call void @__assert_fail(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @.str.5, i32 0, i32 0), i8* getelementptr inbounds ([10 x i8], [10 x i8]* @.str.6, i32 0, i32 0), i32 41, i8* getelementptr inbounds ([39 x i8], [39 x i8]* @__PRETTY_FUNCTION__.string_cat, i32 0, i32 0)) #7
   unreachable
 
 ; <label>:12:                                     ; preds = %10
@@ -92,15 +123,15 @@ define %struct.string* @string_cat(%struct.string*, %struct.string*) #0 {
   br label %17
 
 ; <label>:16:                                     ; preds = %12
-  call void @__assert_fail(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @.str.4, i32 0, i32 0), i8* getelementptr inbounds ([10 x i8], [10 x i8]* @.str.3, i32 0, i32 0), i32 34, i8* getelementptr inbounds ([39 x i8], [39 x i8]* @__PRETTY_FUNCTION__.string_cat, i32 0, i32 0)) #7
+  call void @__assert_fail(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @.str.7, i32 0, i32 0), i8* getelementptr inbounds ([10 x i8], [10 x i8]* @.str.6, i32 0, i32 0), i32 42, i8* getelementptr inbounds ([39 x i8], [39 x i8]* @__PRETTY_FUNCTION__.string_cat, i32 0, i32 0)) #7
   unreachable
 
 ; <label>:17:                                     ; preds = %15
   %18 = load %struct.string*, %struct.string** %3, align 8
-  %19 = getelementptr inbounds %struct.string, %struct.string* %18, i32 0, i32 1
+  %19 = getelementptr inbounds %struct.string, %struct.string* %18, i32 0, i32 0
   %20 = load i32, i32* %19, align 8
   %21 = load %struct.string*, %struct.string** %4, align 8
-  %22 = getelementptr inbounds %struct.string, %struct.string* %21, i32 0, i32 1
+  %22 = getelementptr inbounds %struct.string, %struct.string* %21, i32 0, i32 0
   %23 = load i32, i32* %22, align 8
   %24 = add nsw i32 %20, %23
   store i32 %24, i32* %5, align 4
@@ -113,11 +144,11 @@ define %struct.string* @string_cat(%struct.string*, %struct.string*) #0 {
   store %struct.string* %29, %struct.string** %7, align 8
   %30 = load i8*, i8** %6, align 8
   %31 = load %struct.string*, %struct.string** %7, align 8
-  %32 = getelementptr inbounds %struct.string, %struct.string* %31, i32 0, i32 0
+  %32 = getelementptr inbounds %struct.string, %struct.string* %31, i32 0, i32 1
   store i8* %30, i8** %32, align 8
   %33 = load i32, i32* %5, align 4
   %34 = load %struct.string*, %struct.string** %7, align 8
-  %35 = getelementptr inbounds %struct.string, %struct.string* %34, i32 0, i32 1
+  %35 = getelementptr inbounds %struct.string, %struct.string* %34, i32 0, i32 0
   store i32 %33, i32* %35, align 8
   %36 = load %struct.string*, %struct.string** %7, align 8
   ret %struct.string* %36

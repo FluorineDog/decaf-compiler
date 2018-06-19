@@ -6,19 +6,21 @@
 main:                                   # @main
 	.cfi_startproc
 # %bb.0:                                # %god_see
-	pushq	%rbx
-	.cfi_def_cfa_offset 16
-	subq	$16, %rsp
-	.cfi_def_cfa_offset 32
-	.cfi_offset %rbx, -16
+	subq	$40, %rsp
+	.cfi_def_cfa_offset 48
+	callq	readline
+	movq	%rax, 16(%rsp)
+	movl	(%rax), %ecx
+	addl	%ecx, %ecx
+	movl	%ecx, (%rax)
+	movq	%rax, %rdi
+	callq	printss
 	movl	$100, 12(%rsp)
 	callq	readint
-	movl	%eax, %ebx
-	leal	100(%rbx), %edi
+                                        # kill: def %eax killed %eax def %rax
+	leal	100(%rax), %edi
 	callq	refint
-	movl	%ebx, %eax
-	addq	$16, %rsp
-	popq	%rbx
+	addq	$40, %rsp
 	retq
 .Lfunc_end0:
 	.size	main, .Lfunc_end0-main
