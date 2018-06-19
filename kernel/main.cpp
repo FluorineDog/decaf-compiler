@@ -4,7 +4,7 @@
 node_ptr_t root;
 
 int main() {
-  freopen("/home/mike/compiler/data/fake.decaf", "r", stdin);
+  freopen("/home/mike/compiler/data/naive.decaf", "r", stdin);
   yyparse();
 
 
