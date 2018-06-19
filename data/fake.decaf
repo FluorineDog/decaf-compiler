@@ -1,3 +1,4 @@
+
 class NodeBase {
   int base;
 }
@@ -21,7 +22,7 @@ class List {
     count = 0;
     cursor = list;
     while (cursor != null) {
-      count = count + 1 * 2 - 2 % 3 +  5 / (2 - 0);
+      count = count + 1;
       Print(count, cursor.data);
       cursor = cursor.next;
     }
@@ -31,7 +32,7 @@ class List {
     ListNode third;
     ListNode[] headarr;
     headarr = NewArray(1, ListNode);
-    head = headarr[0];
+    head = New ListNode;
     head.setData(4);  //  Could use "head.data = 4;"
     Print(head.data);
     second = New ListNode;

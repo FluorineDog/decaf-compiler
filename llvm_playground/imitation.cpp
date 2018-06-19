@@ -39,7 +39,7 @@ int main() {
   // std::ifstream
   // fin("/home/mike/workspace/compiler/llvm_playground/lib/runtime.h.gch",
   // std::ios::binary);
-  auto ExtModule = parseIRFile("runtime.bc", error, TheContext);
+  auto ExtModule = parseIRFile("runtime.bc", error, TheContext, false);
   auto TheModule = llvm::make_unique<Module>("my cool jit", TheContext);
   // TheModule->setPICLevel(PICLevel::NotPIC);
   assert(TheModule);
@@ -78,22 +78,29 @@ int main() {
     Builder.SetInsertPoint(BB);
 
     {
-      auto t2 = StructType::create(
-          {Type::getInt32Ty(TheContext), Type::getInt8PtrTy(TheContext)},
-          "struct.string");
-      auto t = ExtModule->getTypeByName("struct.string");
-      auto ai = Builder.CreateAlloca(t->getPointerTo(), nullptr, "node");
-      auto ai2 = Builder.CreateAlloca(t2, nullptr, "node2");
+      // auto t = StructType::create(
+          // {},
+          //  {Type::getInt32Ty(TheContext), Type::getInt8PtrTy(TheContext)},
+          // "struct.string");
+      // auto t2 = ExtModule->getTypeByName("struct.string");
+      auto t = StructType::create(TheContext, "struct.string");
+      assert(t);
+      auto pt = t->getPointerTo();
+      t->setBody(
+          {Type::getInt32Ty(TheContext), Type::getInt8PtrTy(TheContext)} );
+      // auto pt =
+      auto ai = Builder.CreateAlloca(pt, nullptr, "node");
+      // auto ai2 = Builder.CreateAlloca(t2, nullptr, "node2");
       auto call = Builder.CreateCall(CalleeF3, {}, "calltmp");
       auto st = Builder.CreateStore(call, ai);
       auto ld = Builder.CreateLoad(ai, "ld");
-      {
-        auto index = ConstantInt::get(TheContext, APInt(32, 0, true));
-        auto memAddr = Builder.CreateGEP(ld, {index, index}, "lenAddr");
-        auto mem = Builder.CreateLoad(memAddr, "len");
-        auto mem2 = Builder.CreateAdd(mem, mem, "mem2");
-        auto st2 = Builder.CreateStore(mem2, memAddr);
-      }
+      // {
+      //   auto index = ConstantInt::get(TheContext, APInt(32, 0, true));
+      //   auto memAddr = Builder.CreateGEP(ld, {index, index}, "lenAddr");
+      //   auto mem = Builder.CreateLoad(memAddr, "len");
+      //   auto mem2 = Builder.CreateAdd(mem, mem, "mem2");
+      //   auto st2 = Builder.CreateStore(mem2, memAddr);
+      // }
       auto call2 = Builder.CreateCall(CalleeF4, {ld}, "");
     }
     {

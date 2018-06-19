@@ -14,16 +14,11 @@ declare void @printss(%struct.string*)
 
 define i32 @main() {
 god_see:
-  %node = alloca %struct.string*
-  %node2 = alloca %struct.string.0
+  %node = alloca %struct.string.0*
   %calltmp = call %struct.string* @readline()
-  store %struct.string* %calltmp, %struct.string** %node
-  %ld = load %struct.string*, %struct.string** %node
-  %lenAddr = getelementptr %struct.string, %struct.string* %ld, i32 0, i32 0
-  %len = load i32, i32* %lenAddr
-  %mem2 = add i32 %len, %len
-  store i32 %mem2, i32* %lenAddr
-  call void @printss(%struct.string* %ld)
+  store %struct.string* %calltmp, %struct.string.0** %node
+  %ld = load %struct.string.0*, %struct.string.0** %node
+  call void @printss(%struct.string.0* %ld)
   %tmp = alloca i32
   store i32 100, i32* %tmp
   %ld1 = load i32, i32* %tmp
