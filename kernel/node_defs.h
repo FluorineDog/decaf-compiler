@@ -1,5 +1,5 @@
 #pragma once
-#include "drivers/local_sym_table_defs.h"
+#include "static_analyse_driver/local_sym_table_defs.h"
 #include "pure_common.h"
 #include <string>
 class List;

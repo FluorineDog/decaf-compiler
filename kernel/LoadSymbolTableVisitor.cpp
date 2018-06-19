@@ -1,7 +1,7 @@
 // Template
 #include "generated/LoadSymbolTableVisitor.h"
 #include "indent.h"
-#include "drivers/class_decl.h"
+#include "static_analyse_driver/class_decl.h"
 /*
  public:
   stack<StateType> call_stack;

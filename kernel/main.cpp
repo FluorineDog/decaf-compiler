@@ -1,6 +1,6 @@
 #include "external.h"
-#include "drivers/class_decl.h"
-#include "drivers/static_analyse.h"
+#include "static_analyse_driver/class_decl.h"
+#include "static_analyse_driver/static_analyse.h"
 node_ptr_t root;
 
 int main() {

@@ -2,7 +2,7 @@
 #include "generated/StaticAnalyseVisitor.h"
 #include "indent.h"
 #include <queue>
-#include "drivers/class_decl.h"
+#include "static_analyse_driver/class_decl.h"
 /*
   const FuncEntry& binded_function;
   const ClassEntries& sym_table;

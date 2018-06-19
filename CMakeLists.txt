@@ -1,7 +1,7 @@
 # Create target for the parser
 cmake_minimum_required(VERSION 3.8)
 file(GLOB VISITOR_CPPS kernel/*Visitor.cpp)
-file(GLOB MAJOR kernel/drivers/*.cpp)
+file(GLOB MAJOR kernel/static_analyse_driver/*.cpp)
 set(ROOT ${CMAKE_CURRENT_SOURCE_DIR})
 
 
@@ -39,7 +39,7 @@ add_custom_target(parser_hxx DEPENDS parser.hxx)
 add_library(visitors ${VISITOR_CPPS})
 add_dependencies(visitors parser_hxx)
 
-add_library(major ${MAJOR} kernel/drivers/local_sym_table_defs.h)
+add_library(major ${MAJOR} kernel/static_analyse_driver/local_sym_table_defs.h)
 target_link_libraries(major visitors)
 
 add_library(parser parser.cpp)
