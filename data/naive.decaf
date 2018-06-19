@@ -4,6 +4,8 @@ class Main {
     i = 42;
     string s;
     s = ReadLine();
+    s = s + s;
+    Print(s);
     return 0;
   }
 }
