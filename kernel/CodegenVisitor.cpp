@@ -57,7 +57,8 @@ void CodegenVisitor::visit(Double *node) {
 
 void CodegenVisitor::visit(NullPointer *node) {
   // TODO
-  assert(false);
+  auto type = eng.get_user_type(node->token_type);
+  rt_value = ConstantPointerNull::get(type);
 }
 
 void CodegenVisitor::visit(Call *node) {
@@ -109,11 +110,9 @@ void CodegenVisitor::visit(UnaryExpr *node) {
     break;
   }
   }
-  // TODO
 }
 
 void CodegenVisitor::visit(BinaryExpr *node) {
-  // TODO
   auto left = get_value(node->left);
   auto right = get_value(node->right);
   switch (node->op) {

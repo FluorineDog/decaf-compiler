@@ -2,9 +2,15 @@ class Main {
   int main() {
     int i;
     string str;
-    str = ReadLine();
-    i = 43;
-    Print(str, i == 43);
+    string str2;
+    bool res1;
+    bool res2;
+    str2 = null;
+    res1 = str == null; 
+    res2 = str2 == str;
+    // str = ReadLine();
+    // i = 43;
+    Print(res1, res2);
     return 0;
   }
 }

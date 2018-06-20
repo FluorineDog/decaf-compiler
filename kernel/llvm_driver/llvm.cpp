@@ -8,13 +8,16 @@ LLVMEngine::LLVMEngine()
   assert(extModule);
   assert(theModule);
   // load basic type
-  auto str_type = extModule->getTypeByName("struct.string")->getPointerTo();
+  auto str_type = extModule->getTypeByName("struct.string");
   // use pointer deliberately. Use as basic type
-  type_dict["string"] = str_type;
-  type_dict["int"] = Type::getInt32Ty(theContext);
-  type_dict["double"] = Type::getDoubleTy(theContext);
-  type_dict["bool"] = Type::getInt1Ty(theContext);
-  type_dict["void"] = Type::getVoidTy(theContext);
+  builtin_type_dict["string"] = str_type->getPointerTo();
+  builtin_type_dict["int"] = Type::getInt32Ty(theContext);
+  builtin_type_dict["double"] = Type::getDoubleTy(theContext);
+  builtin_type_dict["bool"] = Type::getInt1Ty(theContext);
+  builtin_type_dict["void"] = Type::getVoidTy(theContext);
+
+  // load user type
+  user_type_dict["string"] = str_type;
 
   // load external function
   constexpr const char *c_extnames[] = {"readint", "readline", "printint", "printdouble", "printbool",
@@ -34,11 +37,11 @@ Function *LLVMEngine::load_extfunc(string name) {
 
 void LLVMEngine::insert_type(string name) {
   auto t = StructType::create(theContext, name);
-  type_dict[name] = t;
+  builtin_type_dict[name] = t;
 }
 
 void LLVMEngine::create_main(Block *node) {
-  auto FT = FunctionType::get(type_dict["int"], {}, false);
+  auto FT = FunctionType::get(builtin_type_dict["int"], {}, false);
   auto F = Function::Create(FT, Function::ExternalLinkage, "main", theModule.get());
   BasicBlock *BB = BasicBlock::Create(theContext, "entry", F);
   builder.SetInsertPoint(BB);
@@ -50,22 +53,21 @@ void LLVMEngine::create_main(Block *node) {
 
 void LLVMEngine::define_local_variable(int uid, string type) {
   assert(!local_table.count(uid));
-  auto var = builder.CreateAlloca(type_dict[type], nullptr, "local_decl");
+  auto var = builder.CreateAlloca(builtin_type_dict[type], nullptr, "local_decl");
   local_table[uid] = var;
 }
 
-Value* LLVMEngine::fetch_local_id(int uid){
+Value *LLVMEngine::fetch_local_id(int uid) {
   assert(local_table.count(uid));
   return local_table[uid];
 }
 
-
-PointerType* LLVMEngine::get_user_type(string name){
+PointerType *LLVMEngine::get_user_type(string name) {
   // TODO
-  return nullptr;
+  return user_type_dict[name]->getPointerTo();
 }
 
-Type* LLVMEngine::get_basic_type(string name) {
+Type *LLVMEngine::get_basic_type(string name) {
   // TODO
   return nullptr;
 }

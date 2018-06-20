@@ -45,7 +45,8 @@ private:
   std::unique_ptr<Module> extModule;
   std::unique_ptr<Module> theModule;
   std::map<string, Function *> util_func;
-  std::map<string, Type *> type_dict;
+  std::map<string, Type *> builtin_type_dict;
+  std::map<string, Type *> user_type_dict;
   std::map<int, Value *> local_table;
   IRBuilder<> builder;
 };
