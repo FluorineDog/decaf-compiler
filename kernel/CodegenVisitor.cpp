@@ -43,45 +43,45 @@ Type *CodegenVisitor::get_type(node_ptr_t node) {
   return rt_type;
 }
 
-void CodegenVisitor::visit(Integer* node) {
+void CodegenVisitor::visit(Integer *node) {
   assert(right_value);
   assert(call_stack.top() == StateType::GET_VALUE);
   rt_value = ConstantInt::get(eng.getContext(), APInt(32, node->num, true));
 }
 
-void CodegenVisitor::visit(Double* node) {
+void CodegenVisitor::visit(Double *node) {
   assert(right_value);
   assert(call_stack.top() == StateType::GET_VALUE);
   rt_value = ConstantFP::get(Type::getDoubleTy(eng.getContext()), node->num);
 }
 
-void CodegenVisitor::visit(NullPointer* node) {
+void CodegenVisitor::visit(NullPointer *node) {
   // TODO
   auto type = eng.get_user_type(node->token_type);
   rt_value = ConstantPointerNull::get(type);
 }
 
-void CodegenVisitor::visit(Call* node) {
+void CodegenVisitor::visit(Call *node) {
   // TODO
 }
 
-void CodegenVisitor::visit(Index* node) {
+void CodegenVisitor::visit(Index *node) {
   // TODO
 }
 
-void CodegenVisitor::visit(MemberDot* node) {
+void CodegenVisitor::visit(MemberDot *node) {
   // TODO
 }
 
-void CodegenVisitor::visit(NewArray* node) {
+void CodegenVisitor::visit(NewArray *node) {
   // TODO
 }
 
-void CodegenVisitor::visit(New* node) {
+void CodegenVisitor::visit(New *node) {
   // TODO
 }
 
-void CodegenVisitor::visit(Read* node) {
+void CodegenVisitor::visit(Read *node) {
   switch (node->option) {
   case T_ReadLine: {
     auto F = eng.load_ext_func("readline");
@@ -95,7 +95,7 @@ void CodegenVisitor::visit(Read* node) {
   }
 }
 
-void CodegenVisitor::visit(UnaryExpr* node) {
+void CodegenVisitor::visit(UnaryExpr *node) {
   switch (node->op) {
   case '-': {
     auto value = get_value(node->expr);
@@ -112,7 +112,7 @@ void CodegenVisitor::visit(UnaryExpr* node) {
   }
 }
 
-void CodegenVisitor::visit(BinaryExpr* node) {
+void CodegenVisitor::visit(BinaryExpr *node) {
   auto left = get_value(node->left);
   auto right = get_value(node->right);
   switch (node->op) {
@@ -162,11 +162,10 @@ void CodegenVisitor::visit(BinaryExpr* node) {
   }
 
   case T_eq:
-  case T_not_eq:
-  {
+  case T_not_eq: {
     auto left_stp = eng().CreatePtrToInt(left, Type::getInt64Ty(eng.getContext()));
     auto right_stp = eng().CreatePtrToInt(right, Type::getInt64Ty(eng.getContext()));
-    if(node->op  == T_eq){
+    if (node->op == T_eq) {
       rt_value = eng().CreateICmpEQ(left_stp, right_stp);
     } else {
       rt_value = eng().CreateICmpNE(left_stp, right_stp);
@@ -185,16 +184,16 @@ void CodegenVisitor::visit(BinaryExpr* node) {
   }
 }
 
-void CodegenVisitor::visit(This* node) {
+void CodegenVisitor::visit(This *node) {
   // TODO
 }
 
-void CodegenVisitor::visit(Print* node) {
+void CodegenVisitor::visit(Print *node) {
   HOLD(PRINT);
   *this << node->args;
 }
 
-void CodegenVisitor::visit(List* node) {
+void CodegenVisitor::visit(List *node) {
   // TODO
   switch (call_stack.top()) {
   case StateType::BLOCK: {
@@ -215,23 +214,23 @@ void CodegenVisitor::visit(List* node) {
   }
 }
 
-void CodegenVisitor::visit(Break* node) {
+void CodegenVisitor::visit(Break *node) {
   // TODO
 }
 
-void CodegenVisitor::visit(Return* node) {
+void CodegenVisitor::visit(Return *node) {
   eng().CreateRet(get_value(node->expr));
 }
 
-void CodegenVisitor::visit(For* node) {
+void CodegenVisitor::visit(For *node) {
   // TODO
 }
 
-void CodegenVisitor::visit(While* node) {
+void CodegenVisitor::visit(While *node) {
   // TODO
 }
 
-void CodegenVisitor::visit(Block* node) {
+void CodegenVisitor::visit(Block *node) {
   // TODO
   HOLD(BLOCK);
   for (auto&[name, variable]: node->aux.local_uid) {
@@ -241,39 +240,63 @@ void CodegenVisitor::visit(Block* node) {
   *this << node->stmt_list;
 }
 
-void CodegenVisitor::visit(If* node) {
-  // TODO
+void CodegenVisitor::visit(If *node) {
+
+  Function *tf = eng().GetInsertBlock()->getParent();
+  auto condition = get_value(node->condition);
+  auto thenBB = BasicBlock::Create(eng().getContext(), "then", tf);
+  auto elseBB = BasicBlock::Create(eng().getContext(), "else", tf);
+  auto nextBB = BasicBlock::Create(eng().getContext(), "cont", tf);
+  eng().CreateCondBr(condition, thenBB, elseBB);
+
+  // if block
+  eng().SetInsertPoint(thenBB);
+  *this << node->if_stmt;
+  eng().CreateBr(nextBB);
+//  thenBB = eng().GetInsertBlock();
+
+  // else block
+  tf->getBasicBlockList().push_back(elseBB);
+  eng().SetInsertPoint(elseBB);
+  *this << node->else_stmt;
+  eng().CreateBr(nextBB);
+//  elseBB = eng().GetInsertBlock();
+
+  // emit else block
+  tf->getBasicBlockList().push_back(nextBB);
+  eng().SetInsertPoint(nextBB);
+//  nextBB = eng().GetInsertBlock();
 }
 
-void CodegenVisitor::visit(Prototype* node) {
+void CodegenVisitor::visit(Prototype *node) {
   // SKIP
 }
 
-void CodegenVisitor::visit(Interface* node) {
+void CodegenVisitor::visit(Interface *node) {
   // SKIP
 }
 
-void CodegenVisitor::visit(ClassDecl* node) {
+void CodegenVisitor::visit(ClassDecl *node) {
   // SKIP
 }
 
-void CodegenVisitor::visit(FunctionDecl* node) {
+void CodegenVisitor::visit(FunctionDecl *node) {
   // SKIP
 }
 
-void CodegenVisitor::visit(TypeArray* node) {
+void CodegenVisitor::visit(TypeArray *node) {
   // TODO
 }
 
-void CodegenVisitor::visit(TypeBase* node) {
+void CodegenVisitor::visit(TypeBase *node) {
   // TODO
 }
 
-void CodegenVisitor::visit(TypeUser* node) {
+void CodegenVisitor::visit(TypeUser *node) {
   // TODO
 }
 
-void CodegenVisitor::visit(Identifier* node) {
+void CodegenVisitor::visit(Identifier *node) {
   // TODO
   switch (call_stack.top()) {
   case StateType::GET_VALUE: {
@@ -286,7 +309,7 @@ void CodegenVisitor::visit(Identifier* node) {
   }
 }
 
-void CodegenVisitor::visit(Assign* node) {
+void CodegenVisitor::visit(Assign *node) {
   node->right->token_type = node->left->token_type;
   auto right = get_value(node->right);
   auto left = get_value(node->left, false);
@@ -294,15 +317,15 @@ void CodegenVisitor::visit(Assign* node) {
   rt_value = left;
 }
 
-void CodegenVisitor::visit(TypedVariable* node) {
+void CodegenVisitor::visit(TypedVariable *node) {
   // SKIP
 }
 
-void CodegenVisitor::visit(Program* node) {
+void CodegenVisitor::visit(Program *node) {
   // SKIP
 }
 
-void CodegenVisitor::visit(NoAction* node) {
+void CodegenVisitor::visit(NoAction *node) {
   // SKIP
 }
 
