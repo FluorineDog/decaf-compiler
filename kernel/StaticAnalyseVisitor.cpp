@@ -48,19 +48,19 @@ StaticAnalyseVisitor::StaticAnalyseVisitor(const ClassEntries &sym_table,
   call_stack.push(StateType::FUNCTION);
 }
 
-void StaticAnalyseVisitor::visit(Integer* node) {
+void StaticAnalyseVisitor::visit(Integer *node) {
   node->token_type = "int";
 }
 
-void StaticAnalyseVisitor::visit(Double* node) {
+void StaticAnalyseVisitor::visit(Double *node) {
   node->token_type = "double";
 }
 
-void StaticAnalyseVisitor::visit(NullPointer* node) {
+void StaticAnalyseVisitor::visit(NullPointer *node) {
   node->token_type = "nullptr";
 }
 
-void StaticAnalyseVisitor::visit(Call* node) {
+void StaticAnalyseVisitor::visit(Call *node) {
   string domain_type = current_class_name;
   if (node->domain_expr) {
     domain_type = get_type(node->domain_expr.value());
@@ -87,7 +87,7 @@ void StaticAnalyseVisitor::visit(Call* node) {
   node->token_type = func.return_type;
 }
 
-void StaticAnalyseVisitor::visit(Index* node) {
+void StaticAnalyseVisitor::visit(Index *node) {
   auto type = get_type(node->expr);
   auto index_type = get_type(node->index_expr);
   int len = type.size();
@@ -96,7 +96,7 @@ void StaticAnalyseVisitor::visit(Index* node) {
   node->token_type = type.substr(0, len - 2);
 }
 
-void StaticAnalyseVisitor::visit(MemberDot* node) {
+void StaticAnalyseVisitor::visit(MemberDot *node) {
   auto class_name = get_type(node->expr);
   auto id = get_id(node->ident);
   node->ident_name = id;
@@ -104,17 +104,17 @@ void StaticAnalyseVisitor::visit(MemberDot* node) {
   node->ident->token_type = node->token_type;
 }
 
-void StaticAnalyseVisitor::visit(NewArray* node) {
+void StaticAnalyseVisitor::visit(NewArray *node) {
   auto count = get_type(node->expr);
   assert(count == "int");
   node->token_type = get_id(node->type) + "[]";
 }
 
-void StaticAnalyseVisitor::visit(New* node) {
+void StaticAnalyseVisitor::visit(New *node) {
   node->token_type = get_id(node->type);
 }
 
-void StaticAnalyseVisitor::visit(Read* node) {
+void StaticAnalyseVisitor::visit(Read *node) {
   if (node->option == T_ReadInteger) {
     node->token_type = "int";
   } else {
@@ -122,7 +122,7 @@ void StaticAnalyseVisitor::visit(Read* node) {
   }
 }
 
-void StaticAnalyseVisitor::visit(UnaryExpr* node) {
+void StaticAnalyseVisitor::visit(UnaryExpr *node) {
   switch (node->op) {
   case '-': {
     auto expr_type = get_type(node->expr);
@@ -139,7 +139,7 @@ void StaticAnalyseVisitor::visit(UnaryExpr* node) {
   }
 }
 
-void StaticAnalyseVisitor::visit(BinaryExpr* node) {
+void StaticAnalyseVisitor::visit(BinaryExpr *node) {
   auto left_type = get_type(node->left);
   auto right_type = get_type(node->right);
   switch (node->op) {
@@ -196,11 +196,11 @@ void StaticAnalyseVisitor::visit(BinaryExpr* node) {
   }
 }
 
-void StaticAnalyseVisitor::visit(This* node) {
+void StaticAnalyseVisitor::visit(This *node) {
   node->token_type = current_class_name;
 }
 
-void StaticAnalyseVisitor::visit(Print* node) {
+void StaticAnalyseVisitor::visit(Print *node) {
   HOLD(PRINT);
   for (auto ptr: node->args->list) {
     auto type = get_type(ptr);
@@ -208,7 +208,7 @@ void StaticAnalyseVisitor::visit(Print* node) {
   }
 }
 
-void StaticAnalyseVisitor::visit(List* node) {
+void StaticAnalyseVisitor::visit(List *node) {
   switch (call_stack.top()) {
   case StateType::FUNCTION : {
     // top level, should be stmts;
@@ -221,17 +221,17 @@ void StaticAnalyseVisitor::visit(List* node) {
   }
 }
 
-void StaticAnalyseVisitor::visit(Break* node) {
+void StaticAnalyseVisitor::visit(Break *node) {
   assert(loop_point);
   node->loop_point = loop_point.value();
 }
 
-void StaticAnalyseVisitor::visit(Return* node) {
+void StaticAnalyseVisitor::visit(Return *node) {
   auto type = get_type(node->expr);
   assert(type == binded_function.return_type);
 }
 
-void StaticAnalyseVisitor::visit(For* node) {
+void StaticAnalyseVisitor::visit(For *node) {
   auto parent_loop = loop_point;
   loop_point = node;
   *this << node->init_expr;
@@ -242,7 +242,7 @@ void StaticAnalyseVisitor::visit(For* node) {
   loop_point = parent_loop;
 }
 
-void StaticAnalyseVisitor::visit(While* node) {
+void StaticAnalyseVisitor::visit(While *node) {
   auto parent_loop = loop_point;
   loop_point = node;
   auto cond = get_type(node->conditional_expr);
@@ -251,7 +251,7 @@ void StaticAnalyseVisitor::visit(While* node) {
   loop_point = parent_loop;
 }
 
-void StaticAnalyseVisitor::visit(Block* node) {
+void StaticAnalyseVisitor::visit(Block *node) {
   // set parent
   node->aux.parent = current_block;
   // point to here
@@ -259,37 +259,37 @@ void StaticAnalyseVisitor::visit(Block* node) {
   *this << node->stmt_list;
 }
 
-void StaticAnalyseVisitor::visit(If* node) {
+void StaticAnalyseVisitor::visit(If *node) {
   auto cond = get_type(node->condition);
   assert(cond == "bool");
   *this << node->if_stmt;
   *this << node->else_stmt;
 }
 
-void StaticAnalyseVisitor::visit(Prototype* node) {
+void StaticAnalyseVisitor::visit(Prototype *node) {
   // SKIP
 }
 
-void StaticAnalyseVisitor::visit(Interface* node) {
+void StaticAnalyseVisitor::visit(Interface *node) {
   // SKIP
 }
 
-void StaticAnalyseVisitor::visit(ClassDecl* node) {
+void StaticAnalyseVisitor::visit(ClassDecl *node) {
   // SKIP
 }
 
-void StaticAnalyseVisitor::visit(FunctionDecl* node) {
+void StaticAnalyseVisitor::visit(FunctionDecl *node) {
   // SKIP
 }
 
-void StaticAnalyseVisitor::visit(TypeArray* node) {
+void StaticAnalyseVisitor::visit(TypeArray *node) {
   assert(call_stack.top() == StateType::GET_ID);
   auto base = get_id(node->base);
   assert(base != "void");
   current_id = base + "[]";
 }
 
-void StaticAnalyseVisitor::visit(TypeBase* node) {
+void StaticAnalyseVisitor::visit(TypeBase *node) {
   assert(call_stack.top() == StateType::GET_ID);
   string name;
   switch (node->base_type) {
@@ -309,12 +309,12 @@ void StaticAnalyseVisitor::visit(TypeBase* node) {
   current_id = name;
 }
 
-void StaticAnalyseVisitor::visit(TypeUser* node) {
+void StaticAnalyseVisitor::visit(TypeUser *node) {
   assert(call_stack.top() == StateType::GET_ID);
   current_id = node->type_name;
 }
 
-void StaticAnalyseVisitor::visit(Identifier* node) {
+void StaticAnalyseVisitor::visit(Identifier *node) {
   switch (call_stack.top()) {
   case StateType::GET_ID: {
     current_id = node->name;
@@ -332,7 +332,7 @@ void StaticAnalyseVisitor::visit(Identifier* node) {
   }
 }
 
-void StaticAnalyseVisitor::visit(Assign* node) {
+void StaticAnalyseVisitor::visit(Assign *node) {
   // SKIP
   auto lv_type = get_type(node->left);
   auto expr_type = get_type(node->right);
@@ -344,16 +344,16 @@ void StaticAnalyseVisitor::visit(Assign* node) {
   node->token_type = lv_type;
 }
 
-void StaticAnalyseVisitor::visit(TypedVariable* node) {
+void StaticAnalyseVisitor::visit(TypedVariable *node) {
   // CreateDeclForVariables
   current_block->insert(get_id(node->type), get_id(node->id));
 }
 
-void StaticAnalyseVisitor::visit(Program* node) {
+void StaticAnalyseVisitor::visit(Program *node) {
   // SKIP
 }
 
-void StaticAnalyseVisitor::visit(NoAction* node) {
+void StaticAnalyseVisitor::visit(NoAction *node) {
   node->token_type = "void";
 }
 

@@ -19,87 +19,87 @@ string LoadSymbolTableVisitor::get_id(node_ptr_t node) {
   return current_id;
 }
 #define HOLD(t) StateHolder sh(call_stack, StateType::t);
-void LoadSymbolTableVisitor::visit(Integer* node) {
+void LoadSymbolTableVisitor::visit(Integer *node) {
   // TODO
 }
 
-void LoadSymbolTableVisitor::visit(Double* node) {
+void LoadSymbolTableVisitor::visit(Double *node) {
   // TODO
 }
 
-void LoadSymbolTableVisitor::visit(NullPointer* node) {
+void LoadSymbolTableVisitor::visit(NullPointer *node) {
   // TODO
 }
 
-void LoadSymbolTableVisitor::visit(Call* node) {
+void LoadSymbolTableVisitor::visit(Call *node) {
   // TODO
 }
 
-void LoadSymbolTableVisitor::visit(Index* node) {
+void LoadSymbolTableVisitor::visit(Index *node) {
   // TODO
 }
 
-void LoadSymbolTableVisitor::visit(MemberDot* node) {
+void LoadSymbolTableVisitor::visit(MemberDot *node) {
   // TODO
 }
 
-void LoadSymbolTableVisitor::visit(NewArray* node) {
+void LoadSymbolTableVisitor::visit(NewArray *node) {
   // TODO
 }
 
-void LoadSymbolTableVisitor::visit(New* node) {
+void LoadSymbolTableVisitor::visit(New *node) {
   // TODO
 }
 
-void LoadSymbolTableVisitor::visit(Read* node) {
+void LoadSymbolTableVisitor::visit(Read *node) {
   // TODO
 }
 
-void LoadSymbolTableVisitor::visit(UnaryExpr* node) {
+void LoadSymbolTableVisitor::visit(UnaryExpr *node) {
   // TODO
 }
 
-void LoadSymbolTableVisitor::visit(BinaryExpr* node) {
+void LoadSymbolTableVisitor::visit(BinaryExpr *node) {
   // TODO
 }
 
-void LoadSymbolTableVisitor::visit(This* node) {
+void LoadSymbolTableVisitor::visit(This *node) {
   // TODO
 }
 
-void LoadSymbolTableVisitor::visit(Print* node) {
+void LoadSymbolTableVisitor::visit(Print *node) {
   // TODO
 }
 
-void LoadSymbolTableVisitor::visit(List* node) {
+void LoadSymbolTableVisitor::visit(List *node) {
   // TODO
 }
 
-void LoadSymbolTableVisitor::visit(Break* node) {
+void LoadSymbolTableVisitor::visit(Break *node) {
   // TODO
 }
 
-void LoadSymbolTableVisitor::visit(Return* node) {
+void LoadSymbolTableVisitor::visit(Return *node) {
   // TODO
 }
 
-void LoadSymbolTableVisitor::visit(For* node) {
+void LoadSymbolTableVisitor::visit(For *node) {
   // TODO
 }
 
-void LoadSymbolTableVisitor::visit(While* node) {
+void LoadSymbolTableVisitor::visit(While *node) {
   // TODO
 }
 
-void LoadSymbolTableVisitor::visit(Block* node) {
+void LoadSymbolTableVisitor::visit(Block *node) {
   // TODO
 }
 
-void LoadSymbolTableVisitor::visit(If* node) {
+void LoadSymbolTableVisitor::visit(If *node) {
   // TODO
 }
 
-void LoadSymbolTableVisitor::visit(Prototype* node) {
+void LoadSymbolTableVisitor::visit(Prototype *node) {
   // TODO
   HOLD(PROTOTYPE);
   auto name = get_id(node->identifier);
@@ -120,7 +120,7 @@ void LoadSymbolTableVisitor::visit(Prototype* node) {
   entry = FuncEntry();
 }
 
-void LoadSymbolTableVisitor::visit(Interface* node) {
+void LoadSymbolTableVisitor::visit(Interface *node) {
   HOLD(INTERFACE);
   auto class_name = get_id(node->type_ident);
 
@@ -144,7 +144,7 @@ void LoadSymbolTableVisitor::visit(Interface* node) {
   current_interface = InterfaceBody();
 }
 
-void LoadSymbolTableVisitor::visit(ClassDecl* node) {
+void LoadSymbolTableVisitor::visit(ClassDecl *node) {
   HOLD(CLASS);
   auto class_name = get_id(node->type);
 
@@ -180,7 +180,7 @@ void LoadSymbolTableVisitor::visit(ClassDecl* node) {
   current_class = ClassBody();
 }
 
-void LoadSymbolTableVisitor::visit(FunctionDecl* node) {
+void LoadSymbolTableVisitor::visit(FunctionDecl *node) {
   HOLD(FUNCTION);
   auto name = get_id(node->identifier);
 
@@ -200,12 +200,12 @@ void LoadSymbolTableVisitor::visit(FunctionDecl* node) {
   entry = FuncEntry();
 }
 
-void LoadSymbolTableVisitor::visit(TypeArray* node) {
+void LoadSymbolTableVisitor::visit(TypeArray *node) {
   // TODO
   current_id = get_id(node->base) + "[]";
 }
 
-void LoadSymbolTableVisitor::visit(TypeBase* node) {
+void LoadSymbolTableVisitor::visit(TypeBase *node) {
   // TODO
   string name;
   switch (node->base_type) {
@@ -231,21 +231,21 @@ void LoadSymbolTableVisitor::visit(TypeBase* node) {
   current_id = name;
 }
 
-void LoadSymbolTableVisitor::visit(TypeUser* node) {
+void LoadSymbolTableVisitor::visit(TypeUser *node) {
   // TODO
   current_id = node->type_name;
 }
 
-void LoadSymbolTableVisitor::visit(Identifier* node) {
+void LoadSymbolTableVisitor::visit(Identifier *node) {
   // TODO
   current_id = node->name;
 }
 
-void LoadSymbolTableVisitor::visit(Assign* node) {
+void LoadSymbolTableVisitor::visit(Assign *node) {
   // TODO
 }
 
-void LoadSymbolTableVisitor::visit(TypedVariable* node) {
+void LoadSymbolTableVisitor::visit(TypedVariable *node) {
   // TODO
   auto type = get_id(node->type);
   auto id = get_id(node->id);
@@ -269,7 +269,7 @@ void LoadSymbolTableVisitor::visit(TypedVariable* node) {
   }
 }
 
-void LoadSymbolTableVisitor::visit(Program* node) {
+void LoadSymbolTableVisitor::visit(Program *node) {
   HOLD(PROGRAM);
   current_id = "@undefined";
   // *this << node->decls;
@@ -279,7 +279,7 @@ void LoadSymbolTableVisitor::visit(Program* node) {
   }
 }
 
-void LoadSymbolTableVisitor::visit(NoAction* node) {
+void LoadSymbolTableVisitor::visit(NoAction *node) {
   // TODO
 }
 

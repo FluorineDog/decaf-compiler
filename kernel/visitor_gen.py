@@ -49,7 +49,7 @@ wt_source = '''{aux_list}{func_list}
 '''
 
 wt_source_func = \
-'''void {vis}Visitor::visit({type}* node) {{
+'''void {vis}Visitor::visit({type} *node) {{
 {body}
 }}
 
