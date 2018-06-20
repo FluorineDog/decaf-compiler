@@ -18,9 +18,15 @@ public:
   void define_local_variable(int uid, string type);
   Value *fetch_local_id(int uid);
   PointerType *get_user_type(string name);
+  Type* get_basic_type(string name);
 
   IRBuilder<> &operator()() {
     return builder;
+  }
+
+  Function* load_ext_func(string name){
+    assert(util_func.count(name));
+    return util_func[name];
   }
 
   LLVMContext &getContext() {
@@ -30,7 +36,6 @@ public:
     std::error_code err;
     llvm::raw_fd_ostream file("final_build/main.ll", err, sys::fs::F_RW);
     theModule->print(file, nullptr);
-
   }
 
 private:

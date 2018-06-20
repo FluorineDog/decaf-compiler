@@ -20,7 +20,7 @@
   llvm::Type* get_type(node_ptr_t node);
 */
 #define HOLD(t) StateHolder sh(call_stack, StateType::t);
-using namespace llvm;
+//using namespace llvm;
 #include "llvm_driver/llvm.h"
 CodegenVisitor::CodegenVisitor(LLVMEngine &eng, BlockExt *block_aux)
     : eng(eng), block_aux(block_aux) {
@@ -57,7 +57,7 @@ void CodegenVisitor::visit(Double* node) {
 
 void CodegenVisitor::visit(NullPointer* node) {
   // TODO
-  rt_value = ConstantPointerNull::get(eng.get_user_type(node->token_type));
+  assert(false);
 }
 
 void CodegenVisitor::visit(Call* node) {
@@ -81,15 +81,92 @@ void CodegenVisitor::visit(New* node) {
 }
 
 void CodegenVisitor::visit(Read* node) {
-  // TODO
+  switch(node->option){
+  case T_ReadLine:{
+    auto F = eng.load_ext_func("readline");
+    rt_value = eng().CreateCall(F);
+    break;
+  }
+  case T_ReadInteger:{
+    auto F = eng.load_ext_func("readint");
+    rt_value = eng().CreateCall(F);
+  }
+  }
 }
 
 void CodegenVisitor::visit(UnaryExpr* node) {
+  switch (node->op) {
+  case '-': {
+    auto value = get_value(node->expr);
+    assert(set<string>({"int", "double"}).count(node->token_type));
+    rt_value = eng().CreateNeg(value);
+    break;
+  }
+  case '!': {
+    auto value = get_value(node->expr);
+    assert(node->token_type == "bool");
+    rt_value = eng().CreateNot(value, "not");
+    break;
+  }
+  }
   // TODO
 }
 
 void CodegenVisitor::visit(BinaryExpr* node) {
   // TODO
+  auto left_value = get_value(node->left);
+  auto right_value = get_value(node->right);
+  switch (node->op) {
+  case '+': {
+//    assert(set<string>({"double", "int", "string"}).count(left_type));
+    assert(node->left->token_type == node->right->token_type);
+    if(node->left->token_type != "string"){
+      rt_value = eng().CreateAdd(left_value, right_value);
+    } else {
+      auto F = eng.load_ext_func("string_cat");
+      rt_value = eng().CreateCall(F, {left_value, right_value});
+    }
+    break;
+  }
+//  case '%':
+//  case '-':
+//  case '*':
+//  case '/': {
+//    assert(set<string>({"double", "int"}).count(left_type));
+//    assert(left_type == right_type);
+//    node->token_type = left_type;
+//    break;
+//  }
+//  case '<':
+//  case '>':
+//  case T_eq:
+//  case T_less_eq: {
+//    assert(set<string>({"double", "int"}).count(left_type));
+//    assert(left_type == right_type);
+//    node->token_type = "bool";
+//    break;
+//  }
+//
+//  case T_not_eq:
+//  case T_greater_eq: {
+//    if (left_type == "nullptr") {
+//      assert(!is_basic_type(right_type));
+//    } else if (right_type == "nullptr") {
+//      assert(!is_basic_type(left_type));
+//    } else {
+//      assert(left_type == right_type);
+//    }
+//    node->token_type = "bool";
+//    break;
+//  }
+//  case T_and:
+//  case T_or: {
+//    assert(set<string>({"bool"}).count(left_type));
+//    assert(left_type == right_type);
+//    node->token_type = "bool";
+//    break;
+//  }
+  }
 }
 
 void CodegenVisitor::visit(This* node) {
@@ -98,6 +175,7 @@ void CodegenVisitor::visit(This* node) {
 
 void CodegenVisitor::visit(Print* node) {
   // TODO
+
 }
 
 void CodegenVisitor::visit(List* node) {
@@ -185,7 +263,6 @@ void CodegenVisitor::visit(Identifier* node) {
 }
 
 void CodegenVisitor::visit(Assign* node) {
-  // TODO
   if(node->right->token_type == "nullptr");
   node->right->token_type = node->left->token_type;
   auto right = get_value(node->right);

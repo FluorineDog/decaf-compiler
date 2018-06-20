@@ -18,7 +18,7 @@ LLVMEngine::LLVMEngine()
 
   // load external function
   constexpr const char *c_extnames[] = {"readint", "refint", "readline",
-                                        "printss"};
+                                        "printss", "string_cat"};
   for (auto str : c_extnames) {
     util_func[str] = load_extfunc(str);
   }
@@ -61,6 +61,11 @@ Value* LLVMEngine::fetch_local_id(int uid){
 
 
 PointerType* LLVMEngine::get_user_type(string name){
+  // TODO
+  return nullptr;
+}
+
+Type* LLVMEngine::get_basic_type(string name) {
   // TODO
   return nullptr;
 }

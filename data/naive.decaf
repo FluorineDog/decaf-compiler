@@ -1,8 +1,11 @@
 class Main {
   int main() {
     int i;
-    i = 42;
-    i = i;
+    int j;
+    i = 43;
+    j = ReadInteger(); 
+    j = -j;
+    i = i + j;
     return i;
   }
 }
