@@ -1,15 +1,14 @@
 class Main {
   int main() {
     int i;
-    int j;
-    i = ReadInteger();
-    j = ReadInteger();
-    if(i < j){
-      Print(i);
+    int sum;
+    i = 0;
+    sum = 0;
+    while(i < 100){
+      sum = sum + i;
+      i = i + 1; 
     }
-    else {
-      Print(j);
-    }
+    Print(sum);
     return 0;
   }
 }

@@ -228,10 +228,29 @@ void CodegenVisitor::visit(For *node) {
 
 void CodegenVisitor::visit(While *node) {
   // TODO
+  Function *tf = eng().GetInsertBlock()->getParent();
+  auto condBB = BasicBlock::Create(eng().getContext(), "cond", tf);
+  auto loopBB = BasicBlock::Create(eng().getContext(), "whileloop");
+  auto nextBB = BasicBlock::Create(eng().getContext(), "next");
+  eng().CreateBr(condBB);
+  // cond
+  eng().SetInsertPoint(condBB);
+  auto cond = get_value(node->conditional_expr);
+  eng().CreateCondBr(cond, loopBB, nextBB);
+
+  // loop
+  tf->getBasicBlockList().push_back(loopBB);
+  eng().SetInsertPoint(loopBB);
+  *this << node->stmt;
+  eng().CreateBr(condBB);
+
+  // next
+  tf->getBasicBlockList().push_back(nextBB);
+  eng().SetInsertPoint(nextBB);
+
 }
 
 void CodegenVisitor::visit(Block *node) {
-  // TODO
   HOLD(BLOCK);
   for (auto&[name, variable]: node->aux.local_uid) {
     auto&[uid, type] = variable;
