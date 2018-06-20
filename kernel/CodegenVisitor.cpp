@@ -245,27 +245,24 @@ void CodegenVisitor::visit(If *node) {
   Function *tf = eng().GetInsertBlock()->getParent();
   auto condition = get_value(node->condition);
   auto thenBB = BasicBlock::Create(eng().getContext(), "then", tf);
-  auto elseBB = BasicBlock::Create(eng().getContext(), "else", tf);
-  auto nextBB = BasicBlock::Create(eng().getContext(), "cont", tf);
+  auto elseBB = BasicBlock::Create(eng().getContext(), "else");
+  auto nextBB = BasicBlock::Create(eng().getContext(), "cont");
   eng().CreateCondBr(condition, thenBB, elseBB);
 
   // if block
   eng().SetInsertPoint(thenBB);
   *this << node->if_stmt;
   eng().CreateBr(nextBB);
-//  thenBB = eng().GetInsertBlock();
 
   // else block
   tf->getBasicBlockList().push_back(elseBB);
   eng().SetInsertPoint(elseBB);
   *this << node->else_stmt;
   eng().CreateBr(nextBB);
-//  elseBB = eng().GetInsertBlock();
 
   // emit else block
   tf->getBasicBlockList().push_back(nextBB);
   eng().SetInsertPoint(nextBB);
-//  nextBB = eng().GetInsertBlock();
 }
 
 void CodegenVisitor::visit(Prototype *node) {

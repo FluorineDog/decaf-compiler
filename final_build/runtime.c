@@ -12,7 +12,7 @@ typedef struct string{
 int readint(){
   int tmp;
   scanf("%d", &tmp);
-  printf("tmp=%d", tmp);
+  // printf("tmp=%d", tmp);
   return tmp;
 }
 

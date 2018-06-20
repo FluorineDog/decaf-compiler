@@ -1,15 +1,15 @@
 class Main {
   int main() {
     int i;
-    string str1;
-    string str2;
-    string str3;
-    bool res1;
-    bool res2;
-    str1 = ReadLine();
-    str2 = ReadLine();
-    str3 = str1 + str2 + str1; 
-    Print(str3);
+    int j;
+    i = ReadInteger();
+    j = ReadInteger();
+    if(i < j){
+      Print(i);
+    }
+    else {
+      Print(j);
+    }
     return 0;
   }
 }
