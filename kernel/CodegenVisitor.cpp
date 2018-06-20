@@ -1,8 +1,21 @@
 // Template
 #include "generated/CodegenVisitor.h"
 #include "indent.h"
+#include "llvm_driver/llvm_inc.h"
 /*
+ private:
+//  class LLVMEngine& eng;
+ public:
+//  std::variant<Value*, Type*> rt;
 */
+//#include "llvm_driver/llvm.h" //
+//CodegenVisitor::CodegenVisitor(LLVMEngine& eng)
+//  eng(eng)
+//{
+//
+//}
+
+
 void CodegenVisitor::visit(Integer* node) {
   // TODO
 }

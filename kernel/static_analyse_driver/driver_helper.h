@@ -38,10 +38,10 @@ class SeqMap {
                         std::forward<Value>(value));
   }
   Entry& operator[](int i){
-    return (*this)[i];
+    return record[i];
   }
   const Entry& operator[](int i) const{
-    return (*this)[i];
+    return record[i];
   }
   auto begin() const { return record.begin(); }
   auto begin() { return record.begin(); }
