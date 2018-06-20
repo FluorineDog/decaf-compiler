@@ -27,6 +27,7 @@ class Call : public ASTNodeBase {
   // can be nullptr
   optional_node_ptr_t domain_expr;
   node_ptr_t ident;
+  string /**/ ident_name;
   List* actuals;
 };
 
@@ -42,6 +43,7 @@ class MemberDot : public ASTNodeBase {
   virtual void accept(Visitor& v) { v.visit(this); }
   node_ptr_t expr;
   node_ptr_t ident;
+  string/**/ ident_name;
 };
 
 class NewArray : public ASTNodeBase {
