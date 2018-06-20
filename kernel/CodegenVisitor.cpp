@@ -10,6 +10,7 @@
   BlockExt* block_aux;
   stack<StateType> call_stack;
   bool right_value;
+  std::optional<llvm::BasicBlock*> current_nextBB;
  public:
   CodegenVisitor& operator<<(node_ptr_t node){
     node->accept(*this);
@@ -223,13 +224,14 @@ void CodegenVisitor::visit(Return *node) {
 }
 
 void CodegenVisitor::visit(For *node) {
-  // TODO
+  *this << node->init_expr;
+  auto parent_nxBB = current_nextBB;
   Function *tf = eng().GetInsertBlock()->getParent();
   auto condBB = BasicBlock::Create(eng().getContext(), "cond", tf);
   auto loopBB = BasicBlock::Create(eng().getContext(), "whileloop");
   auto nextBB = BasicBlock::Create(eng().getContext(), "next");
+  current_nextBB = nextBB;
   // init
-  *this << node->init_expr;
   eng().CreateBr(condBB);
 
   // cond
@@ -247,14 +249,16 @@ void CodegenVisitor::visit(For *node) {
   // next
   tf->getBasicBlockList().push_back(nextBB);
   eng().SetInsertPoint(nextBB);
-
+  current_nextBB = parent_nxBB;
 }
 
 void CodegenVisitor::visit(While *node) {
+  auto parent_nxBB = current_nextBB;
   Function *tf = eng().GetInsertBlock()->getParent();
   auto condBB = BasicBlock::Create(eng().getContext(), "cond", tf);
   auto loopBB = BasicBlock::Create(eng().getContext(), "whileloop");
   auto nextBB = BasicBlock::Create(eng().getContext(), "next");
+  current_nextBB = nextBB;
   eng().CreateBr(condBB);
   // cond
   eng().SetInsertPoint(condBB);
@@ -270,7 +274,7 @@ void CodegenVisitor::visit(While *node) {
   // next
   tf->getBasicBlockList().push_back(nextBB);
   eng().SetInsertPoint(nextBB);
-
+  current_nextBB = parent_nxBB;
 }
 
 void CodegenVisitor::visit(Block *node) {
@@ -367,5 +371,4 @@ void CodegenVisitor::visit(Program *node) {
 void CodegenVisitor::visit(NoAction *node) {
   // SKIP
 }
-
 
