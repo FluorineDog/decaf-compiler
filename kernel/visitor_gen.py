@@ -58,7 +58,8 @@ mknode_c_tmp = '''#pragma once
 #include "../common.h"'''
 
 def gen_more_includes(content):
-  list = re.findall('^(#include *["<].*[">] *)$', content, re.M)
+  last = content.find("/*")
+  list = re.findall('^(#include *["<].*[">] *)$', content[0:last], re.M)
   return "\n".join(list)
 
 
