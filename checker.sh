@@ -4,7 +4,7 @@ clang -c runtime.c -emit-llvm
 cd ..
 ./build/main
 cd final_build
-rm final
+rm final -f
 llc main.ll
 gcc main.s runtime.c -o final
 ./final

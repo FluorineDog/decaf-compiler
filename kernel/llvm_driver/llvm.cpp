@@ -17,7 +17,7 @@ LLVMEngine::LLVMEngine()
   type_dict["void"] = Type::getVoidTy(theContext);
 
   // load external function
-  constexpr const char *c_extnames[] = {"readint", "readline", "printint", "printdouble",
+  constexpr const char *c_extnames[] = {"readint", "readline", "printint", "printdouble", "printbool",
                                         "printstring", "string_cat"};
   for (auto str : c_extnames) {
     util_func[str] = load_extfunc(str);

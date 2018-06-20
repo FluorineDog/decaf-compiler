@@ -1,11 +1,10 @@
 class Main {
   int main() {
     int i;
-    int j;
+    string str;
+    str = ReadLine();
     i = 43;
-    j = ReadInteger(); 
-    j = -j;
-    i = i + j;
-    return i;
+    Print(str, i == 43);
+    return 0;
   }
 }

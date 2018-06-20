@@ -206,7 +206,7 @@ void CodegenVisitor::visit(List *node) {
   case StateType::PRINT: {
     for (auto ptr: node->list) {
       auto value = get_value(ptr);
-      auto F = eng.load_ext_func("print" + node->token_type);
+      auto F = eng.load_ext_func("print" + ptr->token_type);
       eng().CreateCall(F, {value});
     }
     break;
@@ -287,7 +287,6 @@ void CodegenVisitor::visit(Identifier *node) {
 }
 
 void CodegenVisitor::visit(Assign *node) {
-  if (node->right->token_type == "nullptr");
   node->right->token_type = node->left->token_type;
   auto right = get_value(node->right);
   auto left = get_value(node->left, false);
@@ -296,15 +295,15 @@ void CodegenVisitor::visit(Assign *node) {
 }
 
 void CodegenVisitor::visit(TypedVariable *node) {
-  // TODO
+  // SKIP
 }
 
 void CodegenVisitor::visit(Program *node) {
-  // TODO
+  // SKIP
 }
 
 void CodegenVisitor::visit(NoAction *node) {
-  // TODO
+  // SKIP
 }
 
 

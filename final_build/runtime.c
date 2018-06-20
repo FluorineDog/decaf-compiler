@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include <stdbool.h>
 
 typedef struct string{
   int len;
@@ -35,6 +36,10 @@ string* readline(){
 
 void printstring(string* a){
   printf("(%d)%s ", a->len,  a->content);
+}
+
+void printbool(bool a){
+  printf("%s ", a?"true":"false");
 }
 
 void printint(int a){
