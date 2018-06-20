@@ -5,3 +5,6 @@ build/*
 data/bak/*
 **/generated/*
 !.gitignore
+final_build/*
+!final_build/runtime.c
+
