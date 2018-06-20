@@ -2,11 +2,9 @@ class Main {
   int main() {
     int i;
     int sum;
-    i = 0;
     sum = 0;
-    while(i < 100){
+    for(i = 1; i <= 100; i = i + 1){
       sum = sum + i;
-      i = i + 1; 
     }
     Print(sum);
     return 0;
