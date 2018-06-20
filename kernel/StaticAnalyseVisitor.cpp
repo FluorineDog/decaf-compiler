@@ -156,7 +156,7 @@ void StaticAnalyseVisitor::visit(BinaryExpr *node) {
   }
   case '<':
   case '>':
-  case T_eq:
+  case T_greater_eq:
   case T_less_eq: {
     assert(left_type != "void");
     assert(right_type != "void");
@@ -171,13 +171,13 @@ void StaticAnalyseVisitor::visit(BinaryExpr *node) {
   }
 
   case T_not_eq:
-  case T_greater_eq: {
-    if (left_type == "nullptr") {
-      assert(!is_basic_type(right_type));
-    } else if (right_type == "nullptr") {
-      assert(!is_basic_type(left_type));
-    } else {
+  case T_eq: {
+    if (!is_user_type(left_type)) {
       assert(left_type == right_type);
+    } else if (!is_user_type(right_type)) {
+      assert(left_type == right_type);
+    } else {
+      assert(left_type != "void" && right_type != "void");
     }
     node->token_type = "bool";
     break;

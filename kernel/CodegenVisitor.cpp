@@ -161,15 +161,16 @@ void CodegenVisitor::visit(BinaryExpr *node) {
     break;
   }
 
-  case T_eq: {
-    // TODO
-    rt_value = eng().CreateICmpEQ(left, right);
-    break;
-  }
-
-  case T_not_eq: {
-    // TODO
-    rt_value = eng().CreateICmpNE(left, right);
+  case T_eq:
+  case T_not_eq:
+  {
+    auto left_stp = eng().CreatePtrToInt(left, Type::getInt64Ty(eng.getContext()));
+    auto right_stp = eng().CreatePtrToInt(right, Type::getInt64Ty(eng.getContext()));
+    if(node->op  == T_eq){
+      rt_value = eng().CreateICmpEQ(left_stp, right_stp);
+    } else {
+      rt_value = eng().CreateICmpNE(left_stp, right_stp);
+    }
     break;
   }
 

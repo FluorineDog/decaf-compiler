@@ -53,3 +53,6 @@ class SeqMap {
 inline bool is_basic_type(string type){
   return std::set<std::string>({"int", "double", "bool", "string"}).count(type);
 }
+inline bool is_user_type(string type){
+  return !std::set<std::string>({"int", "double", "bool"}).count(type);
+}

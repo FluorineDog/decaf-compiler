@@ -18,6 +18,7 @@ LLVMEngine::LLVMEngine()
 
   // load user type
   user_type_dict["string"] = str_type;
+  user_type_dict["nullptr"] = Type::getInt8PtrTy(theContext);
 
   // load external function
   constexpr const char *c_extnames[] = {"readint", "readline", "printint", "printdouble", "printbool",
@@ -64,6 +65,7 @@ Value *LLVMEngine::fetch_local_id(int uid) {
 
 PointerType *LLVMEngine::get_user_type(string name) {
   // TODO
+  assert(user_type_dict.count(name));
   return user_type_dict[name]->getPointerTo();
 }
 

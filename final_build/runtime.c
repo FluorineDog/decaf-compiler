@@ -57,6 +57,8 @@ string* string_cat(string* a, string* b) {
   char* str = dog_malloc(newlen + 1);
   string* mem = (string*)dog_malloc(sizeof(string));
   mem->content = str;
+  strcpy(str, a->content);
+  strcpy(str + a->len, b->content);
   mem->len = newlen;
   return mem;
 }
