@@ -7,7 +7,8 @@
   class LLVMEngine& eng;
  public:
   CodegenVisitor(class LLVMEngine& eng);
-//  std::variant<class Value*, class Type*> rt;
+  llvm::Value* rt_value;
+  llvm::Type* rt_type;
 */
 using namespace llvm;
 #include "llvm_driver/llvm.h"
