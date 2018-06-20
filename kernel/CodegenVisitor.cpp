@@ -7,29 +7,35 @@
   class LLVMEngine& eng;
   llvm::Value* rt_value;
   llvm::Type* rt_type;
+  BlockExt* block_aux;
+  stack<StateType> call_stack;
+ public:
   CodegenVisitor& operator<<(node_ptr_t node){
     node->accept(*this);
     return *this;
   }
- public:
-  CodegenVisitor(class LLVMEngine& eng);
+  CodegenVisitor(class LLVMEngine& eng, BlockExt* block_aux);
   llvm::Value* get_value(node_ptr_t node);
   llvm::Type* get_type(node_ptr_t node);
 */
+#define HOLD(t) StateHolder sh(call_stack, StateType::t);
 using namespace llvm;
 #include "llvm_driver/llvm.h"
-CodegenVisitor::CodegenVisitor(LLVMEngine& eng)
-  :eng(eng)
+CodegenVisitor::CodegenVisitor(LLVMEngine& eng, BlockExt* block_aux)
+  :eng(eng), block_aux(block_aux)
 {
+  call_stack.push(StateType::PROGRAM);
 }
 
 Value* CodegenVisitor::get_value(node_ptr_t node){
+  HOLD(GET_VALUE);
   rt_value = nullptr;
   *this << node;
   assert(rt_value);
   return rt_value;
 }
 Type* CodegenVisitor::get_type(node_ptr_t node){
+  HOLD(GET_TYPE);
   rt_type = nullptr;
   *this << node;
   assert(rt_type);
@@ -37,7 +43,7 @@ Type* CodegenVisitor::get_type(node_ptr_t node){
 }
 
 void CodegenVisitor::visit(Integer* node) {
-  // TODO
+
 }
 
 void CodegenVisitor::visit(Double* node) {
@@ -110,6 +116,11 @@ void CodegenVisitor::visit(While* node) {
 
 void CodegenVisitor::visit(Block* node) {
   // TODO
+  for(auto& [name, variable]: node->aux.local_uid){
+    auto& [uid, type] = variable;
+    eng.define_local_variable(uid, type);
+  }
+  rt_value = get_value(node->stmt_list);
 }
 
 void CodegenVisitor::visit(If* node) {

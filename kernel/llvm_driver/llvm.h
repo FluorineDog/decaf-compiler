@@ -10,6 +10,11 @@ class LLVMEngine {
    
   void insert_type(string name);
   void create_main(Block*);
+//  BasicBlock* getBasicBlock();
+  void define_local_variable(int uid, string type);
+  void final_print(){
+    theModule->print(errs(), nullptr);
+  }
  private:
   Function* load_extfunc(string name);
   LLVMContext theContext;
@@ -18,5 +23,6 @@ class LLVMEngine {
   std::unique_ptr<Module> theModule;
   std::map<string, Function*> util_func;
   std::map<string, Type*> type_dict;
-  CodegenVisitor visitor;
+  std::map<int, Value*> local_table;
+  IRBuilder<> builder;
 };

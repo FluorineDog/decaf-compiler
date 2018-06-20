@@ -2,10 +2,6 @@ class Main {
   int main() {
     int i;
     i = 42;
-    string s;
-    s = ReadLine();
-    s = s + s;
-    Print(s);
-    return 0;
+    return i;
   }
 }

@@ -114,6 +114,7 @@ enum class StateType {
   PROGRAM,
   GET_ID,
   GET_TYPE,
+  GET_VALUE,
   PRINT
 };
 

@@ -26,5 +26,5 @@ void codegen(ClassEntries& sym_table) {
       eng.create_main(main_func.body.value());
     }
   }
-
+  eng.final_print();
 }
