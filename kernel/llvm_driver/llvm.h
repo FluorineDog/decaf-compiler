@@ -18,6 +18,6 @@ class LLVMEngine {
   std::unique_ptr<Module> theModule;
   std::map<string, Function*> util_func;
   std::map<string, Type*> type_dict;
-//  CodegenVisitor visitor;
+  CodegenVisitor visitor;
 };
 

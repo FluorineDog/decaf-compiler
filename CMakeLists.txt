@@ -43,7 +43,7 @@ include_directories(kernel)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 add_custom_target(parser_hxx DEPENDS parser.hxx)
 
-file(GLOB VISITOR_CPPS kernel/*Visitor.cpp)
+file(GLOB VISITOR_CPPS kernel/PrintVisitor.cpp kernel/LoadSymbolTableVisitor.cpp kernel/StaticAnalyseVisitor.cpp)
 add_library(visitors ${VISITOR_CPPS})
 add_dependencies(visitors parser_hxx)
 
@@ -56,9 +56,10 @@ add_library(parser parser.cpp)
 add_library(lexer lexer.cpp)
 add_dependencies(lexer parser_hxx)
 
-file(GLOB LLVM_DRIVER kernel/llvm_driver/*.cpp)
+file(GLOB LLVM_DRIVER kernel/llvm_driver/*.cpp kernel/CodegenVisitor.cpp)
 add_library(llvm_driver ${LLVM_DRIVER})
-target_link_libraries(llvm_driver ${llvm_libs} )
+target_link_libraries(llvm_driver ${llvm_libs})
+add_dependencies(llvm_driver parser_hxx)
 
 add_executable(main kernel/main.cpp)
 # target_link_libraries(main visitors)

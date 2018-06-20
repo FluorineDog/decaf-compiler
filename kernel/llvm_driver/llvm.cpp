@@ -1,6 +1,7 @@
 #include "llvm.h"
 
 LLVMEngine::LLVMEngine()
+  :visitor(*this)
 {
   // init module
   extModule = parseIRFile("llvm/runtime.bc", error, theContext, false);

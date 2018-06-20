@@ -4,16 +4,17 @@
 #include "llvm_driver/llvm_inc.h"
 /*
  private:
-//  class LLVMEngine& eng;
+  class LLVMEngine& eng;
  public:
-//  std::variant<Value*, Type*> rt;
+  CodegenVisitor(class LLVMEngine& eng);
+//  std::variant<class Value*, class Type*> rt;
 */
-//#include "llvm_driver/llvm.h" //
-//CodegenVisitor::CodegenVisitor(LLVMEngine& eng)
-//  eng(eng)
-//{
-//
-//}
+using namespace llvm;
+#include "llvm_driver/llvm.h"
+CodegenVisitor::CodegenVisitor(LLVMEngine& eng)
+  :eng(eng)
+{
+}
 
 
 void CodegenVisitor::visit(Integer* node) {
