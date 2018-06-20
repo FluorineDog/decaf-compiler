@@ -113,6 +113,7 @@ enum class StateType {
   PROTOTYPE,
   PROGRAM,
   GET_ID,
+  BLOCK,
   GET_TYPE,
   GET_VALUE,
   PRINT

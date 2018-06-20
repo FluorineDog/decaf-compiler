@@ -2,6 +2,7 @@ class Main {
   int main() {
     int i;
     i = 42;
+    i = i;
     return i;
   }
 }

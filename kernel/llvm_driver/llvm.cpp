@@ -53,3 +53,14 @@ void LLVMEngine::define_local_variable(int uid, string type) {
   auto var = builder.CreateAlloca(type_dict[type], nullptr, "local_decl");
   local_table[uid] = var;
 }
+
+Value* LLVMEngine::fetch_local_id(int uid){
+  assert(local_table.count(uid));
+  return local_table[uid];
+}
+
+
+PointerType* LLVMEngine::get_user_type(string name){
+  // TODO
+  return nullptr;
+}

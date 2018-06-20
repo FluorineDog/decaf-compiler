@@ -12,9 +12,20 @@ class LLVMEngine {
   void create_main(Block*);
 //  BasicBlock* getBasicBlock();
   void define_local_variable(int uid, string type);
+  Value* fetch_local_id(int uid);
+  PointerType* get_user_type(string name);
+
+  IRBuilder<>& operator()(){
+    return builder;
+  }
+
+  LLVMContext& getContext(){
+    return theContext;
+  }
   void final_print(){
     theModule->print(errs(), nullptr);
   }
+
  private:
   Function* load_extfunc(string name);
   LLVMContext theContext;

@@ -9,32 +9,33 @@
   llvm::Type* rt_type;
   BlockExt* block_aux;
   stack<StateType> call_stack;
+  bool right_value;
  public:
   CodegenVisitor& operator<<(node_ptr_t node){
     node->accept(*this);
     return *this;
   }
   CodegenVisitor(class LLVMEngine& eng, BlockExt* block_aux);
-  llvm::Value* get_value(node_ptr_t node);
+  llvm::Value* get_value(node_ptr_t node, bool rvalue = true);
   llvm::Type* get_type(node_ptr_t node);
 */
 #define HOLD(t) StateHolder sh(call_stack, StateType::t);
 using namespace llvm;
 #include "llvm_driver/llvm.h"
-CodegenVisitor::CodegenVisitor(LLVMEngine& eng, BlockExt* block_aux)
-  :eng(eng), block_aux(block_aux)
-{
+CodegenVisitor::CodegenVisitor(LLVMEngine &eng, BlockExt *block_aux)
+    : eng(eng), block_aux(block_aux) {
   call_stack.push(StateType::PROGRAM);
 }
 
-Value* CodegenVisitor::get_value(node_ptr_t node){
+Value *CodegenVisitor::get_value(node_ptr_t node, bool is_right_value) {
   HOLD(GET_VALUE);
+  right_value = is_right_value;
   rt_value = nullptr;
   *this << node;
   assert(rt_value);
   return rt_value;
 }
-Type* CodegenVisitor::get_type(node_ptr_t node){
+Type *CodegenVisitor::get_type(node_ptr_t node) {
   HOLD(GET_TYPE);
   rt_type = nullptr;
   *this << node;
@@ -43,15 +44,20 @@ Type* CodegenVisitor::get_type(node_ptr_t node){
 }
 
 void CodegenVisitor::visit(Integer* node) {
-
+  assert(right_value);
+  assert(call_stack.top() == StateType::GET_VALUE);
+  rt_value = ConstantInt::get(eng.getContext(), APInt(32, node->num, true));
 }
 
 void CodegenVisitor::visit(Double* node) {
-  // TODO
+  assert(right_value);
+  assert(call_stack.top() == StateType::GET_VALUE);
+  rt_value = ConstantFP::get(Type::getDoubleTy(eng.getContext()), node->num);
 }
 
 void CodegenVisitor::visit(NullPointer* node) {
   // TODO
+  rt_value = ConstantPointerNull::get(eng.get_user_type(node->token_type));
 }
 
 void CodegenVisitor::visit(Call* node) {
@@ -96,6 +102,15 @@ void CodegenVisitor::visit(Print* node) {
 
 void CodegenVisitor::visit(List* node) {
   // TODO
+  switch (call_stack.top()) {
+  case StateType::BLOCK: {
+    for (auto ptr: node->list) {
+      *this << ptr;
+    }
+    break;
+  }
+  default: assert(false);
+  }
 }
 
 void CodegenVisitor::visit(Break* node) {
@@ -103,7 +118,7 @@ void CodegenVisitor::visit(Break* node) {
 }
 
 void CodegenVisitor::visit(Return* node) {
-  // TODO
+  eng().CreateRet(get_value(node->expr));
 }
 
 void CodegenVisitor::visit(For* node) {
@@ -116,11 +131,12 @@ void CodegenVisitor::visit(While* node) {
 
 void CodegenVisitor::visit(Block* node) {
   // TODO
-  for(auto& [name, variable]: node->aux.local_uid){
-    auto& [uid, type] = variable;
+  HOLD(BLOCK);
+  for (auto&[name, variable]: node->aux.local_uid) {
+    auto&[uid, type] = variable;
     eng.define_local_variable(uid, type);
   }
-  rt_value = get_value(node->stmt_list);
+  *this << node->stmt_list;
 }
 
 void CodegenVisitor::visit(If* node) {
@@ -128,19 +144,19 @@ void CodegenVisitor::visit(If* node) {
 }
 
 void CodegenVisitor::visit(Prototype* node) {
-  // TODO
+  // SKIP
 }
 
 void CodegenVisitor::visit(Interface* node) {
-  // TODO
+  // SKIP
 }
 
 void CodegenVisitor::visit(ClassDecl* node) {
-  // TODO
+  // SKIP
 }
 
 void CodegenVisitor::visit(FunctionDecl* node) {
-  // TODO
+  // SKIP
 }
 
 void CodegenVisitor::visit(TypeArray* node) {
@@ -157,10 +173,25 @@ void CodegenVisitor::visit(TypeUser* node) {
 
 void CodegenVisitor::visit(Identifier* node) {
   // TODO
+  switch (call_stack.top()) {
+  case StateType::GET_VALUE: {
+    rt_value = eng.fetch_local_id(node->uid);
+    if(right_value){
+      rt_value = eng().CreateLoad(rt_value, "ld");
+    }
+    break;
+  }
+  }
 }
 
 void CodegenVisitor::visit(Assign* node) {
   // TODO
+  if(node->right->token_type == "nullptr");
+  node->right->token_type = node->left->token_type;
+  auto right = get_value(node->right);
+  auto left = get_value(node->left, false);
+  eng().CreateStore(right, left);
+  rt_value = left;
 }
 
 void CodegenVisitor::visit(TypedVariable* node) {
