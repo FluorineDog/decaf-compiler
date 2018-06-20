@@ -5,10 +5,16 @@
 /*
  private:
   class LLVMEngine& eng;
- public:
-  CodegenVisitor(class LLVMEngine& eng);
   llvm::Value* rt_value;
   llvm::Type* rt_type;
+  CodegenVisitor& operator<<(node_ptr_t node){
+    node->accept(*this);
+    return *this;
+  }
+ public:
+  CodegenVisitor(class LLVMEngine& eng);
+  llvm::Value* get_value(node_ptr_t node);
+  llvm::Type* get_type(node_ptr_t node);
 */
 using namespace llvm;
 #include "llvm_driver/llvm.h"
@@ -17,6 +23,18 @@ CodegenVisitor::CodegenVisitor(LLVMEngine& eng)
 {
 }
 
+Value* CodegenVisitor::get_value(node_ptr_t node){
+  rt_value = nullptr;
+  *this << node;
+  assert(rt_value);
+  return rt_value;
+}
+Type* CodegenVisitor::get_type(node_ptr_t node){
+  rt_type = nullptr;
+  *this << node;
+  assert(rt_type);
+  return rt_type;
+}
 
 void CodegenVisitor::visit(Integer* node) {
   // TODO

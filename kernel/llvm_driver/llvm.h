@@ -20,4 +20,3 @@ class LLVMEngine {
   std::map<string, Type*> type_dict;
   CodegenVisitor visitor;
 };
-
