@@ -9,11 +9,13 @@ target triple = "x86_64-pc-linux-gnu"
 @.str.1 = private unnamed_addr constant [7 x i8] c"tmp=%d\00", align 1
 @.str.2 = private unnamed_addr constant [7 x i8] c"ref=%d\00", align 1
 @.str.3 = private unnamed_addr constant [3 x i8] c"%s\00", align 1
-@.str.4 = private unnamed_addr constant [7 x i8] c"%d:%s\0A\00", align 1
-@.str.5 = private unnamed_addr constant [2 x i8] c"a\00", align 1
-@.str.6 = private unnamed_addr constant [10 x i8] c"runtime.c\00", align 1
+@.str.4 = private unnamed_addr constant [8 x i8] c"(%d)%s \00", align 1
+@.str.5 = private unnamed_addr constant [4 x i8] c"%d \00", align 1
+@.str.6 = private unnamed_addr constant [5 x i8] c"%lf \00", align 1
+@.str.7 = private unnamed_addr constant [2 x i8] c"a\00", align 1
+@.str.8 = private unnamed_addr constant [10 x i8] c"runtime.c\00", align 1
 @__PRETTY_FUNCTION__.string_cat = private unnamed_addr constant [39 x i8] c"string *string_cat(string *, string *)\00", align 1
-@.str.7 = private unnamed_addr constant [2 x i8] c"b\00", align 1
+@.str.9 = private unnamed_addr constant [2 x i8] c"b\00", align 1
 
 ; Function Attrs: noinline nounwind optnone sspstrong uwtable
 define i32 @readint() #0 {
@@ -81,7 +83,7 @@ define %struct.string* @readline() #0 {
 declare i64 @strlen(i8*) #3
 
 ; Function Attrs: noinline nounwind optnone sspstrong uwtable
-define void @printss(%struct.string*) #0 {
+define void @printstr(%struct.string*) #0 {
   %2 = alloca %struct.string*, align 8
   store %struct.string* %0, %struct.string** %2, align 8
   %3 = load %struct.string*, %struct.string** %2, align 8
@@ -90,7 +92,25 @@ define void @printss(%struct.string*) #0 {
   %6 = load %struct.string*, %struct.string** %2, align 8
   %7 = getelementptr inbounds %struct.string, %struct.string* %6, i32 0, i32 1
   %8 = load i8*, i8** %7, align 8
-  %9 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([7 x i8], [7 x i8]* @.str.4, i32 0, i32 0), i32 %5, i8* %8)
+  %9 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([8 x i8], [8 x i8]* @.str.4, i32 0, i32 0), i32 %5, i8* %8)
+  ret void
+}
+
+; Function Attrs: noinline nounwind optnone sspstrong uwtable
+define void @printint(i32) #0 {
+  %2 = alloca i32, align 4
+  store i32 %0, i32* %2, align 4
+  %3 = load i32, i32* %2, align 4
+  %4 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.str.5, i32 0, i32 0), i32 %3)
+  ret void
+}
+
+; Function Attrs: noinline nounwind optnone sspstrong uwtable
+define void @printdouble(double) #0 {
+  %2 = alloca double, align 8
+  store double %0, double* %2, align 8
+  %3 = load double, double* %2, align 8
+  %4 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([5 x i8], [5 x i8]* @.str.6, i32 0, i32 0), double %3)
   ret void
 }
 
@@ -111,7 +131,7 @@ define %struct.string* @string_cat(%struct.string*, %struct.string*) #0 {
   br label %12
 
 ; <label>:11:                                     ; preds = %2
-  call void @__assert_fail(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @.str.5, i32 0, i32 0), i8* getelementptr inbounds ([10 x i8], [10 x i8]* @.str.6, i32 0, i32 0), i32 41, i8* getelementptr inbounds ([39 x i8], [39 x i8]* @__PRETTY_FUNCTION__.string_cat, i32 0, i32 0)) #7
+  call void @__assert_fail(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @.str.7, i32 0, i32 0), i8* getelementptr inbounds ([10 x i8], [10 x i8]* @.str.8, i32 0, i32 0), i32 49, i8* getelementptr inbounds ([39 x i8], [39 x i8]* @__PRETTY_FUNCTION__.string_cat, i32 0, i32 0)) #7
   unreachable
 
 ; <label>:12:                                     ; preds = %10
@@ -123,7 +143,7 @@ define %struct.string* @string_cat(%struct.string*, %struct.string*) #0 {
   br label %17
 
 ; <label>:16:                                     ; preds = %12
-  call void @__assert_fail(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @.str.7, i32 0, i32 0), i8* getelementptr inbounds ([10 x i8], [10 x i8]* @.str.6, i32 0, i32 0), i32 42, i8* getelementptr inbounds ([39 x i8], [39 x i8]* @__PRETTY_FUNCTION__.string_cat, i32 0, i32 0)) #7
+  call void @__assert_fail(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @.str.9, i32 0, i32 0), i8* getelementptr inbounds ([10 x i8], [10 x i8]* @.str.8, i32 0, i32 0), i32 50, i8* getelementptr inbounds ([39 x i8], [39 x i8]* @__PRETTY_FUNCTION__.string_cat, i32 0, i32 0)) #7
   unreachable
 
 ; <label>:17:                                     ; preds = %15

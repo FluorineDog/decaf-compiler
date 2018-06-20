@@ -33,8 +33,16 @@ string* readline(){
   return mem;
 }
 
-void printss(string* a){
-  printf("%d:%s\n", a->len,  a->content);
+void printstring(string* a){
+  printf("(%d)%s ", a->len,  a->content);
+}
+
+void printint(int a){
+  printf("%d ", a);
+}
+
+void printdouble(double a){
+  printf("%lf ", a);
 }
 
 string* string_cat(string* a, string* b) {
@@ -47,3 +55,4 @@ string* string_cat(string* a, string* b) {
   mem->len = newlen;
   return mem;
 }
+

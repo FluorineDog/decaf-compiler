@@ -3,7 +3,7 @@
 LLVMEngine::LLVMEngine()
     : builder(theContext) {
   // init module
-  extModule = parseIRFile("llvm/runtime.bc", error, theContext, false);
+  extModule = parseIRFile("final_build/runtime.bc", error, theContext, false);
   theModule = llvm::make_unique<Module>("dog-decaf", theContext);
   assert(extModule);
   assert(theModule);
@@ -17,8 +17,8 @@ LLVMEngine::LLVMEngine()
   type_dict["void"] = Type::getVoidTy(theContext);
 
   // load external function
-  constexpr const char *c_extnames[] = {"readint", "refint", "readline",
-                                        "printss", "string_cat"};
+  constexpr const char *c_extnames[] = {"readint", "readline", "printint", "printdouble",
+                                        "printstring", "string_cat"};
   for (auto str : c_extnames) {
     util_func[str] = load_extfunc(str);
   }

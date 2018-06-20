@@ -43,58 +43,58 @@ Type *CodegenVisitor::get_type(node_ptr_t node) {
   return rt_type;
 }
 
-void CodegenVisitor::visit(Integer* node) {
+void CodegenVisitor::visit(Integer *node) {
   assert(right_value);
   assert(call_stack.top() == StateType::GET_VALUE);
   rt_value = ConstantInt::get(eng.getContext(), APInt(32, node->num, true));
 }
 
-void CodegenVisitor::visit(Double* node) {
+void CodegenVisitor::visit(Double *node) {
   assert(right_value);
   assert(call_stack.top() == StateType::GET_VALUE);
   rt_value = ConstantFP::get(Type::getDoubleTy(eng.getContext()), node->num);
 }
 
-void CodegenVisitor::visit(NullPointer* node) {
+void CodegenVisitor::visit(NullPointer *node) {
   // TODO
   assert(false);
 }
 
-void CodegenVisitor::visit(Call* node) {
+void CodegenVisitor::visit(Call *node) {
   // TODO
 }
 
-void CodegenVisitor::visit(Index* node) {
+void CodegenVisitor::visit(Index *node) {
   // TODO
 }
 
-void CodegenVisitor::visit(MemberDot* node) {
+void CodegenVisitor::visit(MemberDot *node) {
   // TODO
 }
 
-void CodegenVisitor::visit(NewArray* node) {
+void CodegenVisitor::visit(NewArray *node) {
   // TODO
 }
 
-void CodegenVisitor::visit(New* node) {
+void CodegenVisitor::visit(New *node) {
   // TODO
 }
 
-void CodegenVisitor::visit(Read* node) {
-  switch(node->option){
-  case T_ReadLine:{
+void CodegenVisitor::visit(Read *node) {
+  switch (node->option) {
+  case T_ReadLine: {
     auto F = eng.load_ext_func("readline");
     rt_value = eng().CreateCall(F);
     break;
   }
-  case T_ReadInteger:{
+  case T_ReadInteger: {
     auto F = eng.load_ext_func("readint");
     rt_value = eng().CreateCall(F);
   }
   }
 }
 
-void CodegenVisitor::visit(UnaryExpr* node) {
+void CodegenVisitor::visit(UnaryExpr *node) {
   switch (node->op) {
   case '-': {
     auto value = get_value(node->expr);
@@ -112,73 +112,89 @@ void CodegenVisitor::visit(UnaryExpr* node) {
   // TODO
 }
 
-void CodegenVisitor::visit(BinaryExpr* node) {
+void CodegenVisitor::visit(BinaryExpr *node) {
   // TODO
-  auto left_value = get_value(node->left);
-  auto right_value = get_value(node->right);
+  auto left = get_value(node->left);
+  auto right = get_value(node->right);
   switch (node->op) {
   case '+': {
 //    assert(set<string>({"double", "int", "string"}).count(left_type));
     assert(node->left->token_type == node->right->token_type);
-    if(node->left->token_type != "string"){
-      rt_value = eng().CreateAdd(left_value, right_value);
+    if (node->left->token_type != "string") {
+      rt_value = eng().CreateAdd(left, right);
     } else {
       auto F = eng.load_ext_func("string_cat");
-      rt_value = eng().CreateCall(F, {left_value, right_value});
+      rt_value = eng().CreateCall(F, {left, right});
     }
     break;
   }
-//  case '%':
-//  case '-':
-//  case '*':
-//  case '/': {
-//    assert(set<string>({"double", "int"}).count(left_type));
-//    assert(left_type == right_type);
-//    node->token_type = left_type;
-//    break;
-//  }
-//  case '<':
-//  case '>':
-//  case T_eq:
-//  case T_less_eq: {
-//    assert(set<string>({"double", "int"}).count(left_type));
-//    assert(left_type == right_type);
-//    node->token_type = "bool";
-//    break;
-//  }
-//
-//  case T_not_eq:
-//  case T_greater_eq: {
-//    if (left_type == "nullptr") {
-//      assert(!is_basic_type(right_type));
-//    } else if (right_type == "nullptr") {
-//      assert(!is_basic_type(left_type));
-//    } else {
-//      assert(left_type == right_type);
-//    }
-//    node->token_type = "bool";
-//    break;
-//  }
-//  case T_and:
-//  case T_or: {
-//    assert(set<string>({"bool"}).count(left_type));
-//    assert(left_type == right_type);
-//    node->token_type = "bool";
-//    break;
-//  }
+  case '%': {
+    rt_value = eng().CreateSRem(left, right);
+    break;
+  }
+  case '-': {
+    rt_value = eng().CreateSub(left, right);
+    break;
+  }
+  case '*': {
+    rt_value = eng().CreateMul(left, right);
+    break;
+  }
+  case '/': {
+    rt_value = eng().CreateSDiv(left, right);
+    break;
+  }
+  case '<': {
+    rt_value = eng().CreateICmpSLT(left, right);
+    break;
+  }
+  case '>': {
+    rt_value = eng().CreateICmpSGT(left, right);
+    break;
+  }
+  case T_less_eq: {
+    rt_value = eng().CreateICmpSLE(left, right);
+    break;
+  }
+
+  case T_greater_eq: {
+    rt_value = eng().CreateICmpSGE(left, right);
+    break;
+  }
+
+  case T_eq: {
+    // TODO
+    rt_value = eng().CreateICmpEQ(left, right);
+    break;
+  }
+
+  case T_not_eq: {
+    // TODO
+    rt_value = eng().CreateICmpNE(left, right);
+    break;
+  }
+
+  case T_and: {
+    rt_value = eng().CreateAnd(left, right);
+    break;
+  }
+  case T_or: {
+    rt_value = eng().CreateOr(left, right);
+    break;
+  }
   }
 }
 
-void CodegenVisitor::visit(This* node) {
+void CodegenVisitor::visit(This *node) {
   // TODO
 }
 
-void CodegenVisitor::visit(Print* node) {
-  // TODO
-
+void CodegenVisitor::visit(Print *node) {
+  HOLD(PRINT);
+  *this << node->args;
 }
 
-void CodegenVisitor::visit(List* node) {
+void CodegenVisitor::visit(List *node) {
   // TODO
   switch (call_stack.top()) {
   case StateType::BLOCK: {
@@ -187,27 +203,35 @@ void CodegenVisitor::visit(List* node) {
     }
     break;
   }
+  case StateType::PRINT: {
+    for (auto ptr: node->list) {
+      auto value = get_value(ptr);
+      auto F = eng.load_ext_func("print" + node->token_type);
+      eng().CreateCall(F, {value});
+    }
+    break;
+  }
   default: assert(false);
   }
 }
 
-void CodegenVisitor::visit(Break* node) {
+void CodegenVisitor::visit(Break *node) {
   // TODO
 }
 
-void CodegenVisitor::visit(Return* node) {
+void CodegenVisitor::visit(Return *node) {
   eng().CreateRet(get_value(node->expr));
 }
 
-void CodegenVisitor::visit(For* node) {
+void CodegenVisitor::visit(For *node) {
   // TODO
 }
 
-void CodegenVisitor::visit(While* node) {
+void CodegenVisitor::visit(While *node) {
   // TODO
 }
 
-void CodegenVisitor::visit(Block* node) {
+void CodegenVisitor::visit(Block *node) {
   // TODO
   HOLD(BLOCK);
   for (auto&[name, variable]: node->aux.local_uid) {
@@ -217,44 +241,44 @@ void CodegenVisitor::visit(Block* node) {
   *this << node->stmt_list;
 }
 
-void CodegenVisitor::visit(If* node) {
+void CodegenVisitor::visit(If *node) {
   // TODO
 }
 
-void CodegenVisitor::visit(Prototype* node) {
+void CodegenVisitor::visit(Prototype *node) {
   // SKIP
 }
 
-void CodegenVisitor::visit(Interface* node) {
+void CodegenVisitor::visit(Interface *node) {
   // SKIP
 }
 
-void CodegenVisitor::visit(ClassDecl* node) {
+void CodegenVisitor::visit(ClassDecl *node) {
   // SKIP
 }
 
-void CodegenVisitor::visit(FunctionDecl* node) {
+void CodegenVisitor::visit(FunctionDecl *node) {
   // SKIP
 }
 
-void CodegenVisitor::visit(TypeArray* node) {
+void CodegenVisitor::visit(TypeArray *node) {
   // TODO
 }
 
-void CodegenVisitor::visit(TypeBase* node) {
+void CodegenVisitor::visit(TypeBase *node) {
   // TODO
 }
 
-void CodegenVisitor::visit(TypeUser* node) {
+void CodegenVisitor::visit(TypeUser *node) {
   // TODO
 }
 
-void CodegenVisitor::visit(Identifier* node) {
+void CodegenVisitor::visit(Identifier *node) {
   // TODO
   switch (call_stack.top()) {
   case StateType::GET_VALUE: {
     rt_value = eng.fetch_local_id(node->uid);
-    if(right_value){
+    if (right_value) {
       rt_value = eng().CreateLoad(rt_value, "ld");
     }
     break;
@@ -262,8 +286,8 @@ void CodegenVisitor::visit(Identifier* node) {
   }
 }
 
-void CodegenVisitor::visit(Assign* node) {
-  if(node->right->token_type == "nullptr");
+void CodegenVisitor::visit(Assign *node) {
+  if (node->right->token_type == "nullptr");
   node->right->token_type = node->left->token_type;
   auto right = get_value(node->right);
   auto left = get_value(node->left, false);
@@ -271,15 +295,15 @@ void CodegenVisitor::visit(Assign* node) {
   rt_value = left;
 }
 
-void CodegenVisitor::visit(TypedVariable* node) {
+void CodegenVisitor::visit(TypedVariable *node) {
   // TODO
 }
 
-void CodegenVisitor::visit(Program* node) {
+void CodegenVisitor::visit(Program *node) {
   // TODO
 }
 
-void CodegenVisitor::visit(NoAction* node) {
+void CodegenVisitor::visit(NoAction *node) {
   // TODO
 }
 
