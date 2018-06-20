@@ -218,9 +218,10 @@ void CodegenVisitor::visit(List *node) {
 void CodegenVisitor::visit(Break *node) {
   // TODO
   eng().CreateBr(current_nextBB.value());
-  Function *tf = eng().GetInsertBlock()->getParent();
-  auto dummyBB = BasicBlock::Create(eng().getContext(), "dummy", tf);
-  eng().SetInsertPoint(dummyBB);
+  eng.createDummy();
+//  Function *tf = eng().GetInsertBlock()->getParent();
+//  auto dummyBB = BasicBlock::Create(eng().getContext(), "dummy", tf);
+//  eng().SetInsertPoint(dummyBB);
 }
 
 void CodegenVisitor::visit(Return *node) {

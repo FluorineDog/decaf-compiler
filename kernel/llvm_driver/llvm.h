@@ -18,13 +18,13 @@ public:
   void define_local_variable(int uid, string type);
   Value *fetch_local_id(int uid);
   PointerType *get_user_type(string name);
-  Type* get_basic_type(string name);
+  Type *get_basic_type(string name);
 
   IRBuilder<> &operator()() {
     return builder;
   }
 
-  Function* load_ext_func(string name){
+  Function *load_ext_func(string name) {
     assert(util_func.count(name));
     return util_func[name];
   }
@@ -32,6 +32,13 @@ public:
   LLVMContext &getContext() {
     return theContext;
   }
+
+  void createDummy() {
+    Function *tf = builder.GetInsertBlock()->getParent();
+    auto dummyBB = BasicBlock::Create(theContext, "dummy", tf);
+    builder.SetInsertPoint(dummyBB);
+  }
+
   void final_print() {
     std::error_code err;
     llvm::raw_fd_ostream file("final_build/main.ll", err, sys::fs::F_RW);
