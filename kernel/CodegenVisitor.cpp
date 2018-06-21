@@ -187,12 +187,14 @@ void CodegenVisitor::visit(BinaryExpr *node) {
 
   case T_eq:
   case T_not_eq: {
-    auto left_stp = eng().CreatePtrToInt(left, Type::getInt64Ty(eng.getContext()));
-    auto right_stp = eng().CreatePtrToInt(right, Type::getInt64Ty(eng.getContext()));
+    if(is_user_type(node->left->token_type)) {
+      left = eng().CreatePtrToInt(left, Type::getInt64Ty(eng.getContext()));
+      right = eng().CreatePtrToInt(right, Type::getInt64Ty(eng.getContext()));
+    }
     if (node->op == T_eq) {
-      rt_value = eng().CreateICmpEQ(left_stp, right_stp);
+      rt_value = eng().CreateICmpEQ(left, right);
     } else {
-      rt_value = eng().CreateICmpNE(left_stp, right_stp);
+      rt_value = eng().CreateICmpNE(left, right);
     }
     break;
   }
