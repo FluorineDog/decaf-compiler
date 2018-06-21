@@ -4,6 +4,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+int global;
+int* global_arr = &global;
+void* global_arr_ptr = (void*)&global;
 
 typedef struct __entry {
   int fid;

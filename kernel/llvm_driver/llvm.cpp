@@ -1,4 +1,6 @@
 #include "llvm.h"
+#include "llvm/ExecutionEngine/ExecutionEngine.h"
+
 
 LLVMEngine::LLVMEngine(ClassEntries &sym_table)
     : builder(theContext), sym_table(sym_table) {
@@ -150,10 +152,17 @@ void LLVMEngine::define_func(string class_name, string function, FuncEntry &body
 
 void LLVMEngine::create_call_table() {
   // let me think
-  auto np = create_nullptr(external.entry_type->getPointerTo());
-  auto cv = ConstantStruct::get(external.table_type,
-                                {create_IntObj(123),np});
-  auto var = new GlobalVariable(*theModule, external.table_type,
-                                false, GlobalVariable::ExternalLinkage, cv, "good");
+  
+  auto ele = ConstantStruct::get(external.entry_type, {create_IntObj(1234), create_nullptr()});
+  auto carrt = ArrayType::get(external.entry_type, 2);
+  auto carr = ConstantArray::get(carrt, {ele, ele});
+  auto mid = ConstantExpr::getGetElementPtr(external.entry_type->getPointerTo(), carr, {create_IntObj(0)});
+  auto var = new GlobalVariable(*theModule, carr->getType(),
+                                false, GlobalVariable::InternalLinkage, mid, "good");
+//  auto np = create_nullptr(external.entry_type->getPointerTo());
+//  auto cv = ConstantStruct::get(external.table_type,
+//                                {create_IntObj(123), var});
+//  auto vars = new GlobalVariable(*theModule, external.table_type,
+//                                false, GlobalVariable::ExternalLinkage, cv, "good");
 
 }

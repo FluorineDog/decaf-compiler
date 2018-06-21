@@ -18,7 +18,7 @@ int main() {
 
 //  print_sym_table(ce);
   static_analyse(ce);
-  if (true) {
+  if (false) {
     PrintVisitor v;
     root->accept(v);
   }
