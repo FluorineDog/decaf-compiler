@@ -22,7 +22,7 @@ LLVMEngine::LLVMEngine()
 
   // load external function
   constexpr const char *c_extnames[] = {"readint", "readline", "printint", "printdouble", "printbool",
-                                        "printstring", "string_cat"};
+                                        "printstring", "string_cat", "dog_malloc"};
   for (auto str : c_extnames) {
     util_func[str] = load_extfunc(str);
   }
@@ -38,6 +38,11 @@ Function *LLVMEngine::load_extfunc(string name) {
 void LLVMEngine::grant_id(string name) {
   int uid = class_ids.size();
   class_ids[name] = uid;
+}
+
+int LLVMEngine::fetch_type_uid(string name){
+  assert(class_ids.count(name));
+  return class_ids.at(name);
 }
 
 void LLVMEngine::insert_type(string name) {
@@ -58,7 +63,7 @@ void LLVMEngine::create_main(Block *node) {
 }
 
 void LLVMEngine::create_func(FuncEntry &entry) {
-
+  // TODO
 }
 
 void LLVMEngine::define_local_variable(int uid, string type) {
@@ -71,6 +76,7 @@ Value *LLVMEngine::fetch_local_id(int uid) {
   assert(local_table.count(uid));
   return local_table[uid];
 }
+
 
 StructType *LLVMEngine::get_struct(string name) {
   // TODO
@@ -85,4 +91,9 @@ Type *LLVMEngine::get_type(string name) {
   }
   assert(user_type_dict.count(name));
   return user_type_dict[name]->getPointerTo();
+}
+
+int LLVMEngine::get_sizeof(Type* type){
+  DataLayout layout(theModule.get());
+  return layout.getTypeAllocSize(type);
 }

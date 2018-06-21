@@ -4,6 +4,8 @@ class Node {
 }
 class Main {
   int main() {
+    Node node;
+    node = null;
     int i;
     int sum;
     int sum2;

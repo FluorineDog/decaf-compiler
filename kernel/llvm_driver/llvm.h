@@ -14,6 +14,7 @@ public:
 
   void insert_type(string name);
   void grant_id(string name);
+  int fetch_type_uid(string name);
   void create_main(Block *);
 //  BasicBlock* getBasicBlock();
   void define_local_variable(int uid, string type);
@@ -21,10 +22,15 @@ public:
   Type *get_type(string name);
   StructType *get_struct(string name);
   void create_func(FuncEntry &entry);
+  auto getIntObj(int val){
+    return ConstantInt::get(theContext, APInt(32, val, true));
+  }
 
   IRBuilder<> &operator()() {
     return builder;
   }
+
+  int get_sizeof(Type*);
 
   Function *load_ext_func(string name) {
     assert(util_func.count(name));

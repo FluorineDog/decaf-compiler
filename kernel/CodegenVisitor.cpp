@@ -6,7 +6,7 @@
  private:
   class LLVMEngine& eng;
   llvm::Value* rt_value;
-  llvm::Type* rt_type;
+  llvm::StructType* rt_type;
   BlockExt* block_aux;
   stack<StateType> call_stack;
   bool right_value;
@@ -17,18 +17,20 @@
     return *this;
   }
   CodegenVisitor(class LLVMEngine& eng, BlockExt* block_aux);
-  llvm::Value* get_value(node_ptr_t node, bool rvalue = true);
-  llvm::Type* get_type(node_ptr_t node);
+  llvm::Value* node_value(node_ptr_t node, bool rvalue = true);
+  llvm::StructType* node_type(node_ptr_t node);
 */
 #define HOLD(t) StateHolder sh(call_stack, StateType::t);
 //using namespace llvm;
+
 #include "llvm_driver/llvm.h"
+#include "llvm/IR/DataLayout.h"
 CodegenVisitor::CodegenVisitor(LLVMEngine &eng, BlockExt *block_aux)
     : eng(eng), block_aux(block_aux) {
   call_stack.push(StateType::PROGRAM);
 }
 
-Value *CodegenVisitor::get_value(node_ptr_t node, bool is_right_value) {
+Value *CodegenVisitor::node_value(node_ptr_t node, bool is_right_value) {
   HOLD(GET_VALUE);
   right_value = is_right_value;
   rt_value = nullptr;
@@ -36,7 +38,7 @@ Value *CodegenVisitor::get_value(node_ptr_t node, bool is_right_value) {
   assert(rt_value);
   return rt_value;
 }
-Type *CodegenVisitor::get_type(node_ptr_t node) {
+StructType *CodegenVisitor::node_type(node_ptr_t node) {
   HOLD(GET_TYPE);
   rt_type = nullptr;
   *this << node;
@@ -80,6 +82,17 @@ void CodegenVisitor::visit(NewArray *node) {
 
 void CodegenVisitor::visit(New *node) {
   // TODO
+  auto type = node_type(node->type);
+  int size = eng.get_sizeof(type);
+  auto size_obj = eng.getIntObj(size);
+  auto F = eng.load_ext_func("dog_malloc");
+  auto raw_value = eng().CreateCall(F, {size_obj}, "dog_malloc");
+  auto cast_value = eng().CreatePointerCast(raw_value, type->getPointerTo());
+  auto index0 = eng.getIntObj(0);
+  auto memAddr = eng().CreateGEP(cast_value, {index0, index0}, "lenAddr");
+  int type_uid = eng.fetch_type_uid(node->token_type);
+  eng().CreateStore(eng.getIntObj(type_uid), memAddr);
+  rt_value = cast_value;
 }
 
 void CodegenVisitor::visit(Read *node) {
@@ -99,13 +112,13 @@ void CodegenVisitor::visit(Read *node) {
 void CodegenVisitor::visit(UnaryExpr *node) {
   switch (node->op) {
   case '-': {
-    auto value = get_value(node->expr);
+    auto value = node_value(node->expr);
     assert(set<string>({"int", "double"}).count(node->token_type));
     rt_value = eng().CreateNeg(value);
     break;
   }
   case '!': {
-    auto value = get_value(node->expr);
+    auto value = node_value(node->expr);
     assert(node->token_type == "bool");
     rt_value = eng().CreateNot(value, "not");
     break;
@@ -114,8 +127,8 @@ void CodegenVisitor::visit(UnaryExpr *node) {
 }
 
 void CodegenVisitor::visit(BinaryExpr *node) {
-  auto left = get_value(node->left);
-  auto right = get_value(node->right);
+  auto left = node_value(node->left);
+  auto right = node_value(node->right);
   switch (node->op) {
   case '+': {
 //    assert(set<string>({"double", "int", "string"}).count(left_type));
@@ -205,7 +218,7 @@ void CodegenVisitor::visit(List *node) {
   }
   case StateType::PRINT: {
     for (auto ptr: node->list) {
-      auto value = get_value(ptr);
+      auto value = node_value(ptr);
       auto F = eng.load_ext_func("print" + ptr->token_type);
       eng().CreateCall(F, {value});
     }
@@ -221,7 +234,7 @@ void CodegenVisitor::visit(Break *node) {
 }
 
 void CodegenVisitor::visit(Return *node) {
-  eng().CreateRet(get_value(node->expr));
+  eng().CreateRet(node_value(node->expr));
 }
 
 void CodegenVisitor::visit(For *node) {
@@ -237,7 +250,7 @@ void CodegenVisitor::visit(For *node) {
 
   // cond
   eng().SetInsertPoint(condBB);
-  auto cond = get_value(node->conditional_expr);
+  auto cond = node_value(node->conditional_expr);
   eng().CreateCondBr(cond, loopBB, nextBB);
 
   // loop
@@ -263,7 +276,7 @@ void CodegenVisitor::visit(While *node) {
   eng().CreateBr(condBB);
   // cond
   eng().SetInsertPoint(condBB);
-  auto cond = get_value(node->conditional_expr);
+  auto cond = node_value(node->conditional_expr);
   eng().CreateCondBr(cond, loopBB, nextBB);
 
   // loop
@@ -290,7 +303,7 @@ void CodegenVisitor::visit(Block *node) {
 void CodegenVisitor::visit(If *node) {
 
   Function *tf = eng().GetInsertBlock()->getParent();
-  auto condition = get_value(node->condition);
+  auto condition = node_value(node->condition);
   auto thenBB = BasicBlock::Create(eng().getContext(), "then", tf);
   auto elseBB = BasicBlock::Create(eng().getContext(), "else");
   auto nextBB = BasicBlock::Create(eng().getContext(), "cont");
@@ -333,11 +346,13 @@ void CodegenVisitor::visit(TypeArray *node) {
 }
 
 void CodegenVisitor::visit(TypeBase *node) {
-  // TODO
+  assert(false);
 }
 
 void CodegenVisitor::visit(TypeUser *node) {
   // TODO
+  assert(call_stack.top() == StateType::GET_TYPE);
+  rt_type = eng.get_struct(node->token_type);
 }
 
 void CodegenVisitor::visit(Identifier *node) {
@@ -354,10 +369,17 @@ void CodegenVisitor::visit(Identifier *node) {
 }
 
 void CodegenVisitor::visit(Assign *node) {
-  node->right->token_type = node->left->token_type;
-  auto right = get_value(node->right);
-  auto left = get_value(node->left, false);
-  eng().CreateStore(right, left);
+  auto right = node_value(node->right);
+  auto left = node_value(node->left, false);
+
+  if (node->right->token_type != node->left->token_type) {
+    auto left_type = eng.get_type(node->left->token_type);
+    auto tmp = eng().CreatePointerCast(right, left_type);
+    eng().CreateStore(tmp, left);
+  } else {
+    eng().CreateStore(right, left);
+  }
+
   rt_value = left;
 }
 
@@ -372,4 +394,5 @@ void CodegenVisitor::visit(Program *node) {
 void CodegenVisitor::visit(NoAction *node) {
   // SKIP
 }
+
 
