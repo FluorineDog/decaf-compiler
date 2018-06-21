@@ -116,13 +116,11 @@ void LLVMEngine::declare_func(string class_name, string function, FuncEntry &bod
   }
   auto FT = FunctionType::get(ret, paras, false);
   auto F = Function::Create(FT, Function::ExternalLinkage, class_name + "@" + function, theModule.get());
-  func_table[class_name][function] = F:
+  func_table[class_name][function] = F;
 }
 
 void LLVMEngine::define_func(string class_name, string function, FuncEntry &body) {
   auto F = func_table[class_name][function];
-  BasicBlock *BB = BasicBlock::Create(theContext, "entry", F);
-  builder.SetInsertPoint(BB);
   {
     // set up local_table
     local_table.clear();
@@ -137,6 +135,9 @@ void LLVMEngine::define_func(string class_name, string function, FuncEntry &body
       local_table[uid++] = &para;
     }
   }
-
+  BasicBlock *BB = BasicBlock::Create(theContext, "entry", F);
+  builder.SetInsertPoint(BB);
+  CodegenVisitor visitor(*this, nullptr);
+  visitor << body.body.value();
 };
 

@@ -77,5 +77,6 @@ private:
   std::map<string, int> class_ids;
   std::map<string, std::map<string, Function*>> func_table;
   std::map<int, Value *> local_table;
+  std::map<string, int> func_name_uid;
   IRBuilder<> builder;
 };

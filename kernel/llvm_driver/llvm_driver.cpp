@@ -21,20 +21,29 @@ void codegen(ClassEntries &sym_table) {
     if (std::holds_alternative<InterfaceBody>(decl_x)) {
       continue;
     }
+
     auto &decl = std::get<ClassBody>(decl_x);
     auto struct_type = eng.get_struct(decl_name);
-    vector<Type *> body;
-    // use as type_uid
-    stack<string> wtf;
-    
-    body.push_back(eng.get_type("int"));
+    // build type
+    {
+      vector<Type *> body;
+      // use as type_uid
+      stack<string> wtf;
 
-    for (auto&[var_name, var_type]: decl.available.variables) {
-      body.push_back(eng.get_type(var_type));
+      body.push_back(eng.get_type("int"));
+
+      for (auto&[var_name, var_type]: decl.available.variables) {
+        body.push_back(eng.get_type(var_type));
+      }
+      struct_type->setBody(body);
     }
-    struct_type->setBody(body);
+    // declare function
+    {
+      for(auto& [func_name, func_body]:decl.functions){
+        eng.declare_func(decl_name, func_name, func_body);
+      }
+    }
   }
-
 
 
   for (auto&[decl_name, decl_x]: sym_table) {
@@ -55,9 +64,9 @@ void codegen(ClassEntries &sym_table) {
       eng.create_main(main_func.body.value());
     }
 
-    if(std::holds_alternative<ClassBody>(decl_x)) {
+    if (std::holds_alternative<ClassBody>(decl_x)) {
 
-    } else{
+    } else {
 
     }
 
