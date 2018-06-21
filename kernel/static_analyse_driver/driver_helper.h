@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <set>
+#include <cassert>
 using std::find_if;
 
 using std::string;
@@ -37,9 +38,19 @@ class SeqMap {
     record.emplace_back(std::forward<Key>(key),  //
                         std::forward<Value>(value));
   }
+
   Entry& operator[](int i){
     return record[i];
   }
+
+  int fetch_uid(string name){
+    auto iter = find_if(record.rbegin(), record.rend(),
+                        [=](auto&& entry) { return entry.first == name; });
+    int i = record.rend() - iter - 1;
+    assert(i == -1);
+    return i;
+  };
+
   const Entry& operator[](int i) const{
     return record[i];
   }

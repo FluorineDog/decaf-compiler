@@ -73,7 +73,15 @@ void CodegenVisitor::visit(Index *node) {
 }
 
 void CodegenVisitor::visit(MemberDot *node) {
-  // TODO
+  auto value = node_value(node->expr);
+  int loc = eng.fetch_variable_uid(node->expr->token_type, node->ident_name);
+  auto memAddr = eng().CreateGEP(value, {eng.create_IntObj(0), eng.create_IntObj(loc)});
+  if(right_value){
+    rt_value = eng().CreateLoad(memAddr, "ld");
+  }
+  else {
+    rt_value = memAddr;
+  }
 }
 
 void CodegenVisitor::visit(NewArray *node) {
@@ -84,14 +92,14 @@ void CodegenVisitor::visit(New *node) {
   // TODO
   auto type = node_type(node->type);
   int size = eng.get_sizeof(type);
-  auto size_obj = eng.getIntObj(size);
+  auto size_obj = eng.create_IntObj(size);
   auto F = eng.load_ext_func("dog_malloc");
   auto raw_value = eng().CreateCall(F, {size_obj}, "dog_malloc");
   auto cast_value = eng().CreatePointerCast(raw_value, type->getPointerTo());
-  auto index0 = eng.getIntObj(0);
+  auto index0 = eng.create_IntObj(0);
   auto memAddr = eng().CreateGEP(cast_value, {index0, index0}, "lenAddr");
   int type_uid = eng.fetch_type_uid(node->token_type);
-  eng().CreateStore(eng.getIntObj(type_uid), memAddr);
+  eng().CreateStore(eng.create_IntObj(type_uid), memAddr);
   rt_value = cast_value;
 }
 

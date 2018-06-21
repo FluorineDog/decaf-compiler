@@ -1,7 +1,7 @@
 #include "llvm.h"
 
-LLVMEngine::LLVMEngine()
-    : builder(theContext) {
+LLVMEngine::LLVMEngine(ClassEntries& sym_table)
+    : builder(theContext), sym_table(sym_table) {
   // init module
   extModule = parseIRFile("final_build/runtime.bc", error, theContext, false);
   theModule = llvm::make_unique<Module>("dog-decaf", theContext);

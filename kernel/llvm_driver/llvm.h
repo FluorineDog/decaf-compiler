@@ -10,7 +10,7 @@ using std::string;
 
 class LLVMEngine {
 public:
-  LLVMEngine();
+  LLVMEngine(ClassEntries& sym_table);
 
   void insert_type(string name);
   void grant_id(string name);
@@ -22,8 +22,11 @@ public:
   Type *get_type(string name);
   StructType *get_struct(string name);
   void create_func(FuncEntry &entry);
-  auto getIntObj(int val){
+  auto create_IntObj(int val){
     return ConstantInt::get(theContext, APInt(32, val, true));
+  }
+  int fetch_variable_uid(string class_name, string ident){
+    return sym_table.fetch_variable_uid(class_name, ident);
   }
 
   IRBuilder<> &operator()() {
@@ -57,6 +60,7 @@ private:
   Function *load_extfunc(string name);
   LLVMContext theContext;
   SMDiagnostic error;
+  ClassEntries& sym_table;
   std::unique_ptr<Module> extModule;
   std::unique_ptr<Module> theModule;
   std::map<string, Function *> util_func;

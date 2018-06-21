@@ -1,7 +1,7 @@
 #include "llvm.h"
 #include <variant>
 void codegen(ClassEntries &sym_table) {
-  LLVMEngine eng;
+  LLVMEngine eng(sym_table);
   // insert types
   for (auto&[decl_name, decl_x]: sym_table) {
     if (decl_name == "Main") {
