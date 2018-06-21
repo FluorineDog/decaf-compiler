@@ -47,7 +47,7 @@ class SeqMap {
     auto iter = find_if(record.rbegin(), record.rend(),
                         [=](auto&& entry) { return entry.first == name; });
     int i = record.rend() - iter - 1;
-    assert(i == -1);
+    assert(i != -1);
     return i;
   };
 

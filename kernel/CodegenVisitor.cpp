@@ -32,10 +32,12 @@ CodegenVisitor::CodegenVisitor(LLVMEngine &eng, BlockExt *block_aux)
 
 Value *CodegenVisitor::node_value(node_ptr_t node, bool is_right_value) {
   HOLD(GET_VALUE);
+  bool old_flag = right_value;
   right_value = is_right_value;
   rt_value = nullptr;
   *this << node;
   assert(rt_value);
+  right_value = old_flag;
   return rt_value;
 }
 StructType *CodegenVisitor::node_type(node_ptr_t node) {

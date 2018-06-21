@@ -26,7 +26,7 @@ public:
     return ConstantInt::get(theContext, APInt(32, val, true));
   }
   int fetch_variable_uid(string class_name, string ident){
-    return sym_table.fetch_variable_uid(class_name, ident);
+    return 1 + sym_table.fetch_variable_uid(class_name, ident);
   }
 
   IRBuilder<> &operator()() {

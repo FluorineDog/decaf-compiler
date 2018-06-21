@@ -2,26 +2,25 @@ class Node {
   int x;
   Node next;
 }
+
 class Main {
   int main() {
+    Node list;
     Node node;
-    node = New Node;
+    Node iter;
     int i;
-    int sum;
-    int sum2;
-    sum = 0;
-    sum2 = 0;
-    for(i = 1; i <= 100; i = i + 1){
-      sum = sum + i;
-      if(i >= 100) {
-        break;
-        i = 0;
-      }
-      sum2 = sum2 + i;
+    list = null;
+    for(i = 0; i < 100; i = i + 1){
+      node = New Node;
+      node.x = i;
+      node.next = list;
+      list = node;
     }
-    Print(sum, sum2);
-    return 0;
-    i = 0;
+    iter = list;
+    while(iter != null){
+      Print(iter.x);
+      iter = iter.next;
+    }
     return 0;
   }
 }
