@@ -12,6 +12,8 @@ class LLVMEngine {
 public:
   LLVMEngine(ClassEntries& sym_table);
 
+  void create_call_table();
+
   void insert_type(string name);
   void grant_class_id(string name);
   int fetch_class_uid(string name);
@@ -23,6 +25,14 @@ public:
   StructType *get_struct(string name);
   void declare_func(string class_name, string function, FuncEntry &entry);
   void define_func(string class_name, string function, FuncEntry &entry);
+
+  auto create_nullptr(PointerType* type){
+    return ConstantPointerNull::get(type);
+  }
+  auto create_nullptr(){
+    auto type = Type::getInt8PtrTy(theContext);
+    return ConstantPointerNull::get(type);
+  }
   auto create_IntObj(int val){
     return ConstantInt::get(theContext, APInt(32, val, true));
   }

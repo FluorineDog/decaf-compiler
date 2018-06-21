@@ -45,7 +45,7 @@ void codegen(ClassEntries &sym_table) {
     }
   }
 
-
+  eng.create_call_table();
   for (auto&[decl_name, decl_x]: sym_table) {
     if (decl_name == "Main") {
       assert(std::holds_alternative<ClassBody>(decl_x));

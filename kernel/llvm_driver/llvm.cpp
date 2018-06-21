@@ -55,7 +55,7 @@ void LLVMEngine::insert_type(string name) {
 }
 
 void LLVMEngine::define_local_variable(int uid, string type) {
-  if(local_table.count(uid)){
+  if (local_table.count(uid)) {
     return;
   }
   auto var = builder.CreateAlloca(get_type(type), nullptr, "local_decl");
@@ -143,8 +143,17 @@ void LLVMEngine::define_func(string class_name, string function, FuncEntry &body
   }
   CodegenVisitor visitor(*this, nullptr);
   visitor << body.body.value();
-  if(body.return_type == "void"){
+  if (body.return_type == "void") {
     builder.CreateRetVoid();
   }
 };
 
+void LLVMEngine::create_call_table() {
+  // let me think
+  auto np = create_nullptr(external.entry_type->getPointerTo());
+  auto cv = ConstantStruct::get(external.table_type,
+                                {create_IntObj(123),np});
+  auto var = new GlobalVariable(*theModule, external.table_type,
+                                false, GlobalVariable::ExternalLinkage, cv, "good");
+
+}

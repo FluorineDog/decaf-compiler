@@ -62,8 +62,7 @@ void CodegenVisitor::visit(Double *node) {
 
 void CodegenVisitor::visit(NullPointer *node) {
   // TODO
-  auto type = Type::getInt8PtrTy(eng().getContext());
-  rt_value = ConstantPointerNull::get(type);
+  rt_value = eng.create_nullptr();
 }
 
 void CodegenVisitor::visit(Call *node) {
@@ -368,9 +367,9 @@ void CodegenVisitor::visit(TypeUser *node) {
 }
 
 void CodegenVisitor::visit(Identifier *node) {
-  // TODO
-  switch (call_stack.top()) {
-  case StateType::GET_VALUE: {
+  // TODO 
+  switch (call_stack.top()) { 
+    case StateType::GET_VALUE: {
     rt_value = eng.fetch_local_id(node->uid);
     if (right_value) {
       rt_value = eng().CreateLoad(rt_value, "ld");
