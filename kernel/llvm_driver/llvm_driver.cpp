@@ -25,7 +25,10 @@ void codegen(ClassEntries &sym_table) {
     auto struct_type = eng.get_struct(decl_name);
     vector<Type *> body;
     // use as type_uid
+    stack<string> wtf;
+    
     body.push_back(eng.get_type("int"));
+
     for (auto&[var_name, var_type]: decl.variables) {
       body.push_back(eng.get_type(var_type));
     }

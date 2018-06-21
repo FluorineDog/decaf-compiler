@@ -342,7 +342,16 @@ void StaticAnalyseVisitor::visit(Assign *node) {
   if (expr_type == "nullptr") {
     assert(!set<string>({"int", "bool", "double", "void"}).count(lv_type));
   } else {
-    assert(lv_type == expr_type);
+    auto iter = expr_type;
+    while(iter != lv_type){
+      auto body = sym_table.fetch_complete_class(iter);
+      if(body.implementors.count(lv_type)){
+        break;
+      }
+      auto next = body.extender;
+      assert(next);
+      iter = next.value();
+    }
   }
   node->token_type = lv_type;
 }

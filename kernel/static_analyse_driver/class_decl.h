@@ -86,6 +86,10 @@ public:
     auto &body = std::get<InterfaceBody>(*body_ptr);
     return body;
   }
+  auto fetch_parent_type(string class_name){
+    auto body = fetch_complete_class(class_name);
+    return body.extender;
+  }
 
   auto fetch_variable_uid(string class_name, string ident) {
     auto body = fetch_complete_class(class_name);

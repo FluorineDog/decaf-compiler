@@ -3,15 +3,22 @@ class Node {
   Node next;
 }
 
+class NodeExt extends Node {
+  int y;
+}
+
+
 class Main {
   int main() {
     Node list;
     Node node;
     Node iter;
     int i;
+    NodeExt ext;
+    ext.x = 0;
     list = null;
     for(i = 0; i < 100; i = i + 1){
-      node = New Node;
+      node = New NodeExt;
       node.x = i;
       node.next = list;
       list = node;
