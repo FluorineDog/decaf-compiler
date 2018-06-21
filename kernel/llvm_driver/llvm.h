@@ -13,15 +13,16 @@ public:
   LLVMEngine(ClassEntries& sym_table);
 
   void insert_type(string name);
-  void grant_id(string name);
-  int fetch_type_uid(string name);
+  void grant_class_id(string name);
+  int fetch_class_uid(string name);
   void create_main(Block *);
 //  BasicBlock* getBasicBlock();
   void define_local_variable(int uid, string type);
   Value *fetch_local_id(int uid);
   Type *get_type(string name);
   StructType *get_struct(string name);
-  void create_func(string class_name, string function, FuncEntry &entry);
+  void declare_func(string class_name, string function, FuncEntry &entry);
+  void define_func(string class_name, string function, FuncEntry &entry);
   auto create_IntObj(int val){
     return ConstantInt::get(theContext, APInt(32, val, true));
   }
@@ -57,7 +58,13 @@ public:
     theModule->print(file, nullptr);
   }
 
+  struct {
+    StructType* entry_type;
+    StructType* table_type;
+  }external;
 private:
+
+  int load_class_from(string class_name, Argument& para);
   Function *load_extfunc(string name);
   LLVMContext theContext;
   SMDiagnostic error;

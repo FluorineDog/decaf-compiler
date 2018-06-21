@@ -9,6 +9,9 @@ LLVMEngine::LLVMEngine(ClassEntries &sym_table)
   assert(theModule);
   // load basic type
   auto str_type = extModule->getTypeByName("struct.string");
+  external.entry_type = extModule->getTypeByName("struct.__entry");
+  external.table_type = extModule->getTypeByName("struct.__sym_table");
+
   // use pointer deliberately. Use as basic type
   builtin_type_dict["string"] = str_type->getPointerTo();
   builtin_type_dict["int"] = Type::getInt32Ty(theContext);
@@ -35,12 +38,12 @@ Function *LLVMEngine::load_extfunc(string name) {
                    callee->getName(), theModule.get());
   return callee;
 }
-void LLVMEngine::grant_id(string name) {
+void LLVMEngine::grant_class_id(string name) {
   int uid = class_ids.size();
   class_ids[name] = uid;
 }
 
-int LLVMEngine::fetch_type_uid(string name) {
+int LLVMEngine::fetch_class_uid(string name) {
   assert(class_ids.count(name));
   return class_ids.at(name);
 }
@@ -93,17 +96,47 @@ void LLVMEngine::create_main(Block *node) {
   // no concept of block
 }
 
-void LLVMEngine::create_func(string class_name, string function, FuncEntry &body) {
+int LLVMEngine::load_class_from(string class_name, Argument &para) {
+  local_table[-1] = &para;
+  auto &body = sym_table.fetch_complete_class(class_name);
+  auto len = body.available.variables.size();
+  for (int i = 0; i < len; i++) {
+    auto val = builder.CreateGEP(&para, {create_IntObj(0), create_IntObj(i + 1)});
+    local_table[i] = val;
+  }
+  return len;
+}
+
+void LLVMEngine::declare_func(string class_name, string function, FuncEntry &body) {
   auto ret = get_type(body.return_type);
   vector<Type *> paras;
+  paras.push_back(get_type(class_name));
   for (auto[type, _]: body.parameters) {
     paras.push_back(get_type(type));
   }
   auto FT = FunctionType::get(ret, paras, false);
-  auto F = Function::Create(FT, Function::ExternalLinkage, function, theModule.get());
-//  builder.CreatePointerCast(F, get_type("nullptr"));
+  auto F = Function::Create(FT, Function::ExternalLinkage, class_name + "@" + function, theModule.get());
+  func_table[class_name][function] = F:
+}
+
+void LLVMEngine::define_func(string class_name, string function, FuncEntry &body) {
+  auto F = func_table[class_name][function];
   BasicBlock *BB = BasicBlock::Create(theContext, "entry", F);
   builder.SetInsertPoint(BB);
-  local_table.clear();
+  {
+    // set up local_table
+    local_table.clear();
+    bool thisflag = true;
+    int uid = 0;
+    for (auto &para: F->args()) {
+      if (thisflag) {
+        uid = load_class_from(class_name, para);
+        thisflag = false;
+        continue;
+      }
+      local_table[uid++] = &para;
+    }
+  }
 
-}
+};
+

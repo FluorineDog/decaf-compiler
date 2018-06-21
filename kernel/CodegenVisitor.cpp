@@ -100,7 +100,7 @@ void CodegenVisitor::visit(New *node) {
   auto cast_value = eng().CreatePointerCast(raw_value, type->getPointerTo());
   auto index0 = eng.create_IntObj(0);
   auto memAddr = eng().CreateGEP(cast_value, {index0, index0}, "lenAddr");
-  int type_uid = eng.fetch_type_uid(node->token_type);
+  int type_uid = eng.fetch_class_uid(node->token_type);
   eng().CreateStore(eng.create_IntObj(type_uid), memAddr);
   rt_value = cast_value;
 }

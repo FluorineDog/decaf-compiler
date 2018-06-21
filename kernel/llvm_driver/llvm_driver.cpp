@@ -9,7 +9,7 @@ void codegen(ClassEntries &sym_table) {
     }
     eng.insert_type(decl_name);
     if (std::holds_alternative<ClassBody>(decl_x)) {
-      eng.grant_id(decl_name);
+      eng.grant_class_id(decl_name);
     }
   }
 
@@ -35,6 +35,8 @@ void codegen(ClassEntries &sym_table) {
     struct_type->setBody(body);
   }
 
+
+
   for (auto&[decl_name, decl_x]: sym_table) {
     if (decl_name == "Main") {
       assert(std::holds_alternative<ClassBody>(decl_x));
@@ -52,6 +54,13 @@ void codegen(ClassEntries &sym_table) {
       assert(main_func.body);
       eng.create_main(main_func.body.value());
     }
+
+    if(std::holds_alternative<ClassBody>(decl_x)) {
+
+    } else{
+
+    }
+
   }
   eng.final_print();
 }
