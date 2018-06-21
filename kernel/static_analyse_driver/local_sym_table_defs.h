@@ -24,7 +24,8 @@ struct BlockExt {
   }
 
   void load_class(const ClassBody &entry) {
-    for (auto&[id, type] : entry.variables) {
+    reset_uid();
+    for (auto&[id, type] : entry.available.variables) {
       insert(type, id);
     }
   }
@@ -33,7 +34,9 @@ struct BlockExt {
     assert(local_uid.count(id) == 0);
     local_uid[id] = std::make_pair(get_uid(), type);
   }
-
+  static void reset_uid() {
+    global_uid = 0;
+  }
   static int get_uid() { return global_uid++; }
 private:
   static int global_uid;

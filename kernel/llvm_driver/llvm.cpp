@@ -1,6 +1,6 @@
 #include "llvm.h"
 
-LLVMEngine::LLVMEngine(ClassEntries& sym_table)
+LLVMEngine::LLVMEngine(ClassEntries &sym_table)
     : builder(theContext), sym_table(sym_table) {
   // init module
   extModule = parseIRFile("final_build/runtime.bc", error, theContext, false);
@@ -40,7 +40,7 @@ void LLVMEngine::grant_id(string name) {
   class_ids[name] = uid;
 }
 
-int LLVMEngine::fetch_type_uid(string name){
+int LLVMEngine::fetch_type_uid(string name) {
   assert(class_ids.count(name));
   return class_ids.at(name);
 }
@@ -49,21 +49,6 @@ void LLVMEngine::insert_type(string name) {
   assert(!user_type_dict.count(name));
   auto t = StructType::create(theContext, name);
   user_type_dict[name] = t;
-}
-
-void LLVMEngine::create_main(Block *node) {
-  auto FT = FunctionType::get(get_type("int"), {}, false);
-  auto F = Function::Create(FT, Function::ExternalLinkage, "main", theModule.get());
-  BasicBlock *BB = BasicBlock::Create(theContext, "entry", F);
-  builder.SetInsertPoint(BB);
-  local_table.clear();
-  CodegenVisitor visitor(*this, nullptr);
-  visitor << node;
-  // no concept of block
-}
-
-void LLVMEngine::create_func(FuncEntry &entry) {
-  // TODO
 }
 
 void LLVMEngine::define_local_variable(int uid, string type) {
@@ -76,7 +61,6 @@ Value *LLVMEngine::fetch_local_id(int uid) {
   assert(local_table.count(uid));
   return local_table[uid];
 }
-
 
 StructType *LLVMEngine::get_struct(string name) {
   // TODO
@@ -93,7 +77,33 @@ Type *LLVMEngine::get_type(string name) {
   return user_type_dict[name]->getPointerTo();
 }
 
-int LLVMEngine::get_sizeof(Type* type){
+int LLVMEngine::get_sizeof(Type *type) {
   DataLayout layout(theModule.get());
   return layout.getTypeAllocSize(type);
+}
+
+void LLVMEngine::create_main(Block *node) {
+  auto FT = FunctionType::get(get_type("int"), {}, false);
+  auto F = Function::Create(FT, Function::ExternalLinkage, "main", theModule.get());
+  BasicBlock *BB = BasicBlock::Create(theContext, "entry", F);
+  builder.SetInsertPoint(BB);
+  local_table.clear();
+  CodegenVisitor visitor(*this, nullptr);
+  visitor << node;
+  // no concept of block
+}
+
+void LLVMEngine::create_func(string class_name, string function, FuncEntry &body) {
+  auto ret = get_type(body.return_type);
+  vector<Type *> paras;
+  for (auto[type, _]: body.parameters) {
+    paras.push_back(get_type(type));
+  }
+  auto FT = FunctionType::get(ret, paras, false);
+  auto F = Function::Create(FT, Function::ExternalLinkage, function, theModule.get());
+//  builder.CreatePointerCast(F, get_type("nullptr"));
+  BasicBlock *BB = BasicBlock::Create(theContext, "entry", F);
+  builder.SetInsertPoint(BB);
+  local_table.clear();
+
 }

@@ -1,44 +1,73 @@
 class NodeExt extends Node {
-  int y;
-  void f() {
-    Print(y);
+  int class_var1;
+  void f2(int para0, int para1) {
+    int local0;
+    {
+      int local1;
+      class_var0;   
+      class_var1;   
+      para0;
+      para1;
+      local0;
+      local1;
+    }
+    
+  }
+  void f(int para0, int para1) {
+    int local0;
+    {
+      int local1;
+      // class_var0;   
+      class_var1;   
+      para0;
+      para1;
+      local0;
+      local1;
+    }
+    
   }
 }
 
 class Node {
-  int x;
-  Node next;
-  void f() {
-    Print(x);
+  int class_var0;
+  void ff(int para0) {
+  }
+}
+
+class Node2 {
+  int class_var0;
+  void ff(int z) {
+    int e;
+    Print(z);
   }
 }
 
 class Main {
   int main() {
-    Node list;
-    Node node;
-    Node iter;
-    int i;
-    NodeExt ext;
-    list = null;
-    for(i = 0; i < 100; i = i + 1){
-      if(i % 2 == 0){
-        ext = New NodeExt;
-        ext.y = -i;
-        node = ext;
-        node.next = list;
-      } else {
-        node = New Node;
-        node.x = i;
-        node.next = list;
-      }
-      list = node;
-    }
-    iter = list;
-    while(iter != null){
-      Print(iter.x);
-      iter = iter.next;
-    }
+    // Node list;
+    // Node node;
+    // Node iter;
+    // int i;
+    // NodeExt ext;
+    // list = null;
+    // for(i = 0; i < 100; i = i + 1){
+    //   if(i % 2 == 0){
+    //     ext = New NodeExt;
+    //     ext.y = -i;
+    //     node = ext;
+    //     node.next = list;
+    //   } else {
+    //     node = New Node;
+    //     node.x = i;
+    //     node.next = list;
+    //   }
+    //   list = node;
+    // }
+    // iter = list;
+    // while(iter != null){
+    //   Print(iter.x);
+    //   iter = iter.next;
+    // }
     return 0;
   }
 }

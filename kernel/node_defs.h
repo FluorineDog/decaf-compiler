@@ -202,7 +202,7 @@ class Identifier : public ASTNodeBase {
  public:
   virtual void accept(Visitor& v) { v.visit(this); }
   string name;
-  int /**/ uid;
+  int /**/ uid = -1;
 };
 
 class Assign : public ASTNodeBase {

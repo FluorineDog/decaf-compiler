@@ -267,7 +267,7 @@ void PrintVisitor::visit(TypeUser *node) {
 }
 
 void PrintVisitor::visit(Identifier *node) {
-  Indent logger(level, __LINE__, node->token_type);
+  Indent logger(level, __LINE__, node->token_type, node->uid);
   logger("Identifier", node->name);
 }
 

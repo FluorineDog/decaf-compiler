@@ -21,7 +21,7 @@ public:
   Value *fetch_local_id(int uid);
   Type *get_type(string name);
   StructType *get_struct(string name);
-  void create_func(FuncEntry &entry);
+  void create_func(string class_name, string function, FuncEntry &entry);
   auto create_IntObj(int val){
     return ConstantInt::get(theContext, APInt(32, val, true));
   }
@@ -34,6 +34,7 @@ public:
   }
 
   int get_sizeof(Type*);
+
 
   Function *load_ext_func(string name) {
     assert(util_func.count(name));
@@ -67,6 +68,7 @@ private:
   std::map<string, Type *> builtin_type_dict;
   std::map<string, StructType *> user_type_dict;
   std::map<string, int> class_ids;
+  std::map<string, std::map<string, Function*>> func_table;
   std::map<int, Value *> local_table;
   IRBuilder<> builder;
 };
