@@ -75,7 +75,7 @@ public:
   using SeqMap<string, DeclEntry>::SeqMap;
   TypeEntry fetch_complete_variable(string class_name, string id) const {
     auto cls = fetch_complete_class(class_name);
-    auto variable_ptr = cls.get_variable(id);
+    auto variable_ptr = cls.available.variables.find(id);
     assert(variable_ptr);
     return *variable_ptr;
   }
@@ -94,7 +94,7 @@ public:
   auto fetch_variable_uid(string class_name, string ident) {
     auto body = fetch_complete_class(class_name);
     // TODO
-    return body.variables.fetch_uid(ident);
+    return body.available.variables.fetch_uid(ident);
   }
 
   const ClassBody &fetch_complete_class(string name) const {

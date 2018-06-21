@@ -29,7 +29,7 @@ void codegen(ClassEntries &sym_table) {
     
     body.push_back(eng.get_type("int"));
 
-    for (auto&[var_name, var_type]: decl.variables) {
+    for (auto&[var_name, var_type]: decl.available.variables) {
       body.push_back(eng.get_type(var_type));
     }
     struct_type->setBody(body);

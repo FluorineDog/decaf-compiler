@@ -1,11 +1,11 @@
+class NodeExt extends Node {
+  int y;
+}
 class Node {
   int x;
   Node next;
 }
 
-class NodeExt extends Node {
-  int y;
-}
 
 
 class Main {
@@ -15,11 +15,12 @@ class Main {
     Node iter;
     int i;
     NodeExt ext;
-    ext.x = 0;
     list = null;
     for(i = 0; i < 100; i = i + 1){
-      node = New NodeExt;
-      node.x = i;
+      ext = New NodeExt;
+      ext.y = i + 1;
+      ext.x = i;
+      node = ext;
       node.next = list;
       list = node;
     }
