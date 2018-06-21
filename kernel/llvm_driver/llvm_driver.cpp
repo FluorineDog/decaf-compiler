@@ -62,10 +62,14 @@ void codegen(ClassEntries &sym_table) {
 //      visitor.
       assert(main_func.body);
       eng.create_main(main_func.body.value());
+      continue;
     }
 
     if (std::holds_alternative<ClassBody>(decl_x)) {
-
+      auto& decl = std::get<ClassBody>(decl_x);
+      for(auto& [func_name, func_body]:decl.functions){
+        eng.define_func(decl_name, func_name, func_body);
+      }
     } else {
 
     }

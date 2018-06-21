@@ -2,45 +2,34 @@ class NodeExt extends Node {
   int class_var1;
   void f2(int para0, int para1) {
     int local0;
-    {
-      int local1;
-      class_var0;   
-      class_var1;   
-      para0;
-      para1;
-      local0;
-      local1;
-    }
-    
-  }
-  void f(int para0, int para1) {
-    int local0;
-    {
-      int local1;
-      // class_var0;   
-      class_var1;   
-      para0;
-      para1;
-      local0;
-      local1;
-    }
-    
+    // {
+      // int local1;
+    int z;
+    z = class_var1;   
+      // z = class_var1;   
+      // z = para0;
+      // z = para1;
+      // z = local0;
+      // z = local1;
+      // Print(z);
+    // }
   }
 }
 
 class Node {
   int class_var0;
   void ff(int para0) {
+    
   }
 }
 
-class Node2 {
-  int class_var0;
-  void ff(int z) {
-    int e;
-    Print(z);
-  }
-}
+// class Node2 {
+//   int class_var0;
+//   void ff(int z) {
+//     int e;
+//     Print(z);
+//   }
+// }
 
 class Main {
   int main() {

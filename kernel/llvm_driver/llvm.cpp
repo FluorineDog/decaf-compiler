@@ -55,7 +55,9 @@ void LLVMEngine::insert_type(string name) {
 }
 
 void LLVMEngine::define_local_variable(int uid, string type) {
-  assert(!local_table.count(uid));
+  if(local_table.count(uid)){
+    return;
+  }
   auto var = builder.CreateAlloca(get_type(type), nullptr, "local_decl");
   local_table[uid] = var;
 }
@@ -115,17 +117,21 @@ void LLVMEngine::declare_func(string class_name, string function, FuncEntry &bod
     paras.push_back(get_type(type));
   }
   auto FT = FunctionType::get(ret, paras, false);
-  auto F = Function::Create(FT, Function::ExternalLinkage, class_name + "@" + function, theModule.get());
+  auto F = Function::Create(FT, Function::ExternalLinkage, class_name + "__" + function, theModule.get());
+  assert(F);
   func_table[class_name][function] = F;
 }
 
 void LLVMEngine::define_func(string class_name, string function, FuncEntry &body) {
   auto F = func_table[class_name][function];
+  BasicBlock *BB = BasicBlock::Create(theContext, "entry", F);
+  builder.SetInsertPoint(BB);
   {
     // set up local_table
     local_table.clear();
     bool thisflag = true;
     int uid = 0;
+    int len = F->arg_size();
     for (auto &para: F->args()) {
       if (thisflag) {
         uid = load_class_from(class_name, para);
@@ -135,9 +141,10 @@ void LLVMEngine::define_func(string class_name, string function, FuncEntry &body
       local_table[uid++] = &para;
     }
   }
-  BasicBlock *BB = BasicBlock::Create(theContext, "entry", F);
-  builder.SetInsertPoint(BB);
   CodegenVisitor visitor(*this, nullptr);
   visitor << body.body.value();
+  if(body.return_type == "void"){
+    builder.CreateRetVoid();
+  }
 };
 
