@@ -287,6 +287,7 @@ void StaticAnalyseVisitor::visit(TypeArray *node) {
   auto base = get_id(node->base);
   assert(base != "void");
   current_id = base + "[]";
+  node->token_type = current_id;
 }
 
 void StaticAnalyseVisitor::visit(TypeBase *node) {
@@ -307,11 +308,13 @@ void StaticAnalyseVisitor::visit(TypeBase *node) {
     name = "@WTF";
   }
   current_id = name;
+  node->token_type = current_id;
 }
 
 void StaticAnalyseVisitor::visit(TypeUser *node) {
   assert(call_stack.top() == StateType::GET_ID);
   current_id = node->type_name;
+  node->token_type = current_id;
 }
 
 void StaticAnalyseVisitor::visit(Identifier *node) {

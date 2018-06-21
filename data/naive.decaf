@@ -5,7 +5,7 @@ class Node {
 class Main {
   int main() {
     Node node;
-    node = null;
+    node = New Node;
     int i;
     int sum;
     int sum2;
