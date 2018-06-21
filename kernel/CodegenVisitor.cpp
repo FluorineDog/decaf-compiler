@@ -58,7 +58,7 @@ void CodegenVisitor::visit(Double *node) {
 
 void CodegenVisitor::visit(NullPointer *node) {
   // TODO
-  auto type = eng.get_user_type(node->token_type);
+  auto type = Type::getInt8PtrTy(eng().getContext());
   rt_value = ConstantPointerNull::get(type);
 }
 
@@ -216,12 +216,8 @@ void CodegenVisitor::visit(List *node) {
 }
 
 void CodegenVisitor::visit(Break *node) {
-  // TODO
   eng().CreateBr(current_nextBB.value());
   eng.createDummy();
-//  Function *tf = eng().GetInsertBlock()->getParent();
-//  auto dummyBB = BasicBlock::Create(eng().getContext(), "dummy", tf);
-//  eng().SetInsertPoint(dummyBB);
 }
 
 void CodegenVisitor::visit(Return *node) {

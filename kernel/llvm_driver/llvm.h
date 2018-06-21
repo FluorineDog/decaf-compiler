@@ -13,12 +13,14 @@ public:
   LLVMEngine();
 
   void insert_type(string name);
+  void grant_id(string name);
   void create_main(Block *);
 //  BasicBlock* getBasicBlock();
   void define_local_variable(int uid, string type);
   Value *fetch_local_id(int uid);
-  PointerType *get_user_type(string name);
   Type *get_basic_type(string name);
+  Type *get_user_type(string name);
+  StructType *get_struct(string name);
 
   IRBuilder<> &operator()() {
     return builder;
@@ -53,7 +55,8 @@ private:
   std::unique_ptr<Module> theModule;
   std::map<string, Function *> util_func;
   std::map<string, Type *> builtin_type_dict;
-  std::map<string, Type *> user_type_dict;
+  std::map<string, StructType *> user_type_dict;
+  std::map<string, int> class_ids;
   std::map<int, Value *> local_table;
   IRBuilder<> builder;
 };

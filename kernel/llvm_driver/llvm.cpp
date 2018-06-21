@@ -15,10 +15,10 @@ LLVMEngine::LLVMEngine()
   builtin_type_dict["double"] = Type::getDoubleTy(theContext);
   builtin_type_dict["bool"] = Type::getInt1Ty(theContext);
   builtin_type_dict["void"] = Type::getVoidTy(theContext);
+  builtin_type_dict["nullptr"] = Type::getInt8PtrTy(theContext);
 
   // load user type
   user_type_dict["string"] = str_type;
-  user_type_dict["nullptr"] = Type::getInt8PtrTy(theContext);
 
   // load external function
   constexpr const char *c_extnames[] = {"readint", "readline", "printint", "printdouble", "printbool",
@@ -35,10 +35,15 @@ Function *LLVMEngine::load_extfunc(string name) {
                    callee->getName(), theModule.get());
   return callee;
 }
+void LLVMEngine::grant_id(string name){
+  int uid = class_ids.size();
+  class_ids[name] = uid;
+}
 
 void LLVMEngine::insert_type(string name) {
+  assert(!user_type_dict.count(name));
   auto t = StructType::create(theContext, name);
-  builtin_type_dict[name] = t;
+  user_type_dict[name] = t;
 }
 
 void LLVMEngine::create_main(Block *node) {
@@ -63,7 +68,7 @@ Value *LLVMEngine::fetch_local_id(int uid) {
   return local_table[uid];
 }
 
-PointerType *LLVMEngine::get_user_type(string name) {
+Type *LLVMEngine::get_user_type(string name) {
   // TODO
   assert(user_type_dict.count(name));
   return user_type_dict[name]->getPointerTo();
