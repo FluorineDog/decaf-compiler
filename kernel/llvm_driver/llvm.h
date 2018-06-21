@@ -18,9 +18,9 @@ public:
 //  BasicBlock* getBasicBlock();
   void define_local_variable(int uid, string type);
   Value *fetch_local_id(int uid);
-  Type *get_basic_type(string name);
-  Type *get_user_type(string name);
+  Type *get_type(string name);
   StructType *get_struct(string name);
+  void create_func(FuncEntry &entry);
 
   IRBuilder<> &operator()() {
     return builder;

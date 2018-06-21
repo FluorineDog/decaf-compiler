@@ -35,7 +35,7 @@ Function *LLVMEngine::load_extfunc(string name) {
                    callee->getName(), theModule.get());
   return callee;
 }
-void LLVMEngine::grant_id(string name){
+void LLVMEngine::grant_id(string name) {
   int uid = class_ids.size();
   class_ids[name] = uid;
 }
@@ -47,7 +47,7 @@ void LLVMEngine::insert_type(string name) {
 }
 
 void LLVMEngine::create_main(Block *node) {
-  auto FT = FunctionType::get(builtin_type_dict["int"], {}, false);
+  auto FT = FunctionType::get(get_type("int"), {}, false);
   auto F = Function::Create(FT, Function::ExternalLinkage, "main", theModule.get());
   BasicBlock *BB = BasicBlock::Create(theContext, "entry", F);
   builder.SetInsertPoint(BB);
@@ -57,9 +57,13 @@ void LLVMEngine::create_main(Block *node) {
   // no concept of block
 }
 
+void LLVMEngine::create_func(FuncEntry &entry) {
+
+}
+
 void LLVMEngine::define_local_variable(int uid, string type) {
   assert(!local_table.count(uid));
-  auto var = builder.CreateAlloca(builtin_type_dict[type], nullptr, "local_decl");
+  auto var = builder.CreateAlloca(get_type(type), nullptr, "local_decl");
   local_table[uid] = var;
 }
 
@@ -68,13 +72,17 @@ Value *LLVMEngine::fetch_local_id(int uid) {
   return local_table[uid];
 }
 
-Type *LLVMEngine::get_user_type(string name) {
+StructType *LLVMEngine::get_struct(string name) {
   // TODO
   assert(user_type_dict.count(name));
-  return user_type_dict[name]->getPointerTo();
+  return user_type_dict[name];
 }
 
-Type *LLVMEngine::get_basic_type(string name) {
+Type *LLVMEngine::get_type(string name) {
   // TODO
-  return nullptr;
+  if (builtin_type_dict.count(name)) {
+    return builtin_type_dict[name];
+  }
+  assert(user_type_dict.count(name));
+  return user_type_dict[name]->getPointerTo();
 }

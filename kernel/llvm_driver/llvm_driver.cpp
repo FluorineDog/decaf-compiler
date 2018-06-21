@@ -1,38 +1,45 @@
 #include "llvm.h"
-void codegen(ClassEntries& sym_table) {
+#include <variant>
+void codegen(ClassEntries &sym_table) {
   LLVMEngine eng;
   // insert types
-  for(auto [decl_name, decl_x]: sym_table){
-    if(decl_name == "Main"){
+  for (auto&[decl_name, decl_x]: sym_table) {
+    if (decl_name == "Main") {
       continue;
     }
     eng.insert_type(decl_name);
-    if(std::holds_alternative<ClassBody>(decl_x)){
+    if (std::holds_alternative<ClassBody>(decl_x)) {
       eng.grant_id(decl_name);
     }
   }
 
-  for(auto [decl_name, decl_x]: sym_table){
-    if(decl_name == "Main"){
+  for (auto&[decl_name, decl_x]: sym_table) {
+    if (decl_name == "Main") {
       continue;
     }
     // no interface, sir
-    if(std::holds_alternative<InterfaceBody>(decl_x)){
+    if (std::holds_alternative<InterfaceBody>(decl_x)) {
       continue;
     }
-    auto& decl = std::get<ClassBody>(decl_x);
-    auto struct_type = eng.get_user_type(decl_name);
-
+    auto &decl = std::get<ClassBody>(decl_x);
+    auto struct_type = eng.get_struct(decl_name);
+    vector<Type *> body;
+    // use as type_uid
+    body.push_back(eng.get_type("int"));
+    for (auto&[var_name, var_type]: decl.variables) {
+      body.push_back(eng.get_type(var_type));
+    }
+    struct_type->setBody(body);
   }
 
-  for(auto [decl_name, decl_x]: sym_table){
-    if(decl_name == "Main"){
+  for (auto&[decl_name, decl_x]: sym_table) {
+    if (decl_name == "Main") {
       assert(std::holds_alternative<ClassBody>(decl_x));
-      auto& decl = std::get<ClassBody>(decl_x);
+      auto &decl = std::get<ClassBody>(decl_x);
       // only main is permitted
       assert(decl.functions.size() == 1);
       assert(decl.variables.size() == 0);
-      auto& [main_name, main_func] = decl.functions[0];
+      auto&[main_name, main_func] = decl.functions[0];
       assert(main_name == "main");
       assert(main_func.return_type == "int");
       assert(main_func.parameters.size() == 0);

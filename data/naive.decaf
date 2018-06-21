@@ -1,3 +1,7 @@
+class Node {
+  int x;
+  Node next;
+}
 class Main {
   int main() {
     int i;
