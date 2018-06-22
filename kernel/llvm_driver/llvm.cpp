@@ -39,15 +39,15 @@ Function *LLVMEngine::load_extfunc(string name) {
                    callee->getName(), theModule.get());
   return callee;
 }
-void LLVMEngine::grant_class_id(string name) {
-  int uid = class_ids.size();
-  class_ids[name] = uid;
-}
-
-int LLVMEngine::fetch_class_uid(string name) {
-  assert(class_ids.count(name));
-  return class_ids.at(name);
-}
+//void LLVMEngine::grant_class_id(string name) {
+//  int uid = class_ids.size();
+//  class_ids[name] = uid;
+//}
+//
+//int LLVMEngine::fetch_class_uid(string name) {
+//  assert(class_ids.count(name));
+//  return class_ids.at(name);
+//}
 
 void LLVMEngine::insert_type(string name) {
   assert(!user_type_dict.count(name));
@@ -209,10 +209,15 @@ void LLVMEngine::create_call_table() {
         true,
         GlobalVariable::PrivateLinkage,
         sym_table_c,
-        "__sym_table" + cname);
+        "__sym_table_" + cname);
     sym_table_per_class[cname] = gv;
   }
 }
 
-
+llvm::Constant* LLVMEngine::fetch_sym_ptr(string class_name) {
+  auto gv = theModule->getGlobalVariable("__sym_table_" + class_name);
+  auto ptr = ConstantExpr::getBitCast(
+      gv, external.table_type->getPointerTo());
+  return ptr;
+}
 

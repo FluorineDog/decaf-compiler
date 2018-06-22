@@ -8,9 +8,9 @@ void codegen(ClassEntries &sym_table) {
       continue;
     }
     eng.insert_type(decl_name);
-    if (std::holds_alternative<ClassBody>(decl_x)) {
-      eng.grant_class_id(decl_name);
-    }
+//    if (std::holds_alternative<ClassBody>(decl_x)) {
+//      eng.grant_class_id(decl_name);
+//    }
   }
 
   for (auto&[decl_name, decl_x]: sym_table) {
@@ -30,7 +30,7 @@ void codegen(ClassEntries &sym_table) {
       // use as type_uid
       stack<string> wtf;
 
-      body.push_back(eng.get_type("int"));
+      body.push_back(eng.external.table_type);
 
       for (auto&[var_name, var_type]: decl.available.variables) {
         body.push_back(eng.get_type(var_type));

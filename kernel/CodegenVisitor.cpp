@@ -26,7 +26,7 @@
 
 #include "llvm_driver/llvm.h"
 #include "llvm/IR/DataLayout.h"
-CodegenVisitor::CodegenVisitor(class LLVMEngine& eng, BlockExt* block_aux, string class_name)
+CodegenVisitor::CodegenVisitor(class LLVMEngine &eng, BlockExt *block_aux, string class_name)
     : eng(eng), block_aux(block_aux), current_class_name(class_name) {
   call_stack.push(StateType::PROGRAM);
 }
@@ -62,12 +62,17 @@ void CodegenVisitor::visit(Double *node) {
 }
 
 void CodegenVisitor::visit(NullPointer *node) {
-  // TODO
   rt_value = eng.create_nullptr();
 }
 
 void CodegenVisitor::visit(Call *node) {
   // TODO
+  auto func_name = node->ident_name;
+  auto issuer = node->domain_expr ?
+                node_value(node->domain_expr.value())
+                                  : eng.getArg(-1);
+  // analyse issuer's pointer
+
 }
 
 void CodegenVisitor::visit(Index *node) {
@@ -78,10 +83,9 @@ void CodegenVisitor::visit(MemberDot *node) {
   auto value = node_value(node->expr);
   int loc = eng.fetch_variable_uid(node->expr->token_type, node->ident_name);
   auto memAddr = eng().CreateGEP(value, {eng.create_IntObj(0), eng.create_IntObj(loc)});
-  if(right_value){
+  if (right_value) {
     rt_value = eng().CreateLoad(memAddr, "ld");
-  }
-  else {
+  } else {
     rt_value = memAddr;
   }
 }
@@ -100,8 +104,8 @@ void CodegenVisitor::visit(New *node) {
   auto cast_value = eng().CreatePointerCast(raw_value, type->getPointerTo());
   auto index0 = eng.create_IntObj(0);
   auto memAddr = eng().CreateGEP(cast_value, {index0, index0}, "lenAddr");
-  int type_uid = eng.fetch_class_uid(node->token_type);
-  eng().CreateStore(eng.create_IntObj(type_uid), memAddr);
+  auto sym_ptr = eng.fetch_sym_ptr(node->token_type);
+  eng().CreateStore(sym_ptr, memAddr);
   rt_value = cast_value;
 }
 
@@ -187,7 +191,7 @@ void CodegenVisitor::visit(BinaryExpr *node) {
 
   case T_eq:
   case T_not_eq: {
-    if(is_user_type(node->left->token_type)) {
+    if (is_user_type(node->left->token_type)) {
       left = eng().CreatePtrToInt(left, Type::getInt64Ty(eng.getContext()));
       right = eng().CreatePtrToInt(right, Type::getInt64Ty(eng.getContext()));
     }
@@ -211,7 +215,8 @@ void CodegenVisitor::visit(BinaryExpr *node) {
 }
 
 void CodegenVisitor::visit(This *node) {
-  // TODO
+  assert(right_value);
+  rt_value = eng.getArg(-1);
 }
 
 void CodegenVisitor::visit(Print *node) {
@@ -369,8 +374,8 @@ void CodegenVisitor::visit(TypeUser *node) {
 
 void CodegenVisitor::visit(Identifier *node) {
   // TODO 
-  switch (call_stack.top()) { 
-    case StateType::GET_VALUE: {
+  switch (call_stack.top()) {
+  case StateType::GET_VALUE: {
     rt_value = eng.fetch_local_id(node->uid);
     if (right_value) {
       rt_value = eng().CreateLoad(rt_value, "ld");

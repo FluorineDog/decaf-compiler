@@ -15,8 +15,9 @@ public:
   void create_call_table();
 
   void insert_type(string name);
-  void grant_class_id(string name);
-  int fetch_class_uid(string name);
+//  void grant_class_id(string name);
+//  int fetch_class_uid(string name);
+  llvm::Constant* fetch_sym_ptr(string class_name);
   void create_main(Block *);
 //  BasicBlock* getBasicBlock();
   void define_local_variable(int uid, string type);
@@ -25,7 +26,9 @@ public:
   StructType *get_struct(string name);
   void declare_func(string class_name, string function, FuncEntry &entry);
   void define_func(string class_name, string function, FuncEntry &entry);
-
+  Value* getArg(int uid){
+    return local_table[uid];
+  }
   auto create_nullptr(PointerType* type){
     return ConstantPointerNull::get(type);
   }
@@ -84,7 +87,7 @@ private:
   std::map<string, Function *> util_func;
   std::map<string, Type *> builtin_type_dict;
   std::map<string, StructType *> user_type_dict;
-  std::map<string, int> class_ids;
+//  std::map<string, int> class_ids;
   std::map<string, std::map<string, Function*>> func_table;
   std::map<int, Value *> local_table;
   std::map<string, int> func_name_uid;
