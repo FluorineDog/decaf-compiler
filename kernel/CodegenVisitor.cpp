@@ -10,13 +10,14 @@
   BlockExt* block_aux;
   stack<StateType> call_stack;
   bool right_value;
+  const string current_class_name;
   std::optional<llvm::BasicBlock*> current_nextBB;
  public:
   CodegenVisitor& operator<<(node_ptr_t node){
     node->accept(*this);
     return *this;
   }
-  CodegenVisitor(class LLVMEngine& eng, BlockExt* block_aux);
+  CodegenVisitor(class LLVMEngine& eng, BlockExt* block_aux, string class_name);
   llvm::Value* node_value(node_ptr_t node, bool rvalue = true);
   llvm::StructType* node_type(node_ptr_t node);
 */
@@ -25,8 +26,8 @@
 
 #include "llvm_driver/llvm.h"
 #include "llvm/IR/DataLayout.h"
-CodegenVisitor::CodegenVisitor(LLVMEngine &eng, BlockExt *block_aux)
-    : eng(eng), block_aux(block_aux) {
+CodegenVisitor::CodegenVisitor(class LLVMEngine& eng, BlockExt* block_aux, string class_name)
+    : eng(eng), block_aux(block_aux), current_class_name(class_name) {
   call_stack.push(StateType::PROGRAM);
 }
 

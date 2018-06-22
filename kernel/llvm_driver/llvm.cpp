@@ -1,7 +1,6 @@
 #include "llvm.h"
 #include "llvm/ExecutionEngine/ExecutionEngine.h"
 
-
 LLVMEngine::LLVMEngine(ClassEntries &sym_table)
     : builder(theContext), sym_table(sym_table) {
   // init module
@@ -95,7 +94,7 @@ void LLVMEngine::create_main(Block *node) {
   BasicBlock *BB = BasicBlock::Create(theContext, "entry", F);
   builder.SetInsertPoint(BB);
   local_table.clear();
-  CodegenVisitor visitor(*this, nullptr);
+  CodegenVisitor visitor(*this, nullptr, "");
   visitor << node;
   // no concept of block
 }
@@ -143,7 +142,7 @@ void LLVMEngine::define_func(string class_name, string function, FuncEntry &body
       local_table[uid++] = &para;
     }
   }
-  CodegenVisitor visitor(*this, nullptr);
+  CodegenVisitor visitor(*this, nullptr, class_name);
   visitor << body.body.value();
   if (body.return_type == "void") {
     builder.CreateRetVoid();
@@ -152,17 +151,68 @@ void LLVMEngine::define_func(string class_name, string function, FuncEntry &body
 
 void LLVMEngine::create_call_table() {
   // let me think
-  
-  auto ele = ConstantStruct::get(external.entry_type, {create_IntObj(1234), create_nullptr()});
-  auto carrt = ArrayType::get(external.entry_type, 2);
-  auto carr = ConstantArray::get(carrt, {ele, ele});
-  auto mid = ConstantExpr::getGetElementPtr(external.entry_type->getPointerTo(), carr, {create_IntObj(0)});
-  auto var = new GlobalVariable(*theModule, carr->getType(),
-                                false, GlobalVariable::InternalLinkage, mid, "good");
+
+//  auto ele = ConstantStruct::get(external.entry_type, {create_IntObj(1234), create_nullptr()});
+//  auto carrt = ArrayType::get(external.entry_type, 2);
+//  auto carr = ConstantArray::get(carrt, {ele, ele});
+//  auto mid = ConstantExpr::getGetElementPtr(external.entry_type->getPointerTo(), carr, {create_IntObj(0)});
+//  auto var = new GlobalVariable(*theModule, carr->getType(),
+//                                false, GlobalVariable::InternalLinkage, mid, "good");
 //  auto np = create_nullptr(external.entry_type->getPointerTo());
 //  auto cv = ConstantStruct::get(external.table_type,
 //                                {create_IntObj(123), var});
 //  auto vars = new GlobalVariable(*theModule, external.table_type,
 //                                false, GlobalVariable::ExternalLinkage, cv, "good");
+  int fuid = 0;
+//  auto ele_t = ConstantStruct::get(external.entry_type, {});
+  auto ele_t = external.entry_type;
 
+  auto intify = [&](size_t i) {
+    return builder.getInt64(i);
+  };
+
+  for (auto&[cname, func_list]: func_table) {
+    map<int, Function *> elements;
+    for (auto[fname, F]: func_list) {
+      // get func's unique id
+      if (!func_name_uid.count(fname)) {
+        func_name_uid[fname] = fuid++;
+      }
+      auto uid = func_name_uid[fname];
+      // insert into classes
+      elements[uid] = F;
+    }
+    vector<Constant *> arr;
+    cerr << arr.size();
+
+    for (auto[uid, F]: elements) {
+      auto ele = ConstantStruct::get(
+          ele_t, {builder.getInt64(uid),
+                  ConstantExpr::getBitCast(
+                      F, Type::getInt8PtrTy(theContext))
+          });
+      arr.push_back(ele);
+    }
+    auto arr_t = ArrayType::get(ele_t, arr.size());
+    auto arr_c = ConstantArray::get(arr_t, arr);
+    auto sym_table_t = StructType::get(
+        theContext,
+        {Type::getInt64Ty(theContext), arr_t});
+    auto sym_table_c = ConstantStruct::get(sym_table_t, {
+        builder.getInt64(arr.size()),
+        arr_c
+    });
+
+    auto gv = new GlobalVariable(
+        *theModule,
+        sym_table_t,
+        true,
+        GlobalVariable::PrivateLinkage,
+        sym_table_c,
+        "__sym_table" + cname);
+    sym_table_per_class[cname] = gv;
+  }
 }
+
+
+

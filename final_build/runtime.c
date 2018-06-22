@@ -9,13 +9,14 @@ int* global_arr = &global;
 void* global_arr_ptr = (void*)&global;
 
 typedef struct __entry {
-  int fid;
+  unsigned long long fid;
   void* fptr;
 } __entry;
 
+// this is symtable for simgle class
 typedef struct __sym_table {
-  int len;
-  __entry* table;
+  unsigned long long len;
+  __entry table[1];
 } __sym_table;
 
 typedef struct string {
