@@ -71,6 +71,10 @@ void CodegenVisitor::visit(Call *node) {
   auto issuer = node->domain_expr ?
                 node_value(node->domain_expr.value())
                                   : eng.getArg(-1);
+  auto ptrAddr = eng().CreateGEP(issuer, {eng().getInt32(0), eng().getInt32(0)});
+  auto sym_ptr = eng().CreateLoad(ptrAddr, "loadSymPtr");
+  auto func_ptr_raw = eng().CreateCall(eng.load_ext_func("load_ptr"), {sym_ptr});
+//  auto
   // analyse issuer's pointer
 
 }

@@ -8,6 +8,7 @@ LLVMEngine::LLVMEngine(ClassEntries &sym_table)
   theModule = llvm::make_unique<Module>("dog-decaf", theContext);
   assert(extModule);
   assert(theModule);
+  theModule->setPICLevel(PICLevel::BigPIC);
   // load basic type
   auto str_type = extModule->getTypeByName("struct.string");
   external.entry_type = extModule->getTypeByName("struct.__entry");
@@ -26,7 +27,7 @@ LLVMEngine::LLVMEngine(ClassEntries &sym_table)
 
   // load external function
   constexpr const char *c_extnames[] = {"readint", "readline", "printint", "printdouble", "printbool",
-                                        "printstring", "string_cat", "dog_malloc"};
+                                        "printstring", "string_cat", "dog_malloc", "load_ptr"};
   for (auto str : c_extnames) {
     util_func[str] = load_extfunc(str);
   }
@@ -139,7 +140,9 @@ void LLVMEngine::define_func(string class_name, string function, FuncEntry &body
         thisflag = false;
         continue;
       }
-      local_table[uid++] = &para;
+      auto tmp = builder.CreateAlloca(para.getType(), 0, nullptr, "arg_tmp");
+      builder.CreateStore(&para, tmp);
+      local_table[uid++] = tmp;
     }
   }
   CodegenVisitor visitor(*this, nullptr, class_name);
@@ -215,7 +218,7 @@ void LLVMEngine::create_call_table() {
 }
 
 llvm::Constant* LLVMEngine::fetch_sym_ptr(string class_name) {
-  auto gv = theModule->getGlobalVariable("__sym_table_" + class_name);
+  auto gv = sym_table_per_class.at(class_name);
   auto ptr = ConstantExpr::getBitCast(
       gv, external.table_type->getPointerTo());
   return ptr;

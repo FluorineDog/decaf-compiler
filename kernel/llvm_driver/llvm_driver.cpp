@@ -30,7 +30,7 @@ void codegen(ClassEntries &sym_table) {
       // use as type_uid
       stack<string> wtf;
 
-      body.push_back(eng.external.table_type);
+      body.push_back(eng.external.table_type->getPointerTo());
 
       for (auto&[var_name, var_type]: decl.available.variables) {
         body.push_back(eng.get_type(var_type));
