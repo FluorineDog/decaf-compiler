@@ -4,7 +4,7 @@ mkdir -p kernel/generated/template
 mkdir -p parser/generated/template
 mkdir -p lexer/generated/template
 cd kernel
-python3 visitor_gen.py
+/usr/bin/python3 visitor_gen.py
 cd ..
 cd build
 cmake ..
