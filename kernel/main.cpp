@@ -4,8 +4,9 @@
 node_ptr_t root;
 #include "llvm_driver/llvm_external.h"
 
-int main() {
-  freopen("/home/mike/compiler/data/naive.decaf", "r", stdin);
+int main(int argc, char* argv[]) {
+  assert(argc == 2);
+  freopen(argv[1], "r", stdin);
   yyparse();
   assert(root);
 
