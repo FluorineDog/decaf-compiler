@@ -74,9 +74,15 @@ void CodegenVisitor::visit(Call *node) {
   auto ptrAddr = eng().CreateGEP(issuer, {eng().getInt32(0), eng().getInt32(0)});
   auto sym_ptr = eng().CreateLoad(ptrAddr, "loadSymPtr");
   auto func_ptr_raw = eng().CreateCall(eng.load_ext_func("load_ptr"), {sym_ptr});
-//  auto
-  // analyse issuer's pointer
-
+  auto func_ptr = eng().CreateBitOrPointerCast(func_ptr_raw, eng.get_function_type(current_class_name, func_name));
+  vector<Value*> args;
+  auto raw_issuer = eng().CreateBitOrPointerCast(issuer, eng().getInt8PtrTy());
+  args.push_back(raw_issuer);
+  for(auto ptr: node->actuals->list){
+    args.push_back(node_value(ptr));
+  }
+  auto ret = eng().CreateCall(func_ptr, args, "virtual_call");
+  rt_value = ret;
 }
 
 void CodegenVisitor::visit(Index *node) {

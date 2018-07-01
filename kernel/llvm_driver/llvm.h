@@ -23,6 +23,7 @@ public:
   void define_local_variable(int uid, string type);
   Value *fetch_local_id(int uid);
   Type *get_type(string name);
+  FunctionType* get_function_type(string cname, string fname);
   StructType *get_struct(string name);
   void declare_func(string class_name, string function, FuncEntry &entry, bool is_class);
   void define_func_empty(string class_name);

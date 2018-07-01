@@ -233,3 +233,7 @@ llvm::Constant* LLVMEngine::fetch_sym_ptr(string class_name) {
 void LLVMEngine::define_func_empty(string class_name){
   func_table[class_name];
 }
+FunctionType* LLVMEngine::get_function_type(string cname, string fname){
+  return func_type_table[cname][fname];
+}
+
