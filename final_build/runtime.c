@@ -72,12 +72,13 @@ void* load_ptr(__sym_table* table, int id) {
   // sorted
   int beg = 0;
   int end = table->len;
+  // fprintf(stderr, "beg=%d, end=%d", beg, end);
   while (end != beg) {
     int mid = (beg + end) / 2;
     if (table->table[mid].fid < id) {
-      beg = mid;
+      beg = mid + 1;
     } else {
-      end = mid + 1;
+      end = mid;
     }
   }
   __entry res = table->table[beg];
