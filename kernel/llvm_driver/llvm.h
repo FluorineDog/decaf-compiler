@@ -10,38 +10,38 @@ using std::string;
 
 class LLVMEngine {
 public:
-  LLVMEngine(ClassEntries& sym_table);
+  LLVMEngine(ClassEntries &sym_table);
 
   void create_call_table();
 
   void insert_type(string name);
 //  void grant_class_id(string name);
 //  int fetch_class_uid(string name);
-  llvm::Constant* fetch_sym_ptr(string class_name);
+  llvm::Constant *fetch_sym_ptr(string class_name);
   void create_main(Block *);
 //  BasicBlock* getBasicBlock();
   void define_local_variable(int uid, string type);
   Value *fetch_local_id(int uid);
   Type *get_type(string name);
-  FunctionType* get_function_type(string cname, string fname);
+  FunctionType *get_function_type(string cname, string fname);
   StructType *get_struct(string name);
   void declare_func(string class_name, string function, FuncEntry &entry, bool is_class);
   void define_func_empty(string class_name);
   void define_func(string class_name, string function, FuncEntry &entry);
-  Value* getArg(int uid){
+  Value *getArg(int uid) {
     return local_table[uid];
   }
-  auto create_nullptr(PointerType* type){
+  auto create_nullptr(PointerType *type) {
     return ConstantPointerNull::get(type);
   }
-  auto create_nullptr(){
+  auto create_nullptr() {
     auto type = Type::getInt8PtrTy(theContext);
     return ConstantPointerNull::get(type);
   }
-  auto create_IntObj(int val){
+  auto create_IntObj(int val) {
     return ConstantInt::get(theContext, APInt(32, val, true));
   }
-  int fetch_variable_uid(string class_name, string ident){
+  int fetch_variable_uid(string class_name, string ident) {
     return 1 + sym_table.fetch_variable_uid(class_name, ident);
   }
 
@@ -49,8 +49,7 @@ public:
     return builder;
   }
 
-  int get_sizeof(Type*);
-
+  int get_sizeof(Type *);
 
   Function *load_ext_func(string name) {
     assert(util_func.count(name));
@@ -59,6 +58,10 @@ public:
 
   LLVMContext &getContext() {
     return theContext;
+  }
+
+  int fetch_func_name_uid(string fname) {
+    return func_name_uid[fname];
   }
 
   void createDummy() {
@@ -74,26 +77,26 @@ public:
   }
 
   struct {
-    StructType* entry_type;
-    StructType* table_type;
-  }external;
-private:
+    StructType *entry_type;
+    StructType *table_type;
+  } external;
 
-  int load_class_from(string class_name, Argument& para);
+private:
+  std::map<string, int> func_name_uid;
+  int load_class_from(string class_name, Argument &para);
   Function *load_extfunc(string name);
   LLVMContext theContext;
   SMDiagnostic error;
-  ClassEntries& sym_table;
+  ClassEntries &sym_table;
   std::unique_ptr<Module> extModule;
   std::unique_ptr<Module> theModule;
   std::map<string, Function *> util_func;
   std::map<string, Type *> builtin_type_dict;
   std::map<string, StructType *> user_type_dict;
 //  std::map<string, int> class_ids;
-  std::map<string, std::map<string, Function*>> func_table;
-  std::map<string, std::map<string, FunctionType*>> func_type_table;
+  std::map<string, std::map<string, Function *>> func_table;
+  std::map<string, std::map<string, FunctionType *>> func_type_table;
   std::map<int, Value *> local_table;
-  std::map<string, int> func_name_uid;
-  std::map<string, GlobalVariable*> sym_table_per_class;
+  std::map<string, GlobalVariable *> sym_table_per_class;
   IRBuilder<> builder;
 };

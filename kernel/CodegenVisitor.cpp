@@ -1,4 +1,5 @@
 // Template
+#include <llvm_driver/llvm.h>
 #include "generated/CodegenVisitor.h"
 #include "indent.h"
 #include "llvm_driver/llvm_inc.h"
@@ -74,10 +75,16 @@ void CodegenVisitor::visit(Call *node) {
   auto issuer_type = node->domain_expr ?
                      node->domain_expr.value()->token_type : current_class_name;
   auto ptrAddr = eng().CreateGEP(issuer, {eng().getInt32(0), eng().getInt32(0)});
-  auto sym_ptr = eng().CreateLoad(ptrAddr, "loadSymPtr");
-  auto func_ptr_raw = eng().CreateCall(eng.load_ext_func("load_ptr"), {sym_ptr});
+  auto sym_ptr_raw = eng().CreateLoad(ptrAddr, "loadSymPtr");
+  auto sym_ptr = eng().CreateBitOrPointerCast(sym_ptr_raw, eng.external.entry_type->getPointerTo());
+  int fid = eng.fetch_func_name_uid(func_name);
+  auto idObj = eng().getInt64(fid);
+
+  auto func_ptr_raw = eng().CreateCall(eng.load_ext_func("load_ptr"), {sym_ptr, idObj});
+
   auto f_t = eng.get_function_type(issuer_type, func_name);
   auto functor = eng().CreateBitOrPointerCast(func_ptr_raw, f_t->getPointerTo());
+
   vector<Value *> args;
   auto raw_issuer = eng().CreateBitOrPointerCast(issuer, eng().getInt8PtrTy());
   args.push_back(raw_issuer);
