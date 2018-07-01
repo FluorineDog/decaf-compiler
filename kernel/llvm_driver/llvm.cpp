@@ -100,31 +100,36 @@ void LLVMEngine::create_main(Block *node) {
   // no concept of block
 }
 
-int LLVMEngine::load_class_from(string class_name, Argument &para) {
-  local_table[-1] = &para;
+int LLVMEngine::load_class_from(string class_name, Argument &para_void) {
+  auto para_ptr = builder.CreateBitOrPointerCast(&para_void, get_type(class_name));
+  local_table[-1] = para_ptr;
   auto &body = sym_table.fetch_complete_class(class_name);
   auto len = body.available.variables.size();
   for (int i = 0; i < len; i++) {
-    auto val = builder.CreateGEP(&para, {create_IntObj(0), create_IntObj(i + 1)});
+    auto val = builder.CreateGEP(para_ptr, {create_IntObj(0), create_IntObj(i + 1)});
     local_table[i] = val;
   }
   return len;
 }
 
-void LLVMEngine::declare_func(string class_name, string function, FuncEntry &body) {
+void LLVMEngine::declare_func(string class_name, string function, FuncEntry &body, bool is_class) {
   auto ret = get_type(body.return_type);
   vector<Type *> paras;
-  paras.push_back(get_type(class_name));
+  paras.push_back(builder.getInt8PtrTy());
   for (auto[type, _]: body.parameters) {
     paras.push_back(get_type(type));
   }
   auto FT = FunctionType::get(ret, paras, false);
-  auto F = Function::Create(FT, Function::ExternalLinkage, class_name + "__" + function, theModule.get());
-  assert(F);
-  func_table[class_name][function] = F;
+  func_type_table[class_name][function] = FT;
+  if(is_class){
+    auto F = Function::Create(FT, Function::ExternalLinkage, class_name + "__" + function, theModule.get());
+    assert(F);
+    func_table[class_name][function] = F;
+  }
 }
 
 void LLVMEngine::define_func(string class_name, string function, FuncEntry &body) {
+
   auto F = func_table[class_name][function];
   BasicBlock *BB = BasicBlock::Create(theContext, "entry", F);
   builder.SetInsertPoint(BB);
@@ -224,3 +229,7 @@ llvm::Constant* LLVMEngine::fetch_sym_ptr(string class_name) {
   return ptr;
 }
 
+
+void LLVMEngine::define_func_empty(string class_name){
+  func_table[class_name];
+}

@@ -19,6 +19,10 @@ void codegen(ClassEntries &sym_table) {
     }
     // no interface, sir
     if (std::holds_alternative<InterfaceBody>(decl_x)) {
+      auto& decl = std::get<InterfaceBody>(decl_x);
+      for(auto& [func_name, func_body]:decl.functions){
+        eng.declare_func(decl_name, func_name, func_body, false);
+      }
       continue;
     }
 
@@ -39,8 +43,9 @@ void codegen(ClassEntries &sym_table) {
     }
     // declare function
     {
+      eng.define_func_empty(decl_name);
       for(auto& [func_name, func_body]:decl.functions){
-        eng.declare_func(decl_name, func_name, func_body);
+        eng.declare_func(decl_name, func_name, func_body, true);
       }
     }
   }

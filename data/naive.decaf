@@ -1,25 +1,25 @@
 class NodeExt extends Node {
   int y;
-  void f(int para0) {
-    Print(y);
-  }
-  int h(int para0){
-    int x;
-    x = para0;
-    return x;
-    // return para0 + para0; 
-  }
+  // void f(int para0) {
+  //   Print(y);
+  // }
+  // int h(int para0){
+  //   int x;
+  //   x = para0;
+  //   return x;
+  //   // return para0 + para0; 
+  // }
 }
 
 class Node {
   int x;
   Node next;
-  void f(int para0) {
-    Print(x); 
-  }
-  int g(int para0){
-    return 0;
-  }
+  // void f(int para0) {
+  //   Print(x); 
+  // }
+  // int g(int para0){
+  //   return 0;
+  // }
 }
 
 class Main {

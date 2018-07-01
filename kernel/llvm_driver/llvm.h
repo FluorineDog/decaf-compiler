@@ -24,7 +24,8 @@ public:
   Value *fetch_local_id(int uid);
   Type *get_type(string name);
   StructType *get_struct(string name);
-  void declare_func(string class_name, string function, FuncEntry &entry);
+  void declare_func(string class_name, string function, FuncEntry &entry, bool is_class);
+  void define_func_empty(string class_name);
   void define_func(string class_name, string function, FuncEntry &entry);
   Value* getArg(int uid){
     return local_table[uid];
@@ -89,6 +90,7 @@ private:
   std::map<string, StructType *> user_type_dict;
 //  std::map<string, int> class_ids;
   std::map<string, std::map<string, Function*>> func_table;
+  std::map<string, std::map<string, FunctionType*>> func_type_table;
   std::map<int, Value *> local_table;
   std::map<string, int> func_name_uid;
   std::map<string, GlobalVariable*> sym_table_per_class;
