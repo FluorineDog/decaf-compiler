@@ -1,53 +1,25 @@
 class NodeExt extends Node {
   int y;
-  // void f(int para0) {
-  //   Print(y);
-  // }
-  // int h(int para0){
-  //   int x;
-  //   x = para0;
-  //   return x;
-  //   // return para0 + para0; 
-  // }
+  void f() {
+    Print(123);
+  }
 }
 
 class Node {
   int x;
   Node next;
-  // void f(int para0) {
-  //   Print(x); 
-  // }
-  // int g(int para0){
-  //   return 0;
-  // }
+  void f() {
+    Print(456);
+  }
 }
 
 class Main {
   int main() {
-    Node list;
-    Node node;
-    Node iter;
-    int i;
-    NodeExt ext;
-    list = null;
-    for(i = 0; i < 100; i = i + 1){
-      if(i % 2 == 0){
-        ext = New NodeExt;
-        ext.y = 0;
-        node = ext;
-        node.next = list;
-      } else {
-        node = New Node;
-        node.x = i;
-        node.next = list;
-      }
-      list = node;
-    }
-    iter = list;
-    while(iter != null){
-      Print(iter.x);
-      iter = iter.next;
-    }
+    Node a;
+    NodeExt b;
+    a = New Node;
+    b = New NodeExt;
+    a.f();
     return 0;
   }
 }

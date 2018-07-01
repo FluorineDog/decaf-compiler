@@ -71,17 +71,20 @@ void CodegenVisitor::visit(Call *node) {
   auto issuer = node->domain_expr ?
                 node_value(node->domain_expr.value())
                                   : eng.getArg(-1);
+  auto issuer_type = node->domain_expr ?
+                     node->domain_expr.value()->token_type : current_class_name;
   auto ptrAddr = eng().CreateGEP(issuer, {eng().getInt32(0), eng().getInt32(0)});
   auto sym_ptr = eng().CreateLoad(ptrAddr, "loadSymPtr");
   auto func_ptr_raw = eng().CreateCall(eng.load_ext_func("load_ptr"), {sym_ptr});
-  auto func_ptr = eng().CreateBitOrPointerCast(func_ptr_raw, eng.get_function_type(current_class_name, func_name));
-  vector<Value*> args;
+  auto f_t = eng.get_function_type(issuer_type, func_name);
+  auto functor = eng().CreateBitOrPointerCast(func_ptr_raw, f_t->getPointerTo());
+  vector<Value *> args;
   auto raw_issuer = eng().CreateBitOrPointerCast(issuer, eng().getInt8PtrTy());
   args.push_back(raw_issuer);
-  for(auto ptr: node->actuals->list){
+  for (auto ptr: node->actuals->list) {
     args.push_back(node_value(ptr));
   }
-  auto ret = eng().CreateCall(func_ptr, args, "virtual_call");
+  auto ret = eng().CreateCall(functor, args, "virtual_call");
   rt_value = ret;
 }
 
