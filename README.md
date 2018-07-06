@@ -1,10 +1,21 @@
-Decaf Compiler
+A Naive Decaf Compiler 
 ---------------
-This project requires GCC and Clang supporting C++17, and the latest bison and flex
+ACM1501 U201514613 苟桂霖
 
-To run it, first run ./init.sh to generate necessary directory structure.
+# introduction
+This project implements a Java-like language called decaf,
+which compiles .decaf code into LLVM middle code(.ll).  
+It features:
 
-Then, run ./checker.sh to test program. 
+1. use Flex as tokenizier;
+2. use Bison as Praser;
+3. support limited static analysis;
+4. use LLVM Builder to generate final middle code.
 
-You may modify ./checker.sh to test other program, or manually do it at your wish.
+# usage
+To run it, first run ./init.sh to generate necessary directory structure, and fix any error infomation if exists
+
+Then, run ./checker.sh to compile and test the program. 
+
+You can modify ./checker.sh to test other program, or manually do it at your wish.
 
