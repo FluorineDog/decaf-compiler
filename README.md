@@ -24,7 +24,6 @@ This project requires
 # usage
 To run it, first run ./init.sh to generate necessary directory structure, and fix any error infomation if exists
 
-
 After installing the tools above, run ./init.sh to generate necessary directory structure.
 
 Then, run ./checker.sh to compile and link programs. You can modify ./checker.sh to test other program, or manually do it at your wish.
