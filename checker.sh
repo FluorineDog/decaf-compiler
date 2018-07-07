@@ -2,7 +2,7 @@ make -C build
 cd final_build
 clang -fPIC -c runtime.c -emit-llvm
 cd ..
-./build/main
+./build/main ./data/naive.decaf
 cd final_build
 rm final -f
 llc main.ll -relocation-model=pic

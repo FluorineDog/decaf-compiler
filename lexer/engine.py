@@ -1,4 +1,4 @@
-#!/bin/python
+#!/usr/bin/python3
 
 def custom_format(string, *args, **kwargs):
   padded = string.replace('{', '{{').replace('}', '}}')

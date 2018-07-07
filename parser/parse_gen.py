@@ -1,4 +1,4 @@
-#!/bin/python3
+#!/usr/bin/python33
 import sys
 import re
 # ? Optional
